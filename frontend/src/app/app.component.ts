@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
 
   // Declare empty list of people
   people: any[] = [];
+  posts: any;
 
   constructor(private http: HttpClient) {}
 
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
     this.http.get(`${this.API}/posts`)
       .subscribe((posts : any )=> {
         console.log('POSTS', posts)
+        this.posts = posts;
         this.people = posts
       }, (error: any) => {console.log(error);});
   }
