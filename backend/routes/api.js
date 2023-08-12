@@ -1,3 +1,4 @@
+import * as dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -5,9 +6,13 @@ import cors from "cors";
 // import models
 import { Post } from "../db/models/post.js";
 
+// load from .env
+dotenv.config();
+
 // mongodb initialization
 const corsOptions = { origin: ["http://localhost:8181"] };
-mongoose.connect("mongodb://database:27017/amapetdb");
+const { ATLAS_URI } = process.env;
+mongoose.connect(ATLAS_URI);
 
 // prepare endpoints
 export const api = express.Router();
