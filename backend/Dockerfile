@@ -1,15 +1,11 @@
 FROM node:lts-hydrogen
 
-RUN mkdir -p /usr/src/app
+WORKDIR /usr/app
 
-WORKDIR /usr/src/app
-
-COPY package.json /usr/src/app
+COPY package.json /usr/app
 
 RUN npm install
 
-COPY . /usr/src/app
+COPY . .
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["node", "server.js"]
