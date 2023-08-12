@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'app works!';
 
   // Link to our api, pointing to localhost
-  API = 'http://localhost:3000';
+  API = 'https://amapet-rest-api-ybteve7ska-ey.a.run.app';
 
   // Declare empty list of people
   people: any[] = [];
