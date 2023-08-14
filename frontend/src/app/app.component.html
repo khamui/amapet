@@ -1,9 +1,7 @@
 <div>
-  <p-button (click)="addPost()">Create</p-button>
+  <p-button (click)="router.navigate(['create'])">Create</p-button>
 </div>
-
-<ng-container *ngFor="let post of posts">
-  <p-card>{{post.title}}</p-card>
-</ng-container>
-
+<div>
+  <p-button (click)="router.navigate(['posts'])">Posts</p-button>
+</div>
 <router-outlet></router-outlet>

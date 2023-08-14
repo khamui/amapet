@@ -1,45 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'app works!';
 
-  // Link to our api, pointing to localhost
-  API = 'https://amapet-rest-api-ybteve7ska-ey.a.run.app';
-
-  // Declare empty list of people
-  people: any[] = [];
-  posts: any;
-
-  constructor(private http: HttpClient) {}
-
-  // Angular 2 Life Cycle event when component has been initialized
-  ngOnInit() {
-    this.getAllPosts();
-  }
-
-  // Add one person to the API
-  addPost() {
-    this.http.post(`${this.API}/posts`, {title: 'Blablub', body: 'yapyap'})
-      .subscribe((data: any) => {
-        console.log(data)
-        //this.getAllPeople();
-      }, (error: any) => {console.log(error);});
-  }
-
-  // Get all users from the API
-  getAllPosts() {
-    this.http.get(`${this.API}/posts`)
-      .subscribe((posts : any )=> {
-        console.log('POSTS', posts)
-        this.posts = posts;
-        this.people = posts
-      }, (error: any) => {console.log(error);});
-  }
+  constructor(public router: Router) {}
 }
