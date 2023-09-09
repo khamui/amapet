@@ -8,23 +8,23 @@ import { HttpClientModule } from '@angular/common/http';
 
 // prime components
 import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 
 // custom modules
 import { ContainersModule } from './containers/containers.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     ButtonModule,
-    ContainersModule
+    MenuModule,
+    ContainersModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,6 +1,8 @@
 export type Post = {
-  _id?: string;
+  id?: string;
+  topics: string[];
   title: string;
   body: string;
   author: string;
+  created?: Date;
 }
