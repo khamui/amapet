@@ -7,7 +7,6 @@ import { ApiService } from 'src/app/services/api.service';
   selector: 'app-posts',
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.scss'],
-  providers: [MessageService]
 })
 export class PostsComponent implements OnInit {
   posts: any;

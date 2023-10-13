@@ -6,6 +6,9 @@ import cors from "cors";
 // import models
 import { Post } from "../db/models/post.js";
 
+// import controllers
+import { signin } from "../controllers/signin-google.js";
+
 // load from .env
 dotenv.config();
 
@@ -78,4 +81,9 @@ api.post("/posts", cors(corsOptions), async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
+});
+
+// signin with google
+api.post("/google-signin", cors(corsOptions), (req, res) => { 
+  signin(req, res); 
 });

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { ApiService } from './services/api.service';
+import { Token } from './typedefs/Token.typedef';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +14,11 @@ import { MenuItem } from 'primeng/api';
 export class AppComponent {
   title = 'app works!';
   menuItems: MenuItem[] = [];
+  user!: any;
 
-  constructor(public router: Router) {
+  constructor(
+    public router: Router,
+  ) {
     this.menuItems = [
       { label: 'Create new Post', icon: 'pi pi-plus', routerLink: 'create' },
       { label: 'Profile', icon: 'pi pi-user' },
