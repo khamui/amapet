@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 
 // pointing to remote backend
-const API = 'https://amapet-rest-api-ybteve7ska-ey.a.run.app/';
+// const API = 'https://amapet-rest-api-ybteve7ska-ey.a.run.app/';
+const API = 'http://localhost:5200/';
 
 @Injectable({
   providedIn: 'root'

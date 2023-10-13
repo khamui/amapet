@@ -6,35 +6,39 @@ import { TopbarComponent } from './topbar/topbar.component';
 
 // prime components
 import { CardModule } from 'primeng/card';
-import { ToastModule } from 'primeng/toast';
 import { ComponentsModule } from '../components/components.module';
 import { EditorModule } from 'primeng/editor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { SignInComponent } from './sign-in/sign-in.component';
+
+// third party features
+import {
+  GoogleSigninButtonDirective,
+  GoogleSigninButtonModule,
+} from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
     CreatePostComponent,
     PostsComponent,
-    TopbarComponent
+    TopbarComponent,
+    SignInComponent,
   ],
   imports: [
     CommonModule,
     CardModule,
-    ToastModule,
     ComponentsModule,
     EditorModule,
     ReactiveFormsModule,
     FormsModule,
     ToolbarModule,
-    ButtonModule
+    ButtonModule,
+    InputTextModule,
+    GoogleSigninButtonModule,
   ],
-  exports: [
-    PostsComponent,
-    TopbarComponent
-  ]
+  exports: [PostsComponent, TopbarComponent, GoogleSigninButtonDirective],
 })
-export class ContainersModule { }
-
-
+export class ContainersModule {}

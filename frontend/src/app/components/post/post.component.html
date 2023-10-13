@@ -1,5 +1,3 @@
 <p-panel [header]="post.title" [toggleable]="true">
-  <p>
-    {{ post.body }}
-  </p>
+  <p [innerHtml]="post.body" class="text-left"></p>
 </p-panel>
