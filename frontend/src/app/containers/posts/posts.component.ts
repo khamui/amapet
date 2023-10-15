@@ -29,7 +29,7 @@ export class PostsComponent implements OnInit {
         detail: 'List of posts could not be loaded.',
       });
     } else {
-      this.posts = result;
+      this.posts = (result as Array<Post>).reverse();
       this.ms.add({
         severity: 'success',
         summary: 'Loaded!',

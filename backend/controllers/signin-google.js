@@ -1,7 +1,10 @@
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
+import { User } from "../db/models/user.js";
+import { generateModel, retrieveOneModelByQuery } from "../connection.js";
 
 const EXP_IN_S = 604800; // 7 days expiration time
+// const EXP_IN_S = 15; // 15 s expiration time
 const GOOGLE_CLIENT_ID =
   "265914185201-bgvd5l7u0bqijnknsqqo17kg51thnmpi.apps.googleusercontent.com";
 const client = new OAuth2Client();
@@ -12,17 +15,46 @@ export const signin = (req, res, next) => {
       idToken: req.body.token,
       audience: GOOGLE_CLIENT_ID,
     });
-    const payload = ticket.getPayload();
-    const encodedPayload = {
-      email: payload["email"],
-      firstname: payload["given_name"],
-      lastname: payload["family_name"],
-    };
-    let token = jwt.sign(encodedPayload, process.env.JWT_SECRET, {
+    const originalPayload = getPayload(ticket);
+    const userPayload = await getUserOrCreateUser(originalPayload);
+
+    let token = jwt.sign(userPayload.toJSON(), process.env.JWT_SECRET, {
       expiresIn: EXP_IN_S,
     });
-    res.status(200).json({ token });
+    return token;
   }
 
-  verify().catch(console.error);
+  verify()
+    .then((token) => res.status(200).json({ token }))
+    .catch(console.error);
+};
+
+const getUserOrCreateUser = async (originalPayload) => {
+  let result = await retrieveOneModelByQuery(User, {
+    email: originalPayload.email,
+  });
+  if (!result) {
+    const newUser = {
+      ...originalPayload,
+      respect: 0,
+      level: 'pet enthusiast',
+      questions: [],
+      comments: [],
+      subcomments: [],
+      circles: [],
+      followedQuestions: [],
+      followedCircles: []
+    }
+    result = await generateModel(User, newUser);
+  }
+  return result;
+};
+
+const getPayload = (ticket) => {
+  const payload = ticket.getPayload();
+  return {
+    email: payload["email"],
+    firstname: payload["given_name"],
+    lastname: payload["family_name"],
+  };
 };
