@@ -3,16 +3,19 @@ import { CommonModule } from '@angular/common';
 
 // primeng modules
 import { PanelModule } from 'primeng/panel';
+import { MenuModule } from 'primeng/menu';
 
 // ama components
 import { PostComponent } from './post/post.component';
+import { SideboxComponent } from './sidebox/sidebox.component';
 
 @NgModule({
-  declarations: [PostComponent],
-  exports: [PostComponent],
+  declarations: [PostComponent, SideboxComponent],
+  exports: [PostComponent, SideboxComponent],
   imports: [
     CommonModule,
-    PanelModule
+    PanelModule,
+    MenuModule,
   ]
 })
 export class ComponentsModule { }

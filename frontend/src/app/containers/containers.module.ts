@@ -19,6 +19,7 @@ import {
   GoogleSigninButtonDirective,
   GoogleSigninButtonModule,
 } from '@abacritt/angularx-social-login';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import {
     PostsComponent,
     TopbarComponent,
     SignInComponent,
+    ProfileComponent,
   ],
   imports: [
     CommonModule,
