@@ -4,7 +4,7 @@ import { lastValueFrom } from 'rxjs';
 
 // pointing to remote backend
 // const API = 'https://amapet-rest-api-ybteve7ska-ey.a.run.app/';
-const API = 'https://amapet-rest-api-v0-0-1-ybteve7ska-lz.a.run.app';
+const API = 'https://amapet-rest-api-v0-0-1-ybteve7ska-lz.a.run.app/';
 
 @Injectable({
   providedIn: 'root'
