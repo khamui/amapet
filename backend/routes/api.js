@@ -14,6 +14,7 @@ import {
   retrieveModelById,
   generateModel,
 } from "../connection.js";
+import { Circle } from "../db/models/circle.js";
 
 // prepare endpoints
 export const api = express.Router();
@@ -59,6 +60,44 @@ api.post("/posts", cors(corsOptions), async (req, res) => {
   try {
     const newPost = await generateModel(Post, payload);
     res.status(201).json(newPost);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+/*
+ * GET all posts.
+ */
+api.get("/circles", cors(corsOptions), async (req, res) => {
+  try {
+    const circles = await retrieveModel(Circle);
+    res.status(200).json(circles);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+/*
+ * Create a circle.
+ */
+api.post("/circles", cors(corsOptions), async (req, res) => {
+  const {
+    ownerId,
+    name,
+    about,
+  } = req.body;
+
+  const payload = {
+    ownerId,
+    name: `c/${name}`,
+    about,
+    questions: [],
+    memberCount: 1,
+    moderators: [ownerId],
+  };
+  try {
+    const newCircle = await generateModel(Circle, payload);
+    res.status(201).json(newCircle);
   } catch (error) {
     res.status(500).send(error);
   }

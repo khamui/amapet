@@ -1,0 +1,37 @@
+<div>
+  <p-button
+    label="Create Circle"
+    icon="pi pi-plus"
+    class="mr-2"
+    severity="secondary"
+    [text]="true"
+    [raised]="true"
+    (onClick)="createPopup.toggle($event)"
+  ></p-button>
+  <p-overlayPanel #createPopup>
+    <ng-template pTemplate="content">
+      <div class="p-inputgroup">
+        <span class="p-inputgroup-addon"> c/ </span>
+        <input #nameInput type="text" pInputText placeholder="circle name..." />
+        <button
+          type="button"
+          pButton
+          icon="pi pi-check"
+          (click)="createCircle($event)"
+          [disabled]="nameInput.value === ''"
+        >
+          Create
+        </button>
+      </div>
+    </ng-template>
+  </p-overlayPanel>
+  <!--
+  <p-button (click)="op.toggle($event)" icon="pi pi-image" label="Show"></p-button>
+  -->
+
+  <ng-container *ngIf="circleItems.length > 0">
+    <div class="my-3">
+      <ama-sidebox [items]="circleItems"></ama-sidebox>
+    </div>
+  </ng-container>
+</div>

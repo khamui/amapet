@@ -13,6 +13,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 // third party features
 import {
@@ -20,6 +21,7 @@ import {
   GoogleSigninButtonModule,
 } from '@abacritt/angularx-social-login';
 import { ProfileComponent } from './profile/profile.component';
+import { CircleBoxComponent } from './circle-box/circle-box.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { ProfileComponent } from './profile/profile.component';
     TopbarComponent,
     SignInComponent,
     ProfileComponent,
+    CircleBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -40,7 +43,13 @@ import { ProfileComponent } from './profile/profile.component';
     ButtonModule,
     InputTextModule,
     GoogleSigninButtonModule,
+    OverlayPanelModule,
   ],
-  exports: [PostsComponent, TopbarComponent, GoogleSigninButtonDirective],
+  exports: [
+    PostsComponent,
+    TopbarComponent,
+    GoogleSigninButtonDirective,
+    CircleBoxComponent,
+  ],
 })
 export class ContainersModule {}

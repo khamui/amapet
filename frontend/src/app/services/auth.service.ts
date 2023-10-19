@@ -3,7 +3,7 @@ import { Token } from '../typedefs/Token.typedef';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject } from 'rxjs';
-import decode from 'jwt-decode';
+import decode, { JwtPayload } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User } from '../typedefs/User.typedef';
 
@@ -96,4 +96,15 @@ export class AuthService {
     const userPayload = jwtToken && decode(jwtToken);
     return userPayload;
   };
+
+  /***
+  *
+  * public getUserId()
+  *
+  ***/
+  public getUserId = () => {
+    const jwtToken = localStorage.getItem(TOKEN_NAME);
+    const payload = jwtToken && decode(jwtToken);
+    return (payload as any)._id;
+  }
 }
