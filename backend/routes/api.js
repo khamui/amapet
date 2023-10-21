@@ -6,6 +6,7 @@ import { Post } from "../db/models/post.js";
 
 // import controllers
 import { signin } from "../controllers/signin-google.js";
+import { controllerCircles } from "../controllers/controller.circles.js";
 
 // import db functions
 import {
@@ -13,11 +14,15 @@ import {
   retrieveModel,
   retrieveModelById,
   generateModel,
-} from "../connection.js";
+} from "../dbaccess.js";
 import { Circle } from "../db/models/circle.js";
+
+// import middlewares
+import { middlewareCircles } from "../middlewares/middleware.circles.js"
 
 // prepare endpoints
 export const api = express.Router();
+
 
 /*
  * GET all posts.
@@ -80,28 +85,12 @@ api.get("/circles", cors(corsOptions), async (req, res) => {
 /*
  * Create a circle.
  */
-api.post("/circles", cors(corsOptions), async (req, res) => {
-  const {
-    ownerId,
-    name,
-    about,
-  } = req.body;
-
-  const payload = {
-    ownerId,
-    name: `c/${name}`,
-    about,
-    questions: [],
-    memberCount: 1,
-    moderators: [ownerId],
-  };
-  try {
-    const newCircle = await generateModel(Circle, payload);
-    res.status(201).json(newCircle);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+api.post("/circles", cors(corsOptions), [
+  middlewareCircles.hasRequired,
+  controllerCircles.createOne
+])
+//api.post("/circles", cors(corsOptions), async (req, res) => {
+//});
 
 // signin with google
 api.post("/google-signin", cors(corsOptions), (req, res) => {

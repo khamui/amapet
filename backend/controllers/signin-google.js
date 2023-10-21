@@ -1,7 +1,7 @@
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import { User } from "../db/models/user.js";
-import { generateModel, retrieveOneModelByQuery } from "../connection.js";
+import { generateModel, retrieveOneModelByQuery } from "../dbaccess.js";
 
 const EXP_IN_S = 604800; // 7 days expiration time
 // const EXP_IN_S = 15; // 15 s expiration time
