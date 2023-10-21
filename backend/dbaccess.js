@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 
 export const corsOptions = { origin: ["http://localhost:8181"] };
 
-export const connectDb = () => {
+export const connect = () => {
   // mongodb initialization
   dotenv.config();
   const { ATLAS_URI } = process.env;

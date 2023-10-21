@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   firstname: String,
   lastname: String,
   email: String,
@@ -14,4 +14,4 @@ const userSchema = new mongoose.Schema({
   followedCircles: Array
 });
 
-export const User = mongoose.model("User", userSchema);
+export const User = model("User", userSchema);
