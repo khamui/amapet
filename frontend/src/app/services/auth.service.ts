@@ -88,6 +88,15 @@ export class AuthService {
 
   /***
    *
+   * public getToken()
+   *
+   ***/
+  public getToken = () => {
+    return localStorage.getItem(TOKEN_NAME);
+  };
+
+  /***
+   *
    * public getUser()
    *
    ***/
