@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CreatePostComponent } from './containers/create-post/create-post.component';
-import { PostsComponent } from './containers/posts/posts.component';
 import { SignInComponent } from './containers/sign-in/sign-in.component';
 import { ProfileComponent } from './containers/profile/profile.component';
+import { ExploreComponent } from './containers/explore/explore.component';
+import { CircleComponent } from './containers/circle/circle.component';
+import { CreateQuestionComponent } from './containers/create-question/create-question.component';
 
 const routes: Routes = [
-  { path: 'posts', component: PostsComponent },
-  { path: 'create', component: CreatePostComponent },
+  { path: 'explore', component: ExploreComponent },
+  { path: 'c/:id', component: CircleComponent  },
+  { path: 'c/:id/questions/create', component: CreateQuestionComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'profile', component: ProfileComponent },
-  { path: '', redirectTo: 'posts', pathMatch: 'full' }
+  { path: '', redirectTo: 'explore', pathMatch: 'full' }
 ];
 
 @NgModule({

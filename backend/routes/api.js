@@ -92,9 +92,19 @@ api.get("/circles", cors(corsOptions),
  */
 api.post("/circles", cors(corsOptions), [
   middlewareAuth.isAuthorized,
-  middlewareCircles.hasRequired,
+  middlewareCircles.circleCreateCheck,
   controllerCircles.createOne,
 ]);
+
+/*
+ * Create a question in circle.
+ */
+api.post("/circles/:id/questions/create", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareCircles.questionCreateCheck,
+  controllerCircles.createOneQuestion,
+]);
+
 //api.post("/circles", cors(corsOptions), async (req, res) => {
 //});
 

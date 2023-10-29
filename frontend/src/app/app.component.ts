@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     this.menuItems = [
       // { label: 'Create new Post', icon: 'pi pi-plus', routerLink: 'create' },
       { label: 'Profile', icon: 'pi pi-user', routerLink: 'profile' },
-      { label: 'Questions', icon: 'pi pi-history', routerLink: 'posts' },
+      { label: 'Questions', icon: 'pi pi-history', routerLink: 'questions' },
     ];
   }
 

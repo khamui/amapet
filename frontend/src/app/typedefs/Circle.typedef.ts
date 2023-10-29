@@ -1,10 +1,12 @@
+import { Question } from "./Question.typedef";
+
 export type Circle = {
-  id?: string;
+  _id?: string;
   ownerId: string;
+  created_at?: string
   name: string;
   about?: string,
-  questions?: [],
+  questions?: Question[],
   memberCount?: number,
   moderators?: [],
-  created?: any
 }
