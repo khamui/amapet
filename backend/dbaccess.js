@@ -32,3 +32,12 @@ export const generateModel = async (model, payload) => {
   return result;
 };
 
+export const updateModel = async (model, id, payloadExpr) => {
+  console.log('id: ', id);
+  console.log('updates: ', payloadExpr);
+  const updated = await model.findOneAndUpdate({ _id: id }, { $push: { 'questions': payloadExpr }});
+  const result = await updated.save();
+  return result;
+};
+
+

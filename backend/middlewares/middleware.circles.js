@@ -3,7 +3,7 @@ import { questionCreateSchema } from "./validators/validator.circles.js";
 
 export const middlewareCircles = {
   circleCreateCheck: (req, res, next) => {
-    const { value, error } = circleCreateSchema.validate(req.body);
+    const { error } = circleCreateSchema.validate(req.body);
 
     if (error) {
       console.log(error);
@@ -11,12 +11,11 @@ export const middlewareCircles = {
         .status(500)
         .send(error.message)
     } else {
-      console.log(value);
       next()
     }
   },
   questionCreateCheck: (req, res, next) => {
-    const { value, error } = questionCreateSchema.validate(req.body);
+    const { error } = questionCreateSchema.validate(req.body);
 
     if (error) {
       console.log(error);
@@ -24,7 +23,6 @@ export const middlewareCircles = {
         .status(500)
         .send(error.message)
     } else {
-      console.log(value);
       next()
     }
   }
