@@ -1,0 +1,13 @@
+<h1>{{ circle?.name }}</h1>
+<ng-container *ngIf="isLoggedIn">
+  <div class="w-full">
+    <input
+      class="w-full"
+      type="text"
+      pInputText
+      placeholder="Ask me anything here..."
+      (click)="navigateToCreateForm()"
+    />
+  </div>
+</ng-container>
+<ama-questions [questions]="circle?.questions || []"></ama-questions>

@@ -6,12 +6,12 @@ import { PanelModule } from 'primeng/panel';
 import { MenuModule } from 'primeng/menu';
 
 // ama components
-import { PostComponent } from './post/post.component';
 import { SideboxComponent } from './sidebox/sidebox.component';
+import { QuestionComponent } from './question/question.component';
 
 @NgModule({
-  declarations: [PostComponent, SideboxComponent],
-  exports: [PostComponent, SideboxComponent],
+  declarations: [QuestionComponent, SideboxComponent],
+  exports: [QuestionComponent, SideboxComponent],
   imports: [
     CommonModule,
     PanelModule,
