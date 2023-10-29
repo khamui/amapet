@@ -1,2 +1,7 @@
-<ng-container *ngFor="let question of questions">
-</ng-container>
+<div class="my-4">
+  <ng-container *ngFor="let question of questions">
+    <div class="my-2">
+      <ama-question [question]="question"></ama-question>
+    </div>
+  </ng-container>
+</div>

@@ -1,18 +1,14 @@
-import { generateModel } from "../dbaccess.js";
+import { generateModel, updateModel } from "../dbaccess.js";
 import { Circle } from "../db/models/circle.js";
-import { Question } from "../db/models/question.js";
 
 export const controllerCircles = {
   createOne: async (req, res) => {
-    const {
-      ownerId,
-      name
-    } = req.body;
+    const { ownerId, name } = req.body;
 
     const payload = {
       ownerId,
       name: `c/${name}`,
-      about: '',
+      about: "",
       questions: [],
       memberCount: 1,
       moderators: [ownerId],
@@ -27,14 +23,14 @@ export const controllerCircles = {
   createOneQuestion: async (req, res) => {
     const payload = {
       ...req.body,
-      circleId: req.params.id
+      circleId: req.params.id,
     };
+    const mongoExpr = { $push: { 'questions': payload }};
     try {
-      const newQuestion = await generateModel(Question, payload);
+      const newQuestion = await updateModel(Circle, req.params.id, payload);
       res.status(201).json(newQuestion);
     } catch (error) {
-      res.status(500).send(error);
+      res.status(500).send(error.message);
     }
-  }
-
-}
+  },
+};

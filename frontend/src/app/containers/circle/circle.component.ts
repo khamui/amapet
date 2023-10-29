@@ -9,7 +9,7 @@ import { Circle } from 'src/app/typedefs/Circle.typedef';
   templateUrl: './circle.component.html',
   styleUrls: ['./circle.component.scss'],
 })
-export class CircleComponent implements AfterViewInit {
+export class CircleComponent implements OnInit {
   //slug!: string;
   circle!: Circle | undefined;
   isLoggedIn = false;
@@ -30,9 +30,7 @@ export class CircleComponent implements AfterViewInit {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
     })
-  }
 
-  ngAfterViewInit(): void {
     this.ar.paramMap.subscribe((paramMap) => {
       this.circle = this.cs
         .getCircles()

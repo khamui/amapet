@@ -17,11 +17,9 @@ export class CircleService {
     private as: AuthService,
     private router: Router,
     private ms: MessageService,
-  ) {
-    this.readCircles();
-  }
+  ) {}
 
-  private readCircles = async () => {
+  public readCircles = async () => {
     const response = await this.api.read('circles');
     const { isError, result } = response;
 
