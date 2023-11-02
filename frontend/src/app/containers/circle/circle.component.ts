@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, OnChanges, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
@@ -10,7 +11,9 @@ import { Circle } from 'src/app/typedefs/Circle.typedef';
   styleUrls: ['./circle.component.scss'],
 })
 export class CircleComponent implements OnInit {
-  //slug!: string;
+  circles$!: Observable<Circle[]>;
+  circles: Circle[] = [];
+
   circle!: Circle | undefined;
   isLoggedIn = false;
 
@@ -20,10 +23,7 @@ export class CircleComponent implements OnInit {
     private ar: ActivatedRoute,
     public as: AuthService
   ) {
-    // this.activatedRoute.url.subscribe((urlSegs: UrlSegment[]) => {
-    //   this.slug = urlSegs[1].path;
-    //   console.log('current slug: ', this.slug);
-    // })
+    this.circles$ = this.cs.getCircles();
   }
 
   ngOnInit(): void {
@@ -31,12 +31,14 @@ export class CircleComponent implements OnInit {
       this.isLoggedIn = value;
     })
 
-    this.ar.paramMap.subscribe((paramMap) => {
-      this.circle = this.cs
-        .getCircles()
-        .find((c) => c.name === `c/${paramMap.get('id')}`);
-      console.log('circle: ', this.circle);
-    })
+    /* creating two observables and combine their results */
+    const params$ = this.ar.paramMap;
+    combineLatest([params$, this.circles$])
+      .subscribe(([paramMap , circles]) => {
+        this.circle = circles.find((circle: Circle) => {
+          return circle.name === `c/${paramMap.get('id')}`
+        })
+      })
   }
 
   navigateToCreateForm = () => {

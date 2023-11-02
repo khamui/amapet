@@ -48,6 +48,13 @@ export class ApiService<T> {
     }
   };
 
+  // read
+  readAsObservable$ = <T>(resource: string, withAuth = false) => {
+    return withAuth
+      ? this.http.get<T>(API + resource, this.headers)
+      : this.http.get<T>(API + resource);
+  };
+
   // update
   update = async (resource: string, payload: T, withAuth = false) => {
     try {

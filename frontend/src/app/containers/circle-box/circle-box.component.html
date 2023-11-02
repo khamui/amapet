@@ -1,35 +1,37 @@
 <div>
-  <ng-container *ngIf="cs.getCircleItems().length > 0">
+  <ng-container *ngIf="circleMenuItems.length > 0">
     <div class="my-3">
-      <ama-sidebox [items]="cs.getCircleItems()"></ama-sidebox>
+      <ama-sidebox [items]="circleMenuItems"></ama-sidebox>
     </div>
   </ng-container>
-  <p-button
-    label="Create Circle"
-    icon="pi pi-plus"
-    class="mr-2"
-    severity="secondary"
-    [text]="true"
-    [raised]="true"
-    (onClick)="createPopup.toggle($event)"
-  ></p-button>
-  <p-overlayPanel #createPopup>
-    <ng-template pTemplate="content">
-      <div class="p-inputgroup">
-        <span class="p-inputgroup-addon"> c/ </span>
-        <input #nameInput type="text" pInputText placeholder="circle name..." />
-        <button
-          type="button"
-          pButton
-          icon="pi pi-check"
-          (click)="cs.createCircle(nameInput.value)"
-          [disabled]="nameInput.value === ''"
-        >
-          Create
-        </button>
-      </div>
-    </ng-template>
-  </p-overlayPanel>
+  <ng-container *ngIf="isLoggedIn">
+    <p-button
+      label="Create Circle"
+      icon="pi pi-plus"
+      class="mr-2"
+      severity="secondary"
+      [text]="true"
+      [raised]="true"
+      (onClick)="createPopup.toggle($event)"
+    ></p-button>
+    <p-overlayPanel #createPopup>
+      <ng-template pTemplate="content">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon"> c/ </span>
+          <input #nameInput type="text" pInputText placeholder="circle name..." />
+          <button
+            type="button"
+            pButton
+            icon="pi pi-check"
+            (click)="cs.createCircle(nameInput.value)"
+            [disabled]="nameInput.value === ''"
+          >
+            Create
+          </button>
+        </div>
+      </ng-template>
+    </p-overlayPanel>
+  </ng-container>
   <!--
   <p-button (click)="op.toggle($event)" icon="pi pi-image" label="Show"></p-button>
   -->

@@ -4,6 +4,7 @@ export type Question = {
   id?: string;
   circleId: string;
   ownerId: string;
+  ownerName: string;
   created_at?: string,
   title: string,
   body: string,
