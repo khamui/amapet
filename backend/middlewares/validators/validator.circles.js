@@ -14,6 +14,8 @@ export const questionCreateSchema = Joi.object({
     .required(), 
   ownerId: Joi.string()
     .required(), 
+  ownerName: Joi.string()
+    .required(), 
   title: Joi.string()
     .min(3)
     .max(150)

@@ -3,7 +3,7 @@ import { Token } from '../typedefs/Token.typedef';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject } from 'rxjs';
-import { jwtDecode as decode } from 'jwt-decode';
+import { JwtPayload, jwtDecode as decode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User } from '../typedefs/User.typedef';
 
@@ -45,7 +45,7 @@ export class AuthService {
       });
     } else {
       const payload = decode(storedToken);
-      this.setLoggedInWithExpiration((payload as any).exp)
+      this.setLoggedInWithExpiration((payload as any).exp);
       console.log('Still valid token. Expiry date to be checked');
     }
   };
@@ -100,20 +100,32 @@ export class AuthService {
    * public getUser()
    *
    ***/
-  public getUser = () => {
+  public getUser = (): User => {
     const jwtToken = localStorage.getItem(TOKEN_NAME);
     const userPayload = jwtToken && decode(jwtToken);
-    return userPayload;
+    return userPayload as User;
   };
 
   /***
-  *
-  * public getUserId()
-  *
-  ***/
+   *
+   * public getUser()
+   *
+   ***/
+  public getUserName = () => {
+    const userPayload = this.getUser();
+    return `${(userPayload as User).firstname} ${
+      (userPayload as User).lastname
+    }`;
+  };
+
+  /***
+   *
+   * public getUserId()
+   *
+   ***/
   public getUserId = () => {
     const jwtToken = localStorage.getItem(TOKEN_NAME);
     const payload = jwtToken && decode(jwtToken);
     return (payload as any)._id;
-  }
+  };
 }

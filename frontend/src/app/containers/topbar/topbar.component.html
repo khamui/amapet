@@ -6,13 +6,6 @@
   <div class="p-toolbar-group-end">
     <ng-container *ngIf="isLoggedIn; else loginButton">
       <p-button
-        label="New Post"
-        icon="pi pi-plus"
-        class="mr-2"
-        styleClass="p-button-success"
-        (onClick)="router.navigate(['create'])"
-      ></p-button>
-      <p-button
         icon="pi pi-bell"
         class="mr-2"
         styleClass="p-button-info"

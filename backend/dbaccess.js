@@ -8,7 +8,7 @@ export const connect = () => {
   dotenv.config();
   const { ATLAS_URI } = process.env;
   mongoose.connect(ATLAS_URI);
-}
+};
 
 // db operating functions
 export const retrieveModel = async (model) => {
@@ -23,8 +23,8 @@ export const retrieveModelById = async (model, id) => {
 
 export const retrieveOneModelByQuery = async (model, query) => {
   const result = await model.findOne(query).exec();
-  return result
-}
+  return result;
+};
 
 export const generateModel = async (model, payload) => {
   const generated = await model.create(payload);
@@ -33,11 +33,11 @@ export const generateModel = async (model, payload) => {
 };
 
 export const updateModel = async (model, id, payloadExpr) => {
-  console.log('id: ', id);
-  console.log('updates: ', payloadExpr);
-  const updated = await model.findOneAndUpdate({ _id: id }, { $push: { 'questions': payloadExpr }});
+  const updated = await model.findOneAndUpdate(
+    { _id: id }, 
+    payloadExpr, 
+    { new: true,}
+  );
   const result = await updated.save();
   return result;
 };
-
-

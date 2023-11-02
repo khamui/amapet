@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { Observable, combineLatest } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
@@ -14,6 +15,9 @@ import { Question } from 'src/app/typedefs/Question.typedef';
   styleUrls: ['./create-question.component.scss'],
 })
 export class CreateQuestionComponent implements OnInit {
+  circles$!: Observable<Circle[]>;
+  circles: Circle[] = [];
+
   public loading = false;
   circle!: Circle | undefined;
 
@@ -22,15 +26,18 @@ export class CreateQuestionComponent implements OnInit {
     private ms: MessageService,
     private cs: CircleService,
     private ar: ActivatedRoute,
-    private as: AuthService
-  ) {}
+    private as: AuthService,
+  ) {
+    this.circles$ = this.cs.getCircles();
+  }
 
   ngOnInit(): void {
-    this.ar.paramMap.subscribe((paramMap) => {
-      this.circle = this.cs
-        .getCircles()
-        .find((c) => c.name === `c/${paramMap.get('id')}`);
-      console.log('circle: ', this.circle);
+    /* creating two observables and combine their results */
+    const params$ = this.ar.paramMap;
+    combineLatest([params$, this.circles$]).subscribe(([paramMap, circles]) => {
+      this.circle = circles.find((circle: Circle) => {
+        return circle.name === `c/${paramMap.get('id')}`;
+      });
     });
   }
 
@@ -44,6 +51,7 @@ export class CreateQuestionComponent implements OnInit {
     const payload: Question = {
       circleId: (this.circle as Circle)._id as string,
       ownerId: this.as.getUserId(),
+      ownerName: this.as.getUserName(),
       title: this.questionForm.value.titleInput as string,
       body: this.questionForm.value.bodyEditor as string,
       upvotes: 0,

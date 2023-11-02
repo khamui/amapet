@@ -4,33 +4,35 @@ import { ApiService } from './api.service';
 import { Circle } from '../typedefs/Circle.typedef';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CircleService {
-  private circleItems: MenuItem[] = [];
-  private circles: Circle[] = [];
+  //private circleItems: MenuItem[] = [];
+  private circles$!: Observable<Circle[]>;
 
   constructor(
     private api: ApiService<Circle>,
     private as: AuthService,
     private router: Router,
     private ms: MessageService,
-  ) {}
+  ) {
+    this.readCircles();
+  }
 
-  public readCircles = async () => {
-    const response = await this.api.read('circles');
-    const { isError, result } = response;
-
-    if (!isError) {
-      this.circles = result as Circle[];
-      this.circleItems = (result as any).map((circle: Circle) => ({
-        label: circle.name,
-        command: () => this.router.navigate([circle.name]),
-      })) as MenuItem[];
-    }
-  };
+  private readCircles = () => {
+    this.circles$ = this.api.readAsObservable$<Circle[]>('circles');
+    //circles$.subscribe((value: Object) => {
+      //this.circles = value as Circle[];
+      //console.log('circles arrived', this.circles);
+      //this.circleItems = (value as Circle[]).map((circle: Circle) => ({
+      //  label: circle.name,
+      //  command: () => this.router.navigate([circle.name]),
+      //})) as MenuItem[];
+    //})
+  }
 
   public createCircle = async (name: string) => {
     const payload: Circle = {
@@ -48,13 +50,13 @@ export class CircleService {
         detail: `Could not create Circle. Error ${result}`,
       });
     } else {
-      this.circleItems = [
-        ...this.circleItems,
-        {
-          label: `c/${name}`,
-          command: () => this.router.navigate([`c/${name}`]),
-        },
-      ];
+      //this.circleItems = [
+      //  ...this.circleItems,
+      //  {
+      //    label: `c/${name}`,
+      //    command: () => this.router.navigate([`c/${name}`]),
+      //  },
+      //];
       this.ms.add({
         severity: 'success',
         summary: 'Circle created!',
@@ -63,9 +65,14 @@ export class CircleService {
     }
   };
 
-  public getCircles = () => this.circles;
-  public getCircleItems = () => this.circleItems;
+  public getCircles = () => this.circles$;
+  //public getCircleItems = () => this.circleItems;
 
-  public getCircleByName = (name: string) =>
-    this.circles.find((c) => c.name === name);
+  public getCircleByName = (name: string) => {
+    let foundCircle;
+    this.circles$.subscribe((circles: Circle[]) => {
+      foundCircle = circles.find((c) => c.name === name);
+    })
+    return foundCircle;
+  }
 }
