@@ -30,15 +30,11 @@ export class CircleBoxComponent implements OnInit {
       this.isLoggedIn = value;
     });
 
-    this.cs.circles$.subscribe({
-      next: (circles: Circle[]) => {
+    this.cs.circles$.subscribe((circles: Circle[]) => {
         this.circleMenuItems = circles.map((circle: Circle) => ({
           label: circle.name,
           command: () => this.router.navigate([circle.name]),
         })) as MenuItem[]
-      },
-      error: () => { return null },
-      complete: () => { return null }
-    })
+      })
   }
 }

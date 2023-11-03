@@ -13,6 +13,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
+import { DividerModule } from 'primeng/divider';
 
 // third party features
 import {
@@ -24,6 +26,9 @@ import { CircleBoxComponent } from './circle-box/circle-box.component';
 import { ExploreComponent } from './explore/explore.component';
 import { CircleComponent } from './circle/circle.component';
 import { QuestionsComponent } from './questions/questions.component';
+import { QuestionDetailComponent } from './question-detail/question-detail.component';
+import { QuestionComponent } from './question/question.component';
+import { DateAgoPipe } from '../pipes/date-ago.pipe';
 
 @NgModule({
   declarations: [
@@ -35,6 +40,9 @@ import { QuestionsComponent } from './questions/questions.component';
     CircleBoxComponent,
     ExploreComponent,
     CircleComponent,
+    QuestionDetailComponent,
+    QuestionComponent,
+    DateAgoPipe
   ],
   imports: [
     CommonModule,
@@ -48,13 +56,15 @@ import { QuestionsComponent } from './questions/questions.component';
     InputTextModule,
     GoogleSigninButtonModule,
     OverlayPanelModule,
+    PanelModule,
+    DividerModule,
   ],
   exports: [
     QuestionsComponent,
     TopbarComponent,
     GoogleSigninButtonDirective,
     CircleBoxComponent,
-    CreateQuestionComponent
+    CreateQuestionComponent,
   ],
 })
 export class ContainersModule {}

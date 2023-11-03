@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, combineLatest, map } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
@@ -11,10 +11,7 @@ import { Circle } from 'src/app/typedefs/Circle.typedef';
   styleUrls: ['./circle.component.scss'],
 })
 export class CircleComponent implements OnInit {
-  circles$!: Observable<Circle[]>;
-  circles: Circle[] = [];
-
-  circle!: Circle | undefined;
+  circle!: Circle;
   isLoggedIn = false;
 
   constructor(
@@ -35,7 +32,7 @@ export class CircleComponent implements OnInit {
       .subscribe(([paramMap, circles]) => {
         this.circle = circles.find((circle: Circle) => {
           return circle.name === `c/${paramMap.get('id')}`
-        })
+        }) as Circle
       })
   }
 

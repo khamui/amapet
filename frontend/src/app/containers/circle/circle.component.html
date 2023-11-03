@@ -10,4 +10,7 @@
     />
   </div>
 </ng-container>
-<ama-questions [questions]="circle?.questions || []"></ama-questions>
+<ama-questions
+  [questions]="circle?.questions || []"
+  [circle]="circle"
+></ama-questions>

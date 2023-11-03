@@ -1,7 +1,7 @@
 import { Answer } from "./Answer.typedef";
 
 export type Question = {
-  id?: string;
+  _id?: string;
   circleId: string;
   ownerId: string;
   ownerName: string;
