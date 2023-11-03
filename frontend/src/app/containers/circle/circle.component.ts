@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, map } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
@@ -22,19 +22,17 @@ export class CircleComponent implements OnInit {
     private cs: CircleService,
     private ar: ActivatedRoute,
     public as: AuthService
-  ) {
-    this.circles$ = this.cs.getCircles();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
     })
 
-    /* creating two observables and combine their results */
+    /* refetch circles after arriving c/:id */
     const params$ = this.ar.paramMap;
-    combineLatest([params$, this.circles$])
-      .subscribe(([paramMap , circles]) => {
+    combineLatest([params$, this.cs.circles$])
+      .subscribe(([paramMap, circles]) => {
         this.circle = circles.find((circle: Circle) => {
           return circle.name === `c/${paramMap.get('id')}`
         })
