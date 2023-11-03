@@ -76,6 +76,13 @@ export class ApiService<T> {
     }
   };
 
+  // update as observable
+  updateAsObservable$ = <T>(resource: string, payload: T, withAuth = true) => {
+    return withAuth
+      ? this.http.put<T>(API + resource, payload, this.headers)
+      : this.http.put<T>(API + resource, payload)
+  }
+
   // delete
   delete = async (resource: string, withAuth = true) => {
     try {

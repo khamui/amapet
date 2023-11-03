@@ -5,6 +5,7 @@ import { Circle } from '../typedefs/Circle.typedef';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, map } from 'rxjs';
+import { Question } from '../typedefs/Question.typedef';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +58,43 @@ export class CircleService {
           severity: 'error',
           summary: 'Something went wrong!',
           detail: `Could not create Circle. Error: ${error.message}`,
+        });
+      }
+    })
+  };
+
+  public createCircleQuestion = (circle: Circle, titleInput: string, bodyEditor: string) => {
+    const payload: Question = {
+      circleId: circle._id as string,
+      ownerId: this.as.getUserId(),
+      ownerName: this.as.getUserName(),
+      title: titleInput,
+      body: bodyEditor,
+      upvotes: 0,
+      downvotes: 0,
+    };
+    const createdQuestion$ = this.api.createAsObservable$(
+      `circles/${circle._id}/questions/create`,
+      payload,
+    );
+
+    createdQuestion$.subscribe((newQuestion: Question) => {
+      try {
+        this.readCircles();
+        this.circles$.subscribe(() => {
+          console.log('quesiton created', newQuestion);
+          this.ro.navigate([circle.name, 'questions', newQuestion._id])
+        })
+        this.ms.add({
+          severity: 'success',
+          summary: 'Question created!',
+          detail: 'Your question has been successfully created.',
+        });
+      } catch (error: any) {
+        this.ms.add({
+          severity: 'error',
+          summary: 'Something went wrong!',
+          detail: `Could not create Question. Error: ${error.message}`,
         });
       }
     })

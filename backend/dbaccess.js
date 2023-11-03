@@ -35,8 +35,7 @@ export const generateModel = async (model, payload) => {
 export const updateModel = async (model, id, payloadExpr) => {
   const updated = await model.findOneAndUpdate(
     { _id: id }, 
-    payloadExpr, 
-    { new: true,}
+    payloadExpr
   );
   const result = await updated.save();
   return result;

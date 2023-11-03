@@ -8,14 +8,10 @@ import { DividerModule } from 'primeng/divider';
 
 // ama components
 import { SideboxComponent } from './sidebox/sidebox.component';
-import { QuestionComponent } from './question/question.component';
-
-// custom pipe
-import { DateAgoPipe } from '../pipes/date-ago.pipe';
 
 @NgModule({
-  declarations: [QuestionComponent, SideboxComponent, DateAgoPipe],
-  exports: [QuestionComponent, SideboxComponent],
+  declarations: [SideboxComponent],
+  exports: [SideboxComponent],
   imports: [
     CommonModule,
     DividerModule,

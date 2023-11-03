@@ -32,8 +32,8 @@ export const controllerCircles = {
     };
     const mongoExpr = { $push: { 'questions': payload }};
     try {
-      const newQuestion = await updateModel(Circle, req.params.id, mongoExpr);
-      res.status(201).json(newQuestion);
+      await updateModel(Circle, req.params.id, mongoExpr);
+      res.status(201).json(payload);
     } catch (error) {
       res.status(500).send(error.message);
     }

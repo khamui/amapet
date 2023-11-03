@@ -1,21 +1,21 @@
-<p-panel [toggleable]="true">
+<p-panel>
   <ng-template pTemplate="header">
     <span class="text-xs text-bluegray-300">
-      Posted by {{ question.ownerName }}
+      Posted by {{ question?.ownerName }}
     </span>
     <span class="text-xs text-bluegray-500 mx-1 font-semibold">
-      {{ question.created_at | dateAgo }}
+      {{ question?.created_at | dateAgo }}
     </span>
   </ng-template>
   <div class="flex jufstify-content-start">
     <div class="text-sm mr-1">
-      {{ question.upvotes - question.downvotes }}
+      {{ question?.upvotes - question?.downvotes }}
     </div>
     <p-divider layout="vertical"></p-divider>
     <div class="w-full">
       <div class="ml-1">
-        <h4 class="m-0">{{ question.title }}</h4>
-        <p [innerHtml]="question.body" class="text-left text-sm"></p>
+        <h4 class="m-0">{{ question?.title }}</h4>
+        <p [innerHtml]="question?.body" class="text-left text-sm"></p>
       </div>
       <p-divider layout="horizontal"></p-divider>
       <div class="text-sm">
