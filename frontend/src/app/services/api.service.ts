@@ -22,7 +22,7 @@ export class ApiService<T> {
     },
   };
 
-  // create
+  // create as promise
   create = async (resource: string, payload: T, withAuth = true) => {
     try {
       const response = withAuth
@@ -34,6 +34,13 @@ export class ApiService<T> {
     } catch (error) {
       return { isError: true, result: error };
     }
+  };
+
+  // create as observable
+  createAsObservable$ = <T>(resource: string, payload: T, withAuth = true) => {
+    return withAuth
+        ? this.http.post<T>(API + resource, payload, this.headers)
+        : this.http.post<T>(API + resource, payload)
   };
 
   // read

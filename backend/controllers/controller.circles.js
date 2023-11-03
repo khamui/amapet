@@ -7,6 +7,7 @@ export const controllerCircles = {
     const { ownerId, name } = req.body;
 
     const payload = {
+      created_at: Date.now(),
       ownerId,
       name: `c/${name}`,
       about: "",
