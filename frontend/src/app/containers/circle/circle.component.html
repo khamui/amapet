@@ -1,16 +1,18 @@
-<h1>{{ circle?.name }}</h1>
-<ng-container *ngIf="isLoggedIn">
-  <div class="w-full">
-    <input
-      class="w-full"
-      type="text"
-      pInputText
-      placeholder="Ask me anything..."
-      (click)="navigateToCreateForm()"
-    />
-  </div>
+<ng-container *ngIf="circle">
+  <h3>{{ circle.name }}</h3>
+  <ng-container *ngIf="isLoggedIn">
+    <div class="w-full">
+      <input
+        class="w-full"
+        type="text"
+        pInputText
+        placeholder="Ask me anything..."
+        (click)="navigateToCreateForm()"
+      />
+    </div>
+  </ng-container>
+  <ama-questions
+    [questions]="circle.questions"
+    [circle]="circle"
+  ></ama-questions>
 </ng-container>
-<ama-questions
-  [questions]="circle?.questions || []"
-  [circle]="circle"
-></ama-questions>

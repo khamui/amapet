@@ -1,15 +1,32 @@
-<div
-  class="cursor-pointer hover:shadow-1"
-  (click)="handleQuestionClicked()"
->
+<div class="cursor-pointer hover:shadow-1" (click)="handleQuestionClicked()">
   <p-panel>
     <ng-template pTemplate="header">
-      <span class="text-xs text-bluegray-300">
-        Posted by {{ question.ownerName }}
-      </span>
-      <span class="text-xs text-bluegray-500 mx-1 font-semibold">
-        {{ question.created_at | dateAgo }}
-      </span>
+      <div class="w-full">
+        <span class="text-xs text-bluegray-300">
+          Posted by {{ question.ownerName }}
+        </span>
+        <span class="text-xs text-bluegray-500 mx-1 font-semibold">
+          {{ question.created_at | dateAgo }}
+        </span>
+        <ng-container *ngIf="isOwner">
+          <span class="text-xs">
+            <button
+              type="button"
+              class="btn__link mx-1 btn--reset"
+              (click)="handleEdit($event)"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              class="btn__link mx-1 btn--reset"
+              (click)="handleDelete($event)"
+            >
+              Delete
+            </button>
+          </span>
+        </ng-container>
+      </div>
     </ng-template>
     <div class="flex jufstify-content-start">
       <div class="text-sm mr-1">
@@ -24,7 +41,7 @@
         <p-divider layout="horizontal"></p-divider>
         <div class="text-sm">
           <i class="pi pi-comments"></i>
-          <span> {{ question?.answers?.length || 0 }} answers </span>
+          <span> {{ question.answers.length }} answers </span>
         </div>
       </div>
     </div>

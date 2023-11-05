@@ -3,7 +3,7 @@ import { Token } from '../typedefs/Token.typedef';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { BehaviorSubject } from 'rxjs';
-import { JwtPayload, jwtDecode as decode } from 'jwt-decode';
+import { jwtDecode as decode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User } from '../typedefs/User.typedef';
 

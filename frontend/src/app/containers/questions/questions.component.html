@@ -1,7 +1,11 @@
 <div class="my-4">
   <ng-container *ngFor="let question of questions">
     <div class="my-2">
-      <ama-question [circle]="circle" [question]="question"></ama-question>
+      <ama-question
+        [circle]="circle"
+        [question]="question"
+        [currentUserId]="currentUserId"
+      ></ama-question>
     </div>
   </ng-container>
 </div>
