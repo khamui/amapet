@@ -32,11 +32,15 @@ export const generateModel = async (model, payload) => {
   return result;
 };
 
-export const updateModel = async (model, id, payloadExpr) => {
-  const updated = await model.findOneAndUpdate(
-    { _id: id }, 
-    payloadExpr
-  );
+export const updateModel = async (model, filter, expression) => {
+  const updated = await model.findOneAndUpdate(filter, expression);
+  const result = await updated.save();
+  return result;
+};
+
+export const removeModel = async (model, filter, expression) => {
+  const updated = await model.findOneAndUpdate(filter, expression, { new: true });
+  console.log('removed', updated);
   const result = await updated.save();
   return result;
 };

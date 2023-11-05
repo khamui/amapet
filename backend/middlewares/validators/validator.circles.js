@@ -28,5 +28,17 @@ export const questionCreateSchema = Joi.object({
     .required(),
   downvotes: Joi.number()
     .integer()
-    .required()
+    .required(),
+  answers: Joi.array()
+    .default([])
+})
+
+export const questionEditSchema = Joi.object({
+  title: Joi.string()
+    .min(3)
+    .max(150)
+    .required(),
+  body: Joi.string()
+    .max(3000)
+    .required(),
 })

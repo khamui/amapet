@@ -105,6 +105,24 @@ api.post("/circles/:id/questions/create", cors(corsOptions), [
   controllerCircles.createOneQuestion,
 ]);
 
+/*
+ * Update a question in circle.
+ */
+api.put("/circles/:id/questions/:qid/update", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareCircles.questionEditCheck,
+  controllerCircles.updateOneQuestion,
+]);
+
+/*
+ * Delete a question in circle.
+ */
+api.put("/circles/:id/questions/:qid/delete", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  controllerCircles.deleteOneQuestion,
+]);
+
+
 //api.post("/circles", cors(corsOptions), async (req, res) => {
 //});
 

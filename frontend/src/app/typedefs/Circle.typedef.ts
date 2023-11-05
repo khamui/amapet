@@ -6,7 +6,7 @@ export type Circle = {
   created_at?: string
   name: string;
   about?: string,
-  questions?: Question[],
+  questions: Question[],
   memberCount?: number,
   moderators?: [],
 }

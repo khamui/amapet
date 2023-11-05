@@ -13,6 +13,7 @@ const questionSchema = new mongoose.Schema({
   downvotes: Number,
   answers: Array,
   created_at: Number,
+  modded_at: Number,
   comments: Array
 });
 

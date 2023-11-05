@@ -11,7 +11,7 @@ import { Question } from 'src/app/typedefs/Question.typedef';
   styleUrls: ['./question-detail.component.scss']
 })
 export class QuestionDetailComponent implements OnInit {
-  question!: Question | undefined;
+  question!: Question;
   constructor(private ar: ActivatedRoute, private cs: CircleService) { }
 
   ngOnInit(): void {
@@ -23,9 +23,9 @@ export class QuestionDetailComponent implements OnInit {
           return circle.name === `c/${paramMap.get('id')}`
         })
 
-        this.question = circle?.questions?.find((question: Question) => {
+        this.question = ((circle as Circle).questions as Question[]).find((question: Question) => {
           return question._id === paramMap.get('qid')
-        })
+        }) as Question
       })
   }
 }

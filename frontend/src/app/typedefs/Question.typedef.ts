@@ -10,5 +10,5 @@ export type Question = {
   body: string,
   upvotes: number,
   downvotes: number,
-  answers?: Answer[]
+  answers: Answer[]
 }
