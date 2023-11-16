@@ -15,6 +15,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
 import { DividerModule } from 'primeng/divider';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 // third party features
 import {
@@ -60,6 +61,7 @@ import { EditQuestionComponent } from './edit-question/edit-question.component';
     OverlayPanelModule,
     PanelModule,
     DividerModule,
+    ConfirmDialogModule,
   ],
   exports: [
     QuestionsComponent,

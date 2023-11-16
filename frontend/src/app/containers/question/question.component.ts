@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { ConfirmationService } from 'primeng/api';
+import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
 
@@ -8,6 +9,7 @@ import { Question } from 'src/app/typedefs/Question.typedef';
   selector: 'ama-question',
   templateUrl: './question.component.html',
   styleUrls: ['./question.component.scss'],
+  providers: [ConfirmationService],
 })
 export class QuestionComponent implements OnInit {
   @Input() question!: Question;
@@ -16,7 +18,11 @@ export class QuestionComponent implements OnInit {
 
   isOwner = false;
 
-  constructor(private ro: Router) {}
+  constructor(
+    private ro: Router,
+    private cs: CircleService,
+    private cos: ConfirmationService,
+  ) {}
 
   ngOnInit(): void {
     if (this.currentUserId === this.question.ownerId) {
@@ -40,6 +46,14 @@ export class QuestionComponent implements OnInit {
 
   handleDelete = (event: MouseEvent) => {
     event.stopPropagation();
-    // do somehting
+    this.cos.confirm({
+      message: 'Are you sure that you want to delete this question?',
+      header: 'Delete question?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.cs.deleteCircleQuestion(this.circle, this.question);
+      },
+      reject: () => {},
+    });
   };
 }

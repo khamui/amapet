@@ -126,6 +126,6 @@ export class AuthService {
   public getUserId = () => {
     const jwtToken = localStorage.getItem(TOKEN_NAME);
     const payload = jwtToken && decode(jwtToken);
-    return (payload as any)._id;
+    return (payload as any)?._id;
   };
 }

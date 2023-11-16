@@ -8,24 +8,31 @@ import { Question } from 'src/app/typedefs/Question.typedef';
 @Component({
   selector: 'app-question-detail',
   templateUrl: './question-detail.component.html',
-  styleUrls: ['./question-detail.component.scss']
+  styleUrls: ['./question-detail.component.scss'],
 })
 export class QuestionDetailComponent implements OnInit {
   question!: Question;
-  constructor(private ar: ActivatedRoute, private cs: CircleService) { }
+
+  constructor(
+    private ar: ActivatedRoute,
+    private cs: CircleService,
+  ) {}
 
   ngOnInit(): void {
     /* observes params AND circles c/:id */
     const params$ = this.ar.paramMap;
-    combineLatest([params$, this.cs.circles$])
-      .subscribe(([paramMap, circles]) => {
+    combineLatest([params$, this.cs.circles$]).subscribe(
+      ([paramMap, circles]) => {
         const circle = circles.find((circle: Circle) => {
-          return circle.name === `c/${paramMap.get('id')}`
-        })
+          return circle.name === `c/${paramMap.get('id')}`;
+        });
 
-        this.question = ((circle as Circle).questions as Question[]).find((question: Question) => {
-          return question._id === paramMap.get('qid')
-        }) as Question
-      })
+        this.question = ((circle as Circle).questions as Question[]).find(
+          (question: Question) => {
+            return question._id === paramMap.get('qid');
+          },
+        ) as Question;
+      },
+    );
   }
 }

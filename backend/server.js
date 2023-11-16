@@ -4,14 +4,19 @@ import bodyParser from 'body-parser';
 import cors from "cors";
 
 import { connect } from './dbaccess.js';
-import { api } from './routes/api.js';
+
+// import routes
+import circleRoutes from './routes/circles.js';
+import signinRoutes from './routes/signins.js';
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-app.use('/', api);
+
+app.use('/', circleRoutes);
+app.use('/', signinRoutes)
 
 const port = process.env.PORT || '5200';
 app.set('port', port);

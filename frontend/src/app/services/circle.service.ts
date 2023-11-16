@@ -142,6 +142,30 @@ export class CircleService {
     });
   };
 
+  deleteCircleQuestion = (circle: Circle, question: Question) => {
+    const deleteQuestion$ = this.api.deleteAsObservable$<Question>(
+      `circles/${circle._id}/questions/${question._id}/delete`,
+    );
+
+    deleteQuestion$.subscribe(() => {
+      try {
+        this.readCircles();
+        this.ms.add({
+          severity: 'success',
+          summary: 'Question deleted!',
+          detail: 'Your question has been deleted successfully.',
+        });
+      } catch (error: any) {
+        this.ms.add({
+          severity: 'error',
+          summary: 'Something went wrong!',
+          detail: `Could not delete Question. Error: ${error.message}`,
+        });
+      }
+    });
+
+  }
+
   public getCircles = () => this.circles$;
 
   public getCircleByName = (name: string) => {
