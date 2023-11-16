@@ -12,9 +12,7 @@ const API = 'http://localhost:5200/';
   providedIn: 'root',
 })
 export class ApiService<T> {
-  constructor(
-    private http: HttpClient,
-  ) {}
+  constructor(private http: HttpClient) {}
 
   private headers = {
     headers: {
@@ -39,8 +37,8 @@ export class ApiService<T> {
   // create as observable
   createAsObservable$ = <T>(resource: string, payload: T, withAuth = true) => {
     return withAuth
-        ? this.http.post<T>(API + resource, payload, this.headers)
-        : this.http.post<T>(API + resource, payload)
+      ? this.http.post<T>(API + resource, payload, this.headers)
+      : this.http.post<T>(API + resource, payload);
   };
 
   // read
@@ -80,8 +78,8 @@ export class ApiService<T> {
   updateAsObservable$ = <T>(resource: string, payload: T, withAuth = true) => {
     return withAuth
       ? this.http.put<T>(API + resource, payload, this.headers)
-      : this.http.put<T>(API + resource, payload)
-  }
+      : this.http.put<T>(API + resource, payload);
+  };
 
   // delete
   delete = async (resource: string, withAuth = true) => {
@@ -93,5 +91,12 @@ export class ApiService<T> {
     } catch (error) {
       return { isError: true, result: error };
     }
+  };
+
+  // delete as observable
+  deleteAsObservable$ = <T>(resource: string, withAuth = true) => {
+    return withAuth
+      ? this.http.delete<T>(API + resource, this.headers)
+      : this.http.delete<T>(API + resource);
   };
 }

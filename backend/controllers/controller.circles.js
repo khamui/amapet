@@ -1,8 +1,21 @@
-import { generateModel, removeModel, updateModel } from "../dbaccess.js";
+import {
+  generateModel,
+  deleteModel,
+  retrieveModel,
+  updateModel,
+} from "../dbaccess.js";
 import { Circle } from "../db/models/circle.js";
 import mongoose from "mongoose";
 
 export const controllerCircles = {
+  readAll: async (req, res) => {
+    try {
+      const circles = await retrieveModel(Circle);
+      res.status(200).json(circles);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  },
   createOne: async (req, res) => {
     const { ownerId, name } = req.body;
 
@@ -15,6 +28,7 @@ export const controllerCircles = {
       memberCount: 1,
       moderators: [ownerId],
     };
+
     try {
       const newCircle = await generateModel(Circle, payload);
       res.status(201).json(newCircle);
@@ -52,41 +66,26 @@ export const controllerCircles = {
       $set: {
         "questions.$.title": req.body.title,
         "questions.$.body": req.body.body,
-        "questions.$.modded_at": Date.now()
-      }
+        "questions.$.modded_at": Date.now(),
+      },
     };
 
     try {
-      const updated = await updateModel(
-        Circle,
-        filter,
-        updateExpr
-      );
-      console.log("response", updated);
+      const updated = await updateModel(Circle, filter, updateExpr);
       res.status(200).json(updated);
     } catch (error) {
       res.status(500).send(error.message);
     }
   },
   deleteOneQuestion: async (req, res) => {
-    const filter = {
-      _id: new mongoose.Types.ObjectId(req.params.id),
-    }
+    const circleId = req.params.id;
+    const questionId = req.params.qid;
 
-    const deleteExpr = {
-      $pull: {
-        questions: new mongoose.Types.ObjectId(req.params.qid)
-      }
-    }
     try {
-      await removeModel(
-        Circle,
-        filter,
-        deleteExpr
-      )
-      res.status(204);
+      await deleteModel(Circle, circleId, 'questions', questionId);
+      res.status(204).send();
     } catch (error) {
       res.status(500).send(error.message);
     }
-  }
+  },
 };

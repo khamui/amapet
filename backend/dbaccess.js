@@ -27,20 +27,27 @@ export const retrieveOneModelByQuery = async (model, query) => {
 };
 
 export const generateModel = async (model, payload) => {
-  const generated = await model.create(payload);
-  const result = await generated.save();
+  const result = await model.create(payload);
   return result;
 };
 
 export const updateModel = async (model, filter, expression) => {
-  const updated = await model.findOneAndUpdate(filter, expression);
-  const result = await updated.save();
+  const result = await model.findOneAndUpdate(filter, expression, {
+    new: true,
+  });
   return result;
 };
 
 export const removeModel = async (model, filter, expression) => {
-  const updated = await model.findOneAndUpdate(filter, expression, { new: true });
-  console.log('removed', updated);
-  const result = await updated.save();
+  const result = await model.findOneAndRemove(filter, expression);
   return result;
+};
+
+export const deleteModel = async (model, parentId, childField, childId) => {
+  const parent = await model.findById(parentId);
+  const childIndex = parent[childField].findIndex(
+    (c) => c._id.toString() === childId,
+  );
+  parent[childField].splice(childIndex, 1);
+  await parent.save();
 };
