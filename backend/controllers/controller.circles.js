@@ -17,14 +17,14 @@ export const controllerCircles = {
     }
   },
   createOne: async (req, res) => {
-    const { ownerId, name } = req.body;
+    const { ownerId, name, questions } = req.body;
 
     const payload = {
       created_at: Date.now(),
       ownerId,
       name: `c/${name}`,
       about: "",
-      questions: [],
+      questions,
       memberCount: 1,
       moderators: [ownerId],
     };

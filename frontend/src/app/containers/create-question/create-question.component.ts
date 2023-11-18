@@ -14,7 +14,7 @@ export class CreateQuestionComponent implements OnInit {
   circles: Circle[] = [];
 
   public loading = false;
-  circle!: Circle | undefined;
+  public circle!: Circle | undefined;
 
   constructor(
     private cs: CircleService,
