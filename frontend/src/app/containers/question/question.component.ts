@@ -45,7 +45,9 @@ export class QuestionComponent implements OnInit {
   };
 
   handleDelete = (event: MouseEvent) => {
+    event.preventDefault();
     event.stopPropagation();
+
     this.cos.confirm({
       message: 'Are you sure that you want to delete this question?',
       header: 'Delete question?',

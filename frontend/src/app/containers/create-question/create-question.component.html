@@ -1,4 +1,4 @@
-<h3>Create Question</h3>
+<h3>Create Question in "{{ circle?.name }}"</h3>
 <form [formGroup]="questionForm" (submit)="submitQuestion()">
   <div class="my-3">
     <input
@@ -6,11 +6,15 @@
       type="text"
       pInputText
       formControlName="titleInput"
-      placeholder="Title"
+      placeholder="Describe your question in a few words..."
     />
   </div>
   <div class="w-full my-3">
-    <p-editor formControlName="bodyEditor" [style]="{ height: '12rem' }">
+    <p-editor
+      formControlName="bodyEditor"
+      [style]="{ height: '12rem' }"
+      placeholder="Your question goes here..."
+    >
       <ng-template pTemplate="header">
         <span class="ql-formats">
           <button type="button" class="ql-bold" aria-label="Bold"></button>
