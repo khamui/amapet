@@ -7,8 +7,7 @@ const userSchema = new Schema({
   respect: Number,
   level: String,
   questions: Array,
-  comments: Array,
-  subcomments: Array,
+  answers: Array,
   circles: Array,
   followedQuestions: Array,
   followedCircles: Array

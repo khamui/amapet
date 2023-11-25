@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
-const questionSchema = new mongoose.Schema({
+const answerSchema = new mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
   },
-  circleId: String,
+  parentId: String,
+  parentType: String,
   ownerId: String,
   ownerName: String,
-  title: String,
-  body: String,
+  answerText: String,
   upvotes: Number,
   downvotes: Number,
   created_at: Number,
   modded_at: Number,
 });
 
-export const Question = mongoose.model("Question", questionSchema);
+export const Answer = mongoose.model("Answer", answerSchema);

@@ -39,8 +39,7 @@ const getUserOrCreateUser = async (originalPayload) => {
       respect: 0,
       level: 'pet enthusiast',
       questions: [],
-      comments: [],
-      subcomments: [],
+      answers: [],
       circles: [],
       followedQuestions: [],
       followedCircles: []

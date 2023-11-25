@@ -4,55 +4,43 @@ import {
   retrieveModel,
   updateModel,
 } from "../dbaccess.js";
-import { Circle } from "../db/models/circle.js";
+import { Answer } from "../db/models/answer.js";
 import mongoose from "mongoose";
 
-export const controllerCircles = {
+export const controllerAnswers = {
   readAll: async (req, res) => {
+    const { parentId } = req.body;
     try {
-      const circles = await retrieveModel(Circle);
+      const circles = await retrieveModel(Answer, { parentId } );
       res.status(200).json(circles);
     } catch (error) {
       res.status(500).send(error);
     }
   },
   createOne: async (req, res) => {
-    const { ownerId, name, questions } = req.body;
+    console.log('create one with: ', req.body);
+    const { parentId, parentType, ownerId, ownerName, answerText } = req.body;
 
     const payload = {
+      _id: new mongoose.Types.ObjectId(),
       created_at: Date.now(),
+      parentId,
+      parentType,
       ownerId,
-      name: `c/${name}`,
-      about: "",
-      questions,
-      memberCount: 1,
-      moderators: [ownerId],
+      ownerName,
+      answerText,
+      upvotes: 0,
+      downvotes: 0,
     };
 
     try {
-      const newCircle = await generateModel(Circle, payload);
-      res.status(201).json(newCircle);
+      const newAnswer = await generateModel(Answer, payload);
+      res.status(201).json(newAnswer);
     } catch (error) {
       res.status(500).send(error);
     }
   },
-  createOneQuestion: async (req, res) => {
-    const payload = {
-      ...req.body,
-      _id: new mongoose.Types.ObjectId(),
-      created_at: Date.now(),
-      circleId: req.params.id,
-    };
-    const filter = { _id: req.params.id };
-    const addExpr = { $push: { questions: payload } };
-    try {
-      await updateModel(Circle, filter, addExpr);
-      res.status(201).json(payload);
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
-  },
-  updateOneQuestion: async (req, res) => {
+  updateOneAnswer: async (req, res) => {
     const circleId = req.params.id;
     const questionId = req.params.qid;
 
@@ -70,18 +58,18 @@ export const controllerCircles = {
     };
 
     try {
-      const updated = await updateModel(Circle, filter, updateExpr);
+      const updated = await updateModel(Answer, filter, updateExpr);
       res.status(200).json(updated);
     } catch (error) {
       res.status(500).send(error.message);
     }
   },
-  deleteOneQuestion: async (req, res) => {
+  deleteOneAnswerAndChildren: async (req, res) => {
     const circleId = req.params.id;
     const questionId = req.params.qid;
 
     try {
-      await deleteModel(Circle, circleId, 'questions', questionId);
+      await deleteModel(Answer, circleId, "questions", questionId);
       res.status(204).send();
     } catch (error) {
       res.status(500).send(error.message);

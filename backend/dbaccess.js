@@ -11,8 +11,10 @@ export const connect = () => {
 };
 
 // db operating functions
-export const retrieveModel = async (model) => {
-  const results = await model.find({});
+export const retrieveModel = async (model, expr) => {
+  const results = expr 
+    ? await model.find(expr) 
+    : await model.find({});
   return results;
 };
 
