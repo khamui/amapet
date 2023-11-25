@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 
 // import controllers
-import { signin } from "../controllers/signin-google.js";
 import { controllerCircles } from "../controllers/controller.circles.js";
 
 // import db functions
@@ -55,10 +54,5 @@ router.delete("/circles/:id/questions/:qid/delete", cors(corsOptions), [
   middlewareAuth.isAuthorized,
   controllerCircles.deleteOneQuestion,
 ]);
-
-// signin with google
-router.post("/google-signin", cors(corsOptions), (req, res) => {
-  signin(req, res);
-});
 
 export default router;

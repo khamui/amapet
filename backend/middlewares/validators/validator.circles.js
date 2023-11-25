@@ -32,8 +32,6 @@ export const questionCreateSchema = Joi.object({
   downvotes: Joi.number()
     .integer()
     .required(),
-  answers: Joi.array()
-    .default([])
 })
 
 export const questionEditSchema = Joi.object({
