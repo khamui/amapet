@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { AuthService } from './auth.service';
 
 // pointing to remote backend
 // const API = 'https://amapet-rest-api-ybteve7ska-ey.a.run.app/';

@@ -31,6 +31,7 @@ import { QuestionDetailComponent } from './question-detail/question-detail.compo
 import { QuestionComponent } from './question/question.component';
 import { DateAgoPipe } from '../pipes/date-ago.pipe';
 import { EditQuestionComponent } from './edit-question/edit-question.component';
+import { AnswersComponent } from './answers/answers.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { EditQuestionComponent } from './edit-question/edit-question.component';
     QuestionDetailComponent,
     QuestionComponent,
     DateAgoPipe,
-    EditQuestionComponent
+    EditQuestionComponent,
+    AnswersComponent
   ],
   imports: [
     CommonModule,

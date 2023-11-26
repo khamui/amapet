@@ -9,7 +9,8 @@ import mongoose from "mongoose";
 
 export const controllerAnswers = {
   readAll: async (req, res) => {
-    const { parentId } = req.body;
+    console.log('params', req.params['parentId']);
+    const { parentId } = req.params;
     try {
       const circles = await retrieveModel(Answer, { parentId } );
       res.status(200).json(circles);
