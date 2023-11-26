@@ -15,7 +15,7 @@ const router = express.Router();
 /*
  * GET all answers and subanswers of question.
  */
-router.get("/answers", cors(corsOptions), [
+router.get("/answers/:parentId", cors(corsOptions), [
   controllerAnswers.readAll,
 ]);
 

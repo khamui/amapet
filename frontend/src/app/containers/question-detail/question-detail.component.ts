@@ -1,9 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { AnswerService } from 'src/app/services/answer.service';
 import { CircleService } from 'src/app/services/circle.service';
+import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
 
@@ -15,9 +19,11 @@ import { Question } from 'src/app/typedefs/Question.typedef';
 })
 export class QuestionDetailComponent implements OnInit {
   circle!: Circle;
-  question!: Question;
   currentUserId!: string;
   isOwner = false;
+  public question!: Question;
+  public loading = false;
+  public answers: Answer[] = [];
 
   constructor(
     private ar: ActivatedRoute,
@@ -25,6 +31,7 @@ export class QuestionDetailComponent implements OnInit {
     private ro: Router,
     private cos: ConfirmationService,
     private as: AuthService,
+    private ans: AnswerService,
   ) {
     this.currentUserId = this.as.getUserId();
   }
@@ -34,24 +41,25 @@ export class QuestionDetailComponent implements OnInit {
     const params$ = this.ar.paramMap;
     combineLatest([params$, this.cs.circles$]).subscribe(
       ([paramMap, circles]) => {
-        const circle = circles.find((circle: Circle) => {
-          return circle.name === `c/${paramMap.get('id')}`;
-        });
-
-        if (circle) {
-          this.circle = circle;
-          this.question = ((circle as Circle).questions as Question[]).find(
-            (question: Question) => {
-              return question._id === paramMap.get('qid');
-            },
-          ) as Question;
-
-          if (this.currentUserId === this.question?.ownerId) {
-            this.isOwner = true;
+        circles.find((circle: Circle) => {
+          if (circle.name === `c/${paramMap.get('id')}`) {
+            this.circle = circle;
+            this.question = ((circle as Circle).questions as Question[]).find(
+              (question: Question) => {
+                return question._id === paramMap.get('qid');
+              },
+            ) as Question;
+            if (this.currentUserId === this.question?.ownerId) {
+              this.isOwner = true;
+            }
+            this.ans.readAnswers(this.question._id as string);
           }
-        }
+        });
       },
     );
+    this.ans.answers$.subscribe((answers: Answer[]) => {
+      this.answers = answers;
+    })
   }
 
   handleEdit = (event: MouseEvent) => {
@@ -78,4 +86,22 @@ export class QuestionDetailComponent implements OnInit {
       reject: () => {},
     });
   };
+
+  public answerForm = new FormGroup({
+    answerEditor: new FormControl(''),
+  });
+
+  public submitAnswer = async () => {
+    this.loading = true;
+    const answerEditor = this.answerForm.value.answerEditor;
+    if (answerEditor !== '') {
+      this.ans.createAnswer({
+        parentId: this.question._id as string,
+        parentType: 'question',
+        answerText: answerEditor as string,
+      });
+    }
+    this.loading = false;
+  };
+
 }

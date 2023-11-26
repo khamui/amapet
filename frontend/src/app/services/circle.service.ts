@@ -24,7 +24,7 @@ export class CircleService {
     this.readCircles();
   }
 
-  public readCircles = () => {
+  private readCircles = () => {
     this.api
       .readAsObservable$<Circle[]>('circles')
       .subscribe((circles: Circle[]) => {
@@ -78,7 +78,6 @@ export class CircleService {
       body: bodyEditor,
       upvotes: 0,
       downvotes: 0,
-      answers: [],
     };
     const createdQuestion$ = this.api.createAsObservable$(
       `circles/${circle._id}/questions/create`,

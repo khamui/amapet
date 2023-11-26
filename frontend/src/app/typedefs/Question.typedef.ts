@@ -1,5 +1,3 @@
-import { Answer } from "./Answer.typedef";
-
 export type Question = {
   _id?: string;
   circleId: string;
@@ -10,5 +8,4 @@ export type Question = {
   body: string,
   upvotes: number,
   downvotes: number,
-  answers: Answer[]
 }
