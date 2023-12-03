@@ -2,7 +2,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { AnswerService } from 'src/app/services/answer.service';
@@ -24,6 +23,7 @@ export class QuestionDetailComponent implements OnInit {
   public question!: Question;
   public loading = false;
   public answers: Answer[] = [];
+  public isLoggedIn = false;
 
   constructor(
     private ar: ActivatedRoute,
@@ -37,6 +37,10 @@ export class QuestionDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.as.watchLoggedIn.subscribe((value: boolean) => {
+      this.isLoggedIn = value;
+    })
+
     /* observes params AND circles c/:id */
     const params$ = this.ar.paramMap;
     combineLatest([params$, this.cs.circles$]).subscribe(
@@ -87,13 +91,9 @@ export class QuestionDetailComponent implements OnInit {
     });
   };
 
-  public answerForm = new FormGroup({
-    answerEditor: new FormControl(''),
-  });
-
-  public submitAnswer = async () => {
+  public submitAnswer = async (value: string) => {
     this.loading = true;
-    const answerEditor = this.answerForm.value.answerEditor;
+    const answerEditor = value;
     if (answerEditor !== '') {
       this.ans.createAnswer({
         parentId: this.question._id as string,
@@ -103,5 +103,4 @@ export class QuestionDetailComponent implements OnInit {
     }
     this.loading = false;
   };
-
 }

@@ -4,6 +4,7 @@ import { Answer } from '../typedefs/Answer.typedef';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MessageService } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,8 @@ export class AnswerService {
     private api: ApiService<Answer>,
     private as: AuthService,
     private ms: MessageService,
+    private ro: Router,
+    private aro: ActivatedRoute
   ) {}
 
   private updateAnswers = (newAnswers: Answer[]) => {
@@ -49,12 +52,9 @@ export class AnswerService {
     };
 
     this.created = this.api.createAsObservable$<Answer>('answers/create', payload);
-    this.created.subscribe((newAnswer: Answer) => {
+    this.created.subscribe(() => {
       try {
-        this.readAnswers('6558de988c1e37d49850f25d');
-        this.answers$.subscribe(() => {
-          //this.ro.navigate([newAnswers.name]);
-        });
+        this.readAnswers(parentId);
         this.ms.add({
           severity: 'success',
           summary: 'Answer created!',
