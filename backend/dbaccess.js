@@ -8,10 +8,12 @@ export const connect = () => {
   dotenv.config();
   const { ATLAS_URI } = process.env;
   mongoose.connect(ATLAS_URI);
+  //mongoose.createConnection(ATLAS_URI);
 };
 
 // db operating functions
 export const retrieveModel = async (model, expr) => {
+  console.log('try to retrieve model');
   const results = expr 
     ? await model.find(expr) 
     : await model.find({});

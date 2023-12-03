@@ -13,18 +13,18 @@ const API = 'http://localhost:5200/';
 export class ApiService<T> {
   constructor(private http: HttpClient) {}
 
-  private headers = {
+  private getHeaders = () => ({
     headers: {
       Authorization: `Bearer ${localStorage.getItem('amapet_token')}`,
     },
-  };
+  });
 
   // create as promise
   create = async (resource: string, payload: T, withAuth = true) => {
     try {
       const response = withAuth
         ? await lastValueFrom(
-            this.http.post(API + resource, payload, this.headers),
+            this.http.post(API + resource, payload, this.getHeaders()),
           )
         : await lastValueFrom(this.http.post(API + resource, payload));
       return { isError: false, result: response };
@@ -36,7 +36,7 @@ export class ApiService<T> {
   // create as observable
   createAsObservable$ = <T>(resource: string, payload: T, withAuth = true) => {
     return withAuth
-      ? this.http.post<T>(API + resource, payload, this.headers)
+      ? this.http.post<T>(API + resource, payload, this.getHeaders())
       : this.http.post<T>(API + resource, payload);
   };
 
@@ -44,7 +44,7 @@ export class ApiService<T> {
   read = async (resource: string, withAuth = false) => {
     try {
       const response = withAuth
-        ? await lastValueFrom(this.http.get(API + resource, this.headers))
+        ? await lastValueFrom(this.http.get(API + resource, this.getHeaders()))
         : await lastValueFrom(this.http.get(API + resource));
       return { isError: false, result: response };
     } catch (error) {
@@ -55,7 +55,7 @@ export class ApiService<T> {
   // read
   readAsObservable$ = <T>(resource: string, withAuth = false) => {
     return withAuth
-      ? this.http.get<T>(API + resource, this.headers)
+      ? this.http.get<T>(API + resource, this.getHeaders())
       : this.http.get<T>(API + resource);
   };
 
@@ -64,7 +64,7 @@ export class ApiService<T> {
     try {
       const response = withAuth
         ? await lastValueFrom(
-            this.http.put(API + resource, payload, this.headers),
+            this.http.put(API + resource, payload, this.getHeaders()),
           )
         : await lastValueFrom(this.http.put(API + resource, payload));
       return { isError: false, result: response };
@@ -76,7 +76,7 @@ export class ApiService<T> {
   // update as observable
   updateAsObservable$ = <T>(resource: string, payload: T, withAuth = true) => {
     return withAuth
-      ? this.http.put<T>(API + resource, payload, this.headers)
+      ? this.http.put<T>(API + resource, payload, this.getHeaders())
       : this.http.put<T>(API + resource, payload);
   };
 
@@ -84,7 +84,7 @@ export class ApiService<T> {
   delete = async (resource: string, withAuth = true) => {
     try {
       const response = withAuth
-        ? await lastValueFrom(this.http.delete(API + resource, this.headers))
+        ? await lastValueFrom(this.http.delete(API + resource, this.getHeaders()))
         : await lastValueFrom(this.http.delete(API + resource));
       return { isError: false, result: response };
     } catch (error) {
@@ -95,7 +95,7 @@ export class ApiService<T> {
   // delete as observable
   deleteAsObservable$ = <T>(resource: string, withAuth = true) => {
     return withAuth
-      ? this.http.delete<T>(API + resource, this.headers)
+      ? this.http.delete<T>(API + resource, this.getHeaders())
       : this.http.delete<T>(API + resource);
   };
 }

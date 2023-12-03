@@ -13,7 +13,7 @@ export const controllerCircles = {
       const circles = await retrieveModel(Circle);
       res.status(200).json(circles);
     } catch (error) {
-      res.status(500).send(error);
+      res.status(500).send('couldn\'t retrieve model');
     }
   },
   createOne: async (req, res) => {
