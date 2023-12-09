@@ -1,14 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
+import { ButtonModule } from 'primeng/button';
+import { SharedModule } from 'primeng/api';
+import { EditorModule } from 'primeng/editor';
+import { InputTextModule } from 'primeng/inputtext';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-  selector: 'ama-create-question',
-  templateUrl: './create-question.component.html',
-  styleUrls: ['./create-question.component.scss'],
+    selector: 'ama-create-question',
+    templateUrl: './create-question.component.html',
+    styleUrls: ['./create-question.component.scss'],
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        InputTextModule,
+        EditorModule,
+        SharedModule,
+        ButtonModule,
+    ],
 })
 export class CreateQuestionComponent implements OnInit {
   circles: Circle[] = [];
@@ -19,7 +32,12 @@ export class CreateQuestionComponent implements OnInit {
   constructor(
     private cs: CircleService,
     private ar: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
+
+  get isBrowserOnly(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit(): void {
     /* creating two observables and combine their results */

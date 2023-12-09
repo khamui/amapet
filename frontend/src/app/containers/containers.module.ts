@@ -6,7 +6,6 @@ import { TopbarComponent } from './topbar/topbar.component';
 // prime components
 import { CardModule } from 'primeng/card';
 import { ComponentsModule } from '../components/components.module';
-import { EditorModule } from 'primeng/editor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -34,43 +33,40 @@ import { EditQuestionComponent } from './edit-question/edit-question.component';
 import { AnswersComponent } from './answers/answers.component';
 
 @NgModule({
-  declarations: [
-    CreateQuestionComponent,
-    QuestionsComponent,
-    TopbarComponent,
-    SignInComponent,
-    ProfileComponent,
-    CircleBoxComponent,
-    ExploreComponent,
-    CircleComponent,
-    QuestionDetailComponent,
-    QuestionComponent,
-    DateAgoPipe,
-    EditQuestionComponent,
-    AnswersComponent
-  ],
-  imports: [
-    CommonModule,
-    CardModule,
-    ComponentsModule,
-    EditorModule,
-    ReactiveFormsModule,
-    FormsModule,
-    ToolbarModule,
-    ButtonModule,
-    InputTextModule,
-    GoogleSigninButtonModule,
-    OverlayPanelModule,
-    PanelModule,
-    DividerModule,
-    ConfirmDialogModule,
-  ],
-  exports: [
-    QuestionsComponent,
-    TopbarComponent,
-    GoogleSigninButtonDirective,
-    CircleBoxComponent,
-    CreateQuestionComponent,
-  ],
+    imports: [
+        CommonModule,
+        CardModule,
+        ComponentsModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ToolbarModule,
+        ButtonModule,
+        InputTextModule,
+        GoogleSigninButtonModule,
+        OverlayPanelModule,
+        PanelModule,
+        DividerModule,
+        ConfirmDialogModule,
+        CreateQuestionComponent,
+        QuestionsComponent,
+        TopbarComponent,
+        SignInComponent,
+        ProfileComponent,
+        CircleBoxComponent,
+        ExploreComponent,
+        CircleComponent,
+        QuestionDetailComponent,
+        QuestionComponent,
+        DateAgoPipe,
+        EditQuestionComponent,
+        AnswersComponent,
+    ],
+    exports: [
+        QuestionsComponent,
+        TopbarComponent,
+        GoogleSigninButtonDirective,
+        CircleBoxComponent,
+        CreateQuestionComponent,
+    ],
 })
 export class ContainersModule {}

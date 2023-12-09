@@ -1,6 +1,6 @@
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, SharedModule } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,12 +9,30 @@ import { CircleService } from 'src/app/services/circle.service';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
+import { DateAgoPipe } from '../../pipes/date-ago.pipe';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { AnswersComponent } from '../answers/answers.component';
+import { TexteditorComponent } from '../../components/texteditor/texteditor.component';
+import { DividerModule } from 'primeng/divider';
+import { PanelModule } from 'primeng/panel';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-question-detail',
-  templateUrl: './question-detail.component.html',
-  styleUrls: ['./question-detail.component.scss'],
-  providers: [ConfirmationService],
+    selector: 'app-question-detail',
+    templateUrl: './question-detail.component.html',
+    styleUrls: ['./question-detail.component.scss'],
+    providers: [ConfirmationService],
+    standalone: true,
+    imports: [
+        NgIf,
+        PanelModule,
+        SharedModule,
+        DividerModule,
+        TexteditorComponent,
+        AnswersComponent,
+        ConfirmDialogModule,
+        DateAgoPipe,
+    ],
 })
 export class QuestionDetailComponent implements OnInit {
   circle!: Circle;
