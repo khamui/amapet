@@ -1,15 +1,29 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, SharedModule } from 'primeng/api';
 import { Observable, map } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
+import { InputTextModule } from 'primeng/inputtext';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ButtonModule } from 'primeng/button';
+import { SideboxComponent } from '../../components/sidebox/sidebox.component';
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'ama-circle-box',
-  templateUrl: './circle-box.component.html',
-  styleUrls: ['./circle-box.component.scss'],
+    selector: 'ama-circle-box',
+    templateUrl: './circle-box.component.html',
+    styleUrls: ['./circle-box.component.scss'],
+    standalone: true,
+    imports: [
+        NgIf,
+        SideboxComponent,
+        ButtonModule,
+        OverlayPanelModule,
+        SharedModule,
+        InputTextModule,
+    ],
 })
 export class CircleBoxComponent implements OnInit {
   @Input() items!: MenuItem[];
