@@ -1,12 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from './services/auth.service';
+import { ToastModule } from 'primeng/toast';
+import { NgIf } from '@angular/common';
+import { SideboxComponent } from './components/sidebox/sidebox.component';
+import { CircleBoxComponent } from './containers/circle-box/circle-box.component';
+import { TopbarComponent } from './containers/topbar/topbar.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [
+        RouterOutlet,
+        NgIf,
+        ToastModule,
+        SideboxComponent,
+        CircleBoxComponent,
+        TopbarComponent
+    ],
 })
 export class AppComponent implements OnInit {
   menuItems: MenuItem[] = [];
