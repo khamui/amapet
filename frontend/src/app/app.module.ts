@@ -22,9 +22,7 @@ import { MenuModule } from 'primeng/menu';
 import { ToastModule } from 'primeng/toast';
 
 // custom modules
-import { ContainersModule } from './containers/containers.module';
 import { MessageService } from 'primeng/api';
-import { ComponentsModule } from './components/components.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,10 +33,8 @@ import { ComponentsModule } from './components/components.module';
     HttpClientModule,
     ButtonModule,
     MenuModule,
-    ContainersModule,
     ToastModule,
     SocialLoginModule,
-    ComponentsModule
   ],
   providers: [
     MessageService,
