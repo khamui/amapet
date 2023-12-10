@@ -40,10 +40,12 @@ export class AnswerService {
     parentId,
     parentType,
     answerText,
+    redirectId
   }: {
     parentId: string;
     parentType: 'question' | 'answer';
     answerText: string;
+    redirectId: string;
   }) => {
     const payload: Answer = {
       parentId,
@@ -57,7 +59,7 @@ export class AnswerService {
     this.created = this.api.createAsObservable$<Answer>('answers/create', payload);
     this.created.subscribe(() => {
       try {
-        this.readAnswers(parentId);
+        this.readAnswers(redirectId);
         this.ms.add({
           severity: 'success',
           summary: 'Answer created!',
