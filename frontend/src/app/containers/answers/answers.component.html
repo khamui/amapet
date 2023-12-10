@@ -1,12 +1,36 @@
-<ng-container *ngFor="let answer of answers">
-  <div class="my-2">
+@for (answer of answers; track answer._id) {
+  <div class="mb-2 mt-4">
     <span class="text-xs text-500 hover:text-700">{{ answer.ownerName }}</span
     ><span class="mx-2 text-xs text-500 hover:text-700">{{
       answer.created_at | dateAgo
     }}</span>
+    <span>[edit] [delete]</span>
   </div>
-  <div class="flex">
+  <div class="flex mb-2">
     <p-divider layout="vertical"></p-divider>
-    <div class="text-sm" [innerHtml]="answer.answerText"></div>
+    <div class="flex flex-column justify-content-between">
+      <div class="text-sm" [innerHtml]="answer.answerText"></div>
+      <div class="text-sm mt-3">
+        <p-toggleButton
+          #subAnswerEl
+          styleClass="mx-1 text-sm p-2"
+          onIcon="pi pi-comments"
+          offIcon="pi pi-comments"
+          [disabled]="answer.totalSubAnswers <= 0"
+          [onLabel]="answer.totalSubAnswers.toString()"
+          [offLabel]="answer.totalSubAnswers.toString()"
+          (onChange)="toggleSubAnswers(answer)"
+        ></p-toggleButton>
+        <p-toggleButton
+          styleClass="mx-1 text-sm p-2"
+          onIcon="pi pi-angle-down"
+          onIcon="pi pi-comment"
+          offIcon="pi pi-comment"
+        ></p-toggleButton>
+      </div>
+      @if (subAnswerEl.checked) {
+        <ama-answers [answers]="answers$ | async"></ama-answers>
+      }
+    </div>
   </div>
-</ng-container>
+}
