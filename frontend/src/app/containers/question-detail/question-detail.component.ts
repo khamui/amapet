@@ -117,6 +117,7 @@ export class QuestionDetailComponent implements OnInit {
         parentId: this.question._id as string,
         parentType: 'question',
         answerText: answerEditor as string,
+        redirectId: this.question._id as string
       });
     }
     this.loading = false;

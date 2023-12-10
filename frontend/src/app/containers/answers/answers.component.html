@@ -8,12 +8,14 @@
   </div>
   <div class="flex mb-2">
     <p-divider layout="vertical"></p-divider>
-    <div class="flex flex-column justify-content-between">
+    <div class="flex flex-column justify-content-between w-full">
       <div class="text-sm" [innerHtml]="answer.answerText"></div>
-      <div class="text-sm mt-3">
+      <div class="mt-3">
         <p-toggleButton
-          #subAnswerEl
-          styleClass="mx-1 text-sm p-2"
+          #subAnswerList
+          [styleClass]="
+            'mx-1 text-xs px-2 py-1' + (answer.totalSubAnswers <= 0 ? ' hidden' : '')
+          "
           onIcon="pi pi-comments"
           offIcon="pi pi-comments"
           [disabled]="answer.totalSubAnswers <= 0"
@@ -22,13 +24,22 @@
           (onChange)="toggleSubAnswers(answer)"
         ></p-toggleButton>
         <p-toggleButton
-          styleClass="mx-1 text-sm p-2"
+          #subAnswerEditor
+          styleClass="mx-1 text-xs px-2 py-1"
           onIcon="pi pi-angle-down"
           onIcon="pi pi-comment"
           offIcon="pi pi-comment"
         ></p-toggleButton>
       </div>
-      @if (subAnswerEl.checked) {
+      @if (subAnswerEditor.checked) {
+        <div class="my-3">
+          <ama-texteditor
+            [data]="answer"
+            (submit)="submitAnswer($event)"
+          ></ama-texteditor>
+        </div>
+      }
+      @if (subAnswerList.checked) {
         <ama-answers [answers]="answers$ | async"></ama-answers>
       }
     </div>
