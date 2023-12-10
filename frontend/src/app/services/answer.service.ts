@@ -4,7 +4,6 @@ import { Answer } from '../typedefs/Answer.typedef';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +17,6 @@ export class AnswerService {
     private api: ApiService<Answer>,
     private as: AuthService,
     private ms: MessageService,
-    private ro: Router,
-    private aro: ActivatedRoute
   ) {}
 
   private updateAnswers = (newAnswers: Answer[]) => {
@@ -32,6 +29,11 @@ export class AnswerService {
       .subscribe((circles: Answer[]) => {
         this.updateAnswers(circles);
       });
+  };
+
+  public readSubAnswers$ = (byParentId: string) => {
+    return this.api
+      .readAsObservable$<Answer[]>(`answers/${byParentId}`)
   };
 
   public createAnswer = ({
@@ -49,6 +51,7 @@ export class AnswerService {
       ownerId: this.as.getUserId(),
       ownerName: this.as.getUserName(),
       answerText,
+      totalSubAnswers: 0
     };
 
     this.created = this.api.createAsObservable$<Answer>('answers/create', payload);

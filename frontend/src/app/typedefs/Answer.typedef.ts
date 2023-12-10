@@ -9,4 +9,5 @@ export type Answer = {
   answerText: string,
   upvotes?: number,
   downvotes?: number,
+  totalSubAnswers: number
 }

@@ -13,6 +13,7 @@ const answerSchema = new mongoose.Schema({
   downvotes: Number,
   created_at: Number,
   modded_at: Number,
+  totalSubAnswers: Number,
 });
 
 export const Answer = mongoose.model("Answer", answerSchema);

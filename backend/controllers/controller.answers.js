@@ -7,19 +7,27 @@ import {
 import { Answer } from "../db/models/answer.js";
 import mongoose from "mongoose";
 
+const accumSubAnswers = async (answers) => {
+  const answersCopy = [...answers];
+  for (const answer of answersCopy) {
+    const subAnswer = await retrieveModel(Answer, { parentId: answer._id });
+    answer['totalSubAnswers'] = subAnswer.length;
+  }
+  return answersCopy;
+};
+
 export const controllerAnswers = {
   readAll: async (req, res) => {
-    console.log('params', req.params['parentId']);
     const { parentId } = req.params;
     try {
-      const circles = await retrieveModel(Answer, { parentId } );
-      res.status(200).json(circles);
+      const answers = await retrieveModel(Answer, { parentId });
+      const answersWithSub = await accumSubAnswers(answers);
+      res.status(200).json(answersWithSub);
     } catch (error) {
       res.status(500).send(error);
     }
   },
   createOne: async (req, res) => {
-    console.log('create one with: ', req.body);
     const { parentId, parentType, ownerId, ownerName, answerText } = req.body;
 
     const payload = {
