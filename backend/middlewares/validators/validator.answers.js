@@ -16,6 +16,6 @@ export const answerCreateSchema = Joi.object({
 })
 
 export const answerEditSchema = Joi.object({
-  answertext: Joi.string()
+  toBeUpdated: Joi.array()
     .required(),
 })

@@ -2,7 +2,7 @@
   @if (isBrowserOnly) {
     <p-editor
       formControlName="textEditor"
-      [style]="{ height: '8rem' }"
+      [style]="editorHeightCss"
     >
       <ng-template pTemplate="header">
         <span class="ql-formats">
@@ -46,7 +46,20 @@
       </ng-template>
     </p-editor>
   }
-  <div class="mb-4 mt-2">
+  <div class="mb-2 mt-2">
+    @if (cancelButtonText) {
+      <p-button
+        type="button"
+        size="small"
+        severity="secondary"
+        styleClass="mr-2"
+        [outlined]="true"
+        [loading]="loading"
+        (click)="cancelEditor()"
+      >
+        {{ cancelButtonText }}
+      </p-button>
+    }
     <p-button
       type="submit"
       size="small"
@@ -54,8 +67,9 @@
       [outlined]="true"
       [loading]="loading"
       [disabled]="this.textEditorForm.controls['textEditor'].value == ''"
-      >Answer</p-button
     >
+      {{ submitButtonText }}
+    </p-button>
   </div>
 </form>
 

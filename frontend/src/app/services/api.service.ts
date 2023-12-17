@@ -74,7 +74,11 @@ export class ApiService<T> {
   };
 
   // update as observable
-  updateAsObservable$ = <T>(resource: string, payload: T, withAuth = true) => {
+  updateAsObservable$ = <T>(
+    resource: string,
+    payload: T | unknown,
+    withAuth = true,
+  ) => {
     return withAuth
       ? this.http.put<T>(API + resource, payload, this.getHeaders())
       : this.http.put<T>(API + resource, payload);
@@ -84,7 +88,9 @@ export class ApiService<T> {
   delete = async (resource: string, withAuth = true) => {
     try {
       const response = withAuth
-        ? await lastValueFrom(this.http.delete(API + resource, this.getHeaders()))
+        ? await lastValueFrom(
+            this.http.delete(API + resource, this.getHeaders()),
+          )
         : await lastValueFrom(this.http.delete(API + resource));
       return { isError: false, result: response };
     } catch (error) {

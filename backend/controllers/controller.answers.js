@@ -2,6 +2,7 @@ import {
   generateModel,
   deleteModel,
   retrieveModel,
+  retrieveModelById,
   updateModel,
 } from "../dbaccess.js";
 import { Answer } from "../db/models/answer.js";
@@ -11,7 +12,7 @@ const accumSubAnswers = async (answers) => {
   const answersCopy = [...answers];
   for (const answer of answersCopy) {
     const subAnswer = await retrieveModel(Answer, { parentId: answer._id });
-    answer['totalSubAnswers'] = subAnswer.length;
+    answer["totalSubAnswers"] = subAnswer.length;
   }
   return answersCopy;
 };
@@ -50,21 +51,15 @@ export const controllerAnswers = {
     }
   },
   updateOneAnswer: async (req, res) => {
-    const circleId = req.params.id;
-    const questionId = req.params.qid;
+    const { id } = req.params;
+    const { toBeUpdated } = req.body;
+    const filter = { _id: id };
+    const updateExpr = {};
 
-    const filter = {
-      _id: circleId,
-      "questions._id": new mongoose.Types.ObjectId(questionId),
-    };
-
-    const updateExpr = {
-      $set: {
-        "questions.$.title": req.body.title,
-        "questions.$.body": req.body.body,
-        "questions.$.modded_at": Date.now(),
-      },
-    };
+    for (const field of toBeUpdated) {
+      Object.assign(updateExpr, field);
+    }
+    updateExpr['modded_at'] = Date.now();
 
     try {
       const updated = await updateModel(Answer, filter, updateExpr);

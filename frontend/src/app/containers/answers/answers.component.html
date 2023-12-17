@@ -4,12 +4,45 @@
     ><span class="mx-2 text-xs text-500 hover:text-700">{{
       answer.created_at | dateAgo
     }}</span>
-    <span>[edit] [delete]</span>
+    @if (answer.modded_at) {
+      <span class="mr-3 text-xs font-italic">(edited)</span>
+    }
+    @if (currentUserId === answer.ownerId) {
+      <span class="text-xs">
+        <button
+          type="button"
+          class="btn__link mx-1 btn--reset"
+          (click)="toggleEditForm(answer)"
+        >
+          Edit
+        </button>
+        <button
+          type="button"
+          class="btn__link mx-1 btn--reset"
+        >
+          Delete
+        </button>
+      </span>
+    }
   </div>
   <div class="flex mb-2">
     <p-divider layout="vertical"></p-divider>
     <div class="flex flex-column justify-content-between w-full">
-      <div class="text-sm" [innerHtml]="answer.answerText"></div>
+      @if (answerInEditing?._id === answer?._id) {
+        <div class="my-3">
+          <ama-texteditor
+            submitButtonText="Save"
+            cancelButtonText="Cancel"
+            [data]="answer"
+            [initialValue]="answer.answerText"
+            [editorHeightCss]="{ height: '4rem' }"
+            (submit)="submitAnswerUpdate($event)"
+            (cancel)="closeAnswerForm()"
+          ></ama-texteditor>
+        </div>}
+      @else {
+        <div class="text-sm font-bold" [innerHtml]="answer.answerText"></div>
+      }
       <div class="mt-3">
         <p-toggleButton
           #subAnswerList
@@ -25,13 +58,13 @@
         ></p-toggleButton>
         <p-toggleButton
           #subAnswerEditor
-          styleClass="mx-1 text-xs px-2 py-1"
+          [styleClass]="'mx-1 text-xs px-2 py-1' + (isLoggedIn ? '' : ' hidden')"
           onIcon="pi pi-angle-down"
           onIcon="pi pi-comment"
           offIcon="pi pi-comment"
         ></p-toggleButton>
       </div>
-      @if (subAnswerEditor.checked) {
+      @if (isLoggedIn && subAnswerEditor.checked) {
         <div class="my-3">
           <ama-texteditor
             [data]="answer"

@@ -3,6 +3,7 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnInit,
   Output,
   PLATFORM_ID,
 } from '@angular/core';
@@ -19,16 +20,31 @@ import { isPlatformBrowser } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, EditorModule, SharedModule, ButtonModule],
 })
-export class TexteditorComponent {
+export class TexteditorComponent implements OnInit {
   @Input() loading!: boolean;
+  @Input() editorHeightCss = { height: '8rem' };
+  @Input() submitButtonText = "Answer";
+  @Input() cancelButtonText!: string;
+  @Input() initialValue!: any;
   @Input() data!: any;
   @Output() submit = new EventEmitter();
+  @Output() cancel = new EventEmitter();
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+  ngOnInit(): void {
+    if (this.initialValue) {
+      this.textEditorForm.controls['textEditor'].setValue(this.initialValue);
+    };
+  }
 
   get isBrowserOnly(): boolean {
     return isPlatformBrowser(this.platformId);
   }
+
+  public cancelEditor = () => {
+    this.cancel.emit();
+  };
 
   public submitEditor = (e: SubmitEvent) => {
     e.preventDefault();
