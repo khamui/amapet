@@ -4,7 +4,6 @@ import { Answer } from '../typedefs/Answer.typedef';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MessageService } from 'primeng/api';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -19,7 +18,7 @@ export class AnswerService {
     private ms: MessageService,
   ) {}
 
-  private updateAnswers = (newAnswers: Answer[]) => {
+  private refreshAnswers = (newAnswers: Answer[]) => {
     this.answersSubject.next(newAnswers);
   };
 
@@ -27,20 +26,19 @@ export class AnswerService {
     this.api
       .readAsObservable$<Answer[]>(`answers/${byQuestionId}`)
       .subscribe((circles: Answer[]) => {
-        this.updateAnswers(circles);
+        this.refreshAnswers(circles);
       });
   };
 
   public readSubAnswers$ = (byParentId: string) => {
-    return this.api
-      .readAsObservable$<Answer[]>(`answers/${byParentId}`)
+    return this.api.readAsObservable$<Answer[]>(`answers/${byParentId}`);
   };
 
   public createAnswer = ({
     parentId,
     parentType,
     answerText,
-    redirectId
+    redirectId,
   }: {
     parentId: string;
     parentType: 'question' | 'answer';
@@ -53,10 +51,13 @@ export class AnswerService {
       ownerId: this.as.getUserId(),
       ownerName: this.as.getUserName(),
       answerText,
-      totalSubAnswers: 0
+      totalSubAnswers: 0,
     };
 
-    this.created = this.api.createAsObservable$<Answer>('answers/create', payload);
+    this.created = this.api.createAsObservable$<Answer>(
+      'answers/create',
+      payload,
+    );
     this.created.subscribe(() => {
       try {
         this.readAnswers(redirectId);
@@ -73,5 +74,34 @@ export class AnswerService {
         });
       }
     });
+  };
+
+  public updateAnswer = ({
+    id,
+    toBeUpdated,
+  }: {
+    id: string;
+    toBeUpdated: any[];
+  }) => {
+    const updated = this.api.updateAsObservable$<Answer>(
+      `answers/${id}/update`,
+      { toBeUpdated },
+    );
+    updated.subscribe(() => {
+      try {
+        this.ms.add({
+          severity: 'success',
+          summary: 'Answer updated!',
+          detail: 'Your answer has been successfully updated.',
+        });
+      } catch (error: any) {
+        this.ms.add({
+          severity: 'error',
+          summary: 'Something went wrong!',
+          detail: `Could not create Answer. Error: ${error.message}`,
+        });
+      }
+    })
+    return updated;
   };
 }
