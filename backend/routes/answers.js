@@ -43,7 +43,7 @@ router.put("/answers/:id/update", cors(corsOptions), [
  */
 router.delete("/answers/:id/delete", cors(corsOptions), [
   middlewareAuth.isAuthorized,
-  controllerAnswers.deleteOneAnswerAndChildren,
+  controllerAnswers.deleteOneAnswerContent,
 ]);
 
 export default router;

@@ -104,4 +104,25 @@ export class AnswerService {
     })
     return updated;
   };
+
+  public deleteAnswer = ({id}: {id: string}) => {
+    const deleted = this.api.deleteAsObservable$<Answer>(
+      `answers/${id}/delete`,
+    );
+    deleted.subscribe(() => {
+      try {
+        this.ms.add({
+          severity: 'success',
+          summary: 'Answer deleted!',
+          detail: 'Your answer has been successfully deleted.',
+        });
+      } catch (error: any) {
+        this.ms.add({
+          severity: 'error',
+          summary: 'Something went wrong!',
+          detail: `Could not create Answer. Error: ${error.message}`,
+        });
+      }
+    })
+  }
 }

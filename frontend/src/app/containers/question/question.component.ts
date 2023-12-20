@@ -17,12 +17,12 @@ import { PanelModule } from 'primeng/panel';
     providers: [ConfirmationService],
     standalone: true,
     imports: [
+        NgIf,
+        DateAgoPipe,
         PanelModule,
         SharedModule,
-        NgIf,
         DividerModule,
         ConfirmDialogModule,
-        DateAgoPipe,
     ],
 })
 export class QuestionComponent implements OnInit {

@@ -68,12 +68,18 @@ export const controllerAnswers = {
       res.status(500).send(error.message);
     }
   },
-  deleteOneAnswerAndChildren: async (req, res) => {
-    const circleId = req.params.id;
-    const questionId = req.params.qid;
+  deleteOneAnswerContent: async (req, res) => {
+    const { id } = req.params;
+    const filter = { _id: id };
+    const updateExpr = {};
+
+    updateExpr['answerText'] = '';
+    updateExpr['deleted'] = true;
+    updateExpr['modded_at'] = Date.now();
 
     try {
-      await deleteModel(Answer, circleId, "questions", questionId);
+      // udating here, as we keep the post, but not its content
+      await updateModel(Answer, filter, updateExpr);
       res.status(204).send();
     } catch (error) {
       res.status(500).send(error.message);

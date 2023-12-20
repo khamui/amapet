@@ -1,13 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { DividerModule } from 'primeng/divider';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { AnswerService } from 'src/app/services/answer.service';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { TexteditorComponent } from 'src/app/components/texteditor/texteditor.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'ama-answers',
@@ -15,11 +17,13 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./answers.component.scss'],
   standalone: true,
   imports: [
-    DividerModule,
-    ToggleButtonModule,
+    NgClass,
     DateAgoPipe,
     AsyncPipe,
-    TexteditorComponent,
+    DividerModule,
+    ToggleButtonModule,
+    ConfirmDialogModule,
+    TexteditorComponent
   ],
 })
 export class AnswersComponent {
@@ -34,6 +38,7 @@ export class AnswersComponent {
   constructor(
     private as: AuthService,
     private ans: AnswerService,
+    private cos: ConfirmationService
   ) {
     this.currentUserId = this.as.getUserId();
     this.as.watchLoggedIn.subscribe((value: boolean) => {
@@ -88,6 +93,18 @@ export class AnswersComponent {
   public closeAnswerForm = () => {
     this.answerInEditing = undefined;
   }
+
+  handleDelete = (answer: Answer) => {
+    this.cos.confirm({
+      message: 'Are you sure that you want to delete this answer?',
+      header: 'Delete answer?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.ans.deleteAnswer({ id: answer._id as string })
+      },
+      reject: () => {},
+    });
+  };
   /* owner methods */
 
   public submitAnswer = async ({
