@@ -44,14 +44,18 @@
           <div class="w-full mt-5 mb-3">
             <ama-texteditor
               (submit)="submitAnswer($event)"
-              [loading]="loading"></ama-texteditor>
+              [loading]="loading"
+            ></ama-texteditor>
           </div>
         </ng-container>
       </div>
     </div>
     <div class="my-5">
-      <ama-answers [answers]="answers"></ama-answers>
+      <ama-answers
+        [questionId]="question._id || ''"
+        [answers]="answers"
+      ></ama-answers>
     </div>
   </p-panel>
 </ng-container>
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
