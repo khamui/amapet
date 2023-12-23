@@ -14,7 +14,8 @@ const answerSchema = new mongoose.Schema({
   created_at: Number,
   modded_at: Number,
   totalSubAnswers: Number,
-  deleted: Boolean
+  deleted: Boolean,
+  children: Array,
 });
 
 export const Answer = mongoose.model("Answer", answerSchema);

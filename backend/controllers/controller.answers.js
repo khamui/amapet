@@ -1,8 +1,6 @@
 import {
   generateModel,
-  deleteModel,
   retrieveModel,
-  retrieveModelById,
   updateModel,
 } from "../dbaccess.js";
 import { Answer } from "../db/models/answer.js";
@@ -17,12 +15,24 @@ const accumSubAnswers = async (answers) => {
   return answersCopy;
 };
 
+const makeAnswersTree = async (answersOfQuestion) => {
+  const nestedAnswers = [];
+  for (const answer of answersOfQuestion) {
+    const subAnswers = await retrieveModel(Answer, { parentId: answer._id });
+    if (subAnswers?.length > 0) {
+      answer.children = await makeAnswersTree(subAnswers);
+    }
+    nestedAnswers.push(answer)
+  }
+  return nestedAnswers;
+}
+
 export const controllerAnswers = {
   readAll: async (req, res) => {
     const { parentId } = req.params;
     try {
       const answers = await retrieveModel(Answer, { parentId });
-      const answersWithSub = await accumSubAnswers(answers);
+      const answersWithSub = await makeAnswersTree(answers, parentId);
       res.status(200).json(answersWithSub);
     } catch (error) {
       res.status(500).send(error);

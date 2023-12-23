@@ -11,4 +11,5 @@ export type Answer = {
   downvotes?: number;
   totalSubAnswers: number;
   deleted?: boolean;
+  children?: Answer[];
 }

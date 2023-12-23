@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Answer } from '../typedefs/Answer.typedef';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MessageService } from 'primeng/api';
 @Injectable({
@@ -10,7 +10,6 @@ import { MessageService } from 'primeng/api';
 export class AnswerService {
   private answersSubject = new BehaviorSubject<Answer[]>([]);
   public answers$ = this.answersSubject.asObservable();
-  private created!: Observable<Answer>;
 
   constructor(
     private api: ApiService<Answer>,
@@ -25,13 +24,19 @@ export class AnswerService {
   public readAnswers = (byQuestionId: string) => {
     this.api
       .readAsObservable$<Answer[]>(`answers/${byQuestionId}`)
-      .subscribe((circles: Answer[]) => {
-        this.refreshAnswers(circles);
+      .subscribe((answers: Answer[]) => {
+        this.refreshAnswers(answers);
       });
   };
 
   public readSubAnswers$ = (byParentId: string) => {
     return this.api.readAsObservable$<Answer[]>(`answers/${byParentId}`);
+  };
+
+  public readAllAnswers = async (byQuestionId: string) => {
+    const allAnswersResponse = await this.api.read(`answers/${byQuestionId}`);
+    const { isError, result } = allAnswersResponse;
+    return result;
   };
 
   public createAnswer = ({
@@ -54,11 +59,11 @@ export class AnswerService {
       totalSubAnswers: 0,
     };
 
-    this.created = this.api.createAsObservable$<Answer>(
+    const created$ = this.api.createAsObservable$<Answer>(
       'answers/create',
       payload,
     );
-    this.created.subscribe(() => {
+    created$.subscribe(() => {
       try {
         this.readAnswers(redirectId);
         this.ms.add({
@@ -101,11 +106,11 @@ export class AnswerService {
           detail: `Could not create Answer. Error: ${error.message}`,
         });
       }
-    })
+    });
     return updated;
   };
 
-  public deleteAnswer = ({id}: {id: string}) => {
+  public deleteAnswer = ({ id }: { id: string }) => {
     const deleted = this.api.deleteAsObservable$<Answer>(
       `answers/${id}/delete`,
     );
@@ -123,6 +128,39 @@ export class AnswerService {
           detail: `Could not create Answer. Error: ${error.message}`,
         });
       }
-    })
+    });
+  };
+
+  private findParentById(answers: Answer[], id: string): any {
+    for (let i = 0; i < answers.length; i++) {
+      const answer = answers[i];
+      if (answer._id === id) {
+        return answer;
+      } else if (answer.children && answer.children.length > 0) {
+        const found = this.findParentById(answer.children, id);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  }
+
+  public findFirstQuestionParentFromId(answers: Answer[], id: string) {
+    const startElement = this.findParentById(answers, id);
+    if (!startElement) {
+      return null;
+    }
+
+    let currentElement = startElement;
+    while (currentElement) {
+      if (currentElement.parentType === 'question') {
+        return currentElement.parentId;
+      }
+      const parentId = currentElement.parentId;
+      currentElement = this.findParentById(answers, parentId);
+    }
+
+    return null;
   }
 }

@@ -1,10 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { DividerModule } from 'primeng/divider';
-import { ToggleButtonModule } from 'primeng/togglebutton';
+import { ToggleButton, ToggleButtonModule } from 'primeng/togglebutton';
 import { AnswerService } from 'src/app/services/answer.service';
-import { Observable } from 'rxjs';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { TexteditorComponent } from 'src/app/components/texteditor/texteditor.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -23,13 +22,13 @@ import { ConfirmationService } from 'primeng/api';
     DividerModule,
     ToggleButtonModule,
     ConfirmDialogModule,
-    TexteditorComponent
+    TexteditorComponent,
   ],
 })
 export class AnswersComponent {
-  @Input() answers!: Answer[] | null;
+  @Input() answers!: Answer[] | undefined;
+  @Input() questionId!: string;
 
-  public answers$!: Observable<Answer[]>;
   public loading = false;
   public isLoggedIn = false;
   public currentUserId!: string;
@@ -38,7 +37,7 @@ export class AnswersComponent {
   constructor(
     private as: AuthService,
     private ans: AnswerService,
-    private cos: ConfirmationService
+    private cos: ConfirmationService,
   ) {
     this.currentUserId = this.as.getUserId();
     this.as.watchLoggedIn.subscribe((value: boolean) => {
@@ -46,9 +45,39 @@ export class AnswersComponent {
     });
   }
 
-  public toggleSubAnswers(answer: Answer) {
-    this.answers$ = this.ans.readSubAnswers$(answer._id as string);
-  }
+  public submitAnswer = async ({
+    text,
+    data: answer,
+    editorButtonEl,
+    listButtonEl,
+  }: {
+    text: string;
+    data: Answer;
+    editorButtonEl: ToggleButton;
+    listButtonEl: ToggleButton;
+  }) => {
+    this.loading = true;
+    editorButtonEl.checked = false;
+    listButtonEl.checked = true;
+    const answerText = text;
+    const allAnswers = await this.ans.readAllAnswers(this.questionId);
+    const redirectId = this.ans.findFirstQuestionParentFromId(
+      allAnswers as Answer[],
+      answer._id as string,
+    );
+
+    console.log('redirectId', redirectId);
+
+    if (answerText !== '') {
+      this.ans.createAnswer({
+        parentId: answer._id as string,
+        parentType: 'answer',
+        answerText: answerText as string,
+        redirectId,
+      });
+    }
+    this.loading = false;
+  };
 
   /* owner methods */
   public toggleEditForm = (answer: Answer) => {
@@ -67,24 +96,24 @@ export class AnswersComponent {
     if (answerText !== '') {
       const updated = this.ans.updateAnswer({
         id: answer._id as string,
-        toBeUpdated: [{answerText}],
+        toBeUpdated: [{ answerText }],
       });
 
       updated.subscribe((newAnswer: Answer) => {
-        if(this.answers) {
+        if (this.answers) {
           this.answers = this.answers.map((a: Answer) => {
-            if(a._id === newAnswer._id) {
+            if (a._id === newAnswer._id) {
               return {
                 ...a,
                 answerText: newAnswer.answerText,
-                modded_at: newAnswer.modded_at
-              }
+                modded_at: newAnswer.modded_at,
+              };
             } else {
               return a;
             }
-          })
+          });
         }
-        this.closeAnswerForm()
+        this.closeAnswerForm();
       });
     }
     this.loading = false;
@@ -92,7 +121,7 @@ export class AnswersComponent {
 
   public closeAnswerForm = () => {
     this.answerInEditing = undefined;
-  }
+  };
 
   handleDelete = (answer: Answer) => {
     this.cos.confirm({
@@ -100,30 +129,10 @@ export class AnswersComponent {
       header: 'Delete answer?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.ans.deleteAnswer({ id: answer._id as string })
+        this.ans.deleteAnswer({ id: answer._id as string });
       },
       reject: () => {},
     });
   };
   /* owner methods */
-
-  public submitAnswer = async ({
-    text,
-    data: answer,
-  }: {
-    text: string;
-    data: Answer;
-  }) => {
-    this.loading = true;
-    const answerText = text;
-    if (answerText !== '') {
-      this.ans.createAnswer({
-        parentId: answer._id as string,
-        parentType: 'answer',
-        answerText: answerText as string,
-        redirectId: answer.parentId,
-      });
-    }
-    this.loading = false;
-  };
 }

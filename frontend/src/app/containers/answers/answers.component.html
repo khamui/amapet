@@ -6,7 +6,7 @@
     }}</span>
     @if (answer.modded_at && !answer.deleted) {
       <span class="mr-3 text-xs font-italic">(edited)</span>
-    } @else {
+    } @else if (answer.deleted) {
       <span class="mr-3 text-xs font-italic">(deleted)</span>
     }
     @if (currentUserId === answer.ownerId && !answer.deleted) {
@@ -57,14 +57,13 @@
             #subAnswerList
             [styleClass]="
               'mx-1 text-xs px-2 py-1' +
-              (answer.totalSubAnswers <= 0 || answer.deleted ? ' hidden' : '')
+              (!answer?.children?.length || answer.deleted ? ' hidden' : '')
             "
             onIcon="pi pi-comments"
             offIcon="pi pi-comments"
             [disabled]="answer.totalSubAnswers <= 0"
-            [onLabel]="answer.totalSubAnswers.toString()"
-            [offLabel]="answer.totalSubAnswers.toString()"
-            (onChange)="toggleSubAnswers(answer)"
+            [onLabel]="answer?.children?.length?.toString() || '0'"
+            [offLabel]="answer?.children?.length?.toString() || '0'"
           ></p-toggleButton>
           <p-toggleButton
             #subAnswerEditor
@@ -81,12 +80,17 @@
           <div class="my-3">
             <ama-texteditor
               [data]="answer"
+              [editorButtonElement]="subAnswerEditor"
+              [listButtonElement]="subAnswerList"
               (submit)="submitAnswer($event)"
             ></ama-texteditor>
           </div>
         }
         @if (subAnswerList.checked) {
-          <ama-answers [answers]="answers$ | async"></ama-answers>
+          <ama-answers
+            [questionId]="questionId"
+            [answers]="answer.children"
+          ></ama-answers>
         }
       </div>
     </div>

@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { SharedModule } from 'primeng/api';
 import { EditorModule } from 'primeng/editor';
 import { isPlatformBrowser } from '@angular/common';
+import { ToggleButton } from 'primeng/togglebutton';
 
 @Component({
   selector: 'ama-texteditor',
@@ -27,6 +28,8 @@ export class TexteditorComponent implements OnInit {
   @Input() cancelButtonText!: string;
   @Input() initialValue!: any;
   @Input() data!: any;
+  @Input() editorButtonElement!: ToggleButton;
+  @Input() listButtonElement!: ToggleButton;
   @Output() submit = new EventEmitter();
   @Output() cancel = new EventEmitter();
 
@@ -53,6 +56,8 @@ export class TexteditorComponent implements OnInit {
       ? this.submit.emit({
           text: this.textEditorForm.controls['textEditor'].value,
           data: this.data,
+          editorButtonEl: this.editorButtonElement,
+          listButtonEl: this.listButtonElement
         })
       : this.submit.emit(this.textEditorForm.controls['textEditor'].value);
   };
