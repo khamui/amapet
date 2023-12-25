@@ -55,8 +55,7 @@ export class AnswerService {
       parentType,
       ownerId: this.as.getUserId(),
       ownerName: this.as.getUserName(),
-      answerText,
-      totalSubAnswers: 0,
+      answerText
     };
 
     const created$ = this.api.createAsObservable$<Answer>(

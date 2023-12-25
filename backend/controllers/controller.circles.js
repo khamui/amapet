@@ -26,7 +26,7 @@ export const controllerCircles = {
       about: "",
       questions,
       memberCount: 1,
-      moderators: [ownerId],
+      moderators: [ownerId]
     };
 
     try {
@@ -42,6 +42,8 @@ export const controllerCircles = {
       _id: new mongoose.Types.ObjectId(),
       created_at: Date.now(),
       circleId: req.params.id,
+      upvotes: [req.body.ownerId],
+      downvotes: []
     };
     const filter = { _id: req.params.id };
     const addExpr = { $push: { questions: payload } };
@@ -83,6 +85,44 @@ export const controllerCircles = {
     try {
       await deleteModel(Circle, circleId, 'questions', questionId);
       res.status(204).send();
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  },
+  updateVoteQuestion: async (req, res, direction) => {
+    const circleId = req.params.id;
+    const questionId = req.params.qid;
+
+    const filter = {
+      _id: circleId,
+      "questions._id": new mongoose.Types.ObjectId(questionId),
+    };
+
+    const upvoteExpr = {
+      $addToSet: {
+        "questions.$.upvotes": req.userPayload._id
+      },
+      $pull: {
+        "questions.$.downvotes": req.userPayload._id
+      },
+    };
+
+    const downvoteExpr = {
+      $addToSet: {
+        "questions.$.downvotes": req.userPayload._id
+      },
+      $pull: {
+        "questions.$.upvotes": req.userPayload._id
+      },
+    };
+
+    const updateExpr = direction === 'up'
+      ? upvoteExpr
+      : downvoteExpr;
+
+    try {
+      const updated = await updateModel(Circle, filter, updateExpr);
+      res.status(200).json(updated);
     } catch (error) {
       res.status(500).send(error.message);
     }

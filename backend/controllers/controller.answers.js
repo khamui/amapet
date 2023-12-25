@@ -6,15 +6,6 @@ import {
 import { Answer } from "../db/models/answer.js";
 import mongoose from "mongoose";
 
-const accumSubAnswers = async (answers) => {
-  const answersCopy = [...answers];
-  for (const answer of answersCopy) {
-    const subAnswer = await retrieveModel(Answer, { parentId: answer._id });
-    answer["totalSubAnswers"] = subAnswer.length;
-  }
-  return answersCopy;
-};
-
 const makeAnswersTree = async (answersOfQuestion) => {
   const nestedAnswers = [];
   for (const answer of answersOfQuestion) {
@@ -49,8 +40,8 @@ export const controllerAnswers = {
       ownerId,
       ownerName,
       answerText,
-      upvotes: 0,
-      downvotes: 0,
+      upvotes: [ownerId],
+      downvotes: [],
     };
 
     try {
@@ -91,6 +82,40 @@ export const controllerAnswers = {
       // udating here, as we keep the post, but not its content
       await updateModel(Answer, filter, updateExpr);
       res.status(204).send();
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  },
+  updateVoteAnswer: async (req, res, direction) => {
+    const { id } = req.params;
+
+    const filter = { _id: id };
+
+    const upvoteExpr = {
+      $addToSet: {
+        "upvotes": req.userPayload._id
+      },
+      $pull: {
+        "downvotes": req.userPayload._id
+      },
+    };
+
+    const downvoteExpr = {
+      $addToSet: {
+        "downvotes": req.userPayload._id
+      },
+      $pull: {
+        "upvotes": req.userPayload._id
+      },
+    };
+
+    const updateExpr = direction === 'up'
+      ? upvoteExpr
+      : downvoteExpr;
+
+    try {
+      const updated = await updateModel(Answer, filter, updateExpr);
+      res.status(200).json(updated);
     } catch (error) {
       res.status(500).send(error.message);
     }

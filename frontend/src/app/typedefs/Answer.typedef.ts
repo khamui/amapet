@@ -7,9 +7,8 @@ export type Answer = {
   created_at?: Date;
   modded_at?: Date;
   answerText: string;
-  upvotes?: number;
-  downvotes?: number;
-  totalSubAnswers: number;
+  upvotes?: string[];
+  downvotes?: string[];
   deleted?: boolean;
   children?: Answer[];
 }

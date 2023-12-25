@@ -61,7 +61,7 @@
             "
             onIcon="pi pi-comments"
             offIcon="pi pi-comments"
-            [disabled]="answer.totalSubAnswers <= 0"
+            [disabled]="(answer?.children?.length || 0) <= 0"
             [onLabel]="answer?.children?.length?.toString() || '0'"
             [offLabel]="answer?.children?.length?.toString() || '0'"
           ></p-toggleButton>

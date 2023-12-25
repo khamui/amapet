@@ -7,12 +7,12 @@ const questionSchema = new mongoose.Schema({
   circleId: String,
   ownerId: String,
   ownerName: String,
-  title: String,
-  body: String,
-  upvotes: Number,
-  downvotes: Number,
   created_at: Number,
   modded_at: Number,
+  title: String,
+  body: String,
+  upvotes: Array,
+  downvotes: Array,
 });
 
 export const Question = mongoose.model("Question", questionSchema);
