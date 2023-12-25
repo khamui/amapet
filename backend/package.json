@@ -5,6 +5,7 @@
     "private": true,
     "scripts": {
         "start": "node server.js",
+        "start:dev": "nodemon server.js",
         "clean": "rm -rf node_modules",
         "cstart": "npm run clean && npm cache clean --force && npm i && npm start"
     },
@@ -17,5 +18,8 @@
         "joi": "17.11.0",
         "jsonwebtoken": "9.0.2",
         "mongoose": "8.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2"
     }
 }

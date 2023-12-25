@@ -46,4 +46,22 @@ router.delete("/answers/:id/delete", cors(corsOptions), [
   controllerAnswers.deleteOneAnswerContent,
 ]);
 
+/*
+ * Update a question's votes value. Upvote increment.
+ */
+router.put("/answers/:id/upvote", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  (req, res) => controllerAnswers.updateVoteAnswer(req, res, 'up')
+])
+
+/*
+ * Update a question's votes value. Downvote increment.
+ */
+router.put("/answers/:id/downvote", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  (req, res) => controllerAnswers.updateVoteAnswer(req, res, 'down')
+])
+
 export default router;

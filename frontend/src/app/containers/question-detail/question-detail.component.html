@@ -28,7 +28,9 @@
     </ng-template>
     <div class="flex jufstify-content-start">
       <div class="text-sm mr-1">
-        {{ (question?.upvotes || 0) - (question?.downvotes || 0) }}
+        {{
+          (question?.upvotes?.length || 0) - (question?.downvotes?.length || 0)
+        }}
       </div>
       <p-divider layout="vertical"></p-divider>
       <div class="w-full">

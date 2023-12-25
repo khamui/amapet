@@ -55,4 +55,22 @@ router.delete("/circles/:id/questions/:qid/delete", cors(corsOptions), [
   controllerCircles.deleteOneQuestion,
 ]);
 
+/*
+ * Update a question's votes value. Upvote increment.
+ */
+router.put("/circles/:id/questions/:qid/upvote", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  (req, res) => controllerCircles.updateVoteQuestion(req, res, 'up')
+])
+
+/*
+ * Update a question's votes value. Downvote increment.
+ */
+router.put("/circles/:id/questions/:qid/downvote", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  (req, res) => controllerCircles.updateVoteQuestion(req, res, 'down')
+])
+
 export default router;

@@ -30,7 +30,9 @@
     </ng-template>
     <div class="flex jufstify-content-start">
       <div class="text-sm mr-1">
-        {{ question.upvotes - question.downvotes }}
+        {{
+          (question?.upvotes?.length || 0) - (question?.downvotes?.length || 0)
+        }}
       </div>
       <p-divider layout="vertical"></p-divider>
       <div class="w-full">
@@ -47,4 +49,4 @@
     </div>
   </p-panel>
 </div>
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>

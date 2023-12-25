@@ -25,13 +25,7 @@ export const questionCreateSchema = Joi.object({
     .required(),
   body: Joi.string()
     .max(3000)
-    .required(),
-  upvotes: Joi.number()
-    .integer()
-    .required(),
-  downvotes: Joi.number()
-    .integer()
-    .required(),
+    .required()
 })
 
 export const questionEditSchema = Joi.object({
@@ -43,3 +37,4 @@ export const questionEditSchema = Joi.object({
     .max(3000)
     .required(),
 })
+

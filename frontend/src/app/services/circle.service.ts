@@ -4,7 +4,7 @@ import { ApiService } from './api.service';
 import { Circle } from '../typedefs/Circle.typedef';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Question } from '../typedefs/Question.typedef';
 
 @Injectable({
@@ -76,8 +76,6 @@ export class CircleService {
       ownerName: this.as.getUserName(),
       title: titleInput,
       body: bodyEditor,
-      upvotes: 0,
-      downvotes: 0,
     };
     const createdQuestion$ = this.api.createAsObservable$(
       `circles/${circle._id}/questions/create`,

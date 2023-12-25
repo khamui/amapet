@@ -4,8 +4,9 @@ export type Question = {
   ownerId: string;
   ownerName: string;
   created_at?: string,
+  modded_at?: string,
   title: string,
   body: string,
-  upvotes: number,
-  downvotes: number,
+  upvotes?: string[],
+  downvotes?: string[],
 }

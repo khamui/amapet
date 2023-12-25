@@ -12,7 +12,6 @@ export const answerCreateSchema = Joi.object({
     .required(), 
   answerText: Joi.string()
     .required(),
-  totalSubAnswers: Joi.number()
 })
 
 export const answerEditSchema = Joi.object({
