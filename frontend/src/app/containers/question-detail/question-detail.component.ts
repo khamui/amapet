@@ -1,4 +1,3 @@
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
@@ -16,23 +15,25 @@ import { TexteditorComponent } from '../../components/texteditor/texteditor.comp
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { NgIf } from '@angular/common';
+import { VoteComponent } from 'src/app/components/vote/vote.component';
 
 @Component({
-    selector: 'app-question-detail',
-    templateUrl: './question-detail.component.html',
-    styleUrls: ['./question-detail.component.scss'],
-    providers: [ConfirmationService],
-    standalone: true,
-    imports: [
-        NgIf,
-        PanelModule,
-        SharedModule,
-        DividerModule,
-        TexteditorComponent,
-        AnswersComponent,
-        ConfirmDialogModule,
-        DateAgoPipe,
-    ],
+  selector: 'app-question-detail',
+  templateUrl: './question-detail.component.html',
+  styleUrls: ['./question-detail.component.scss'],
+  providers: [ConfirmationService],
+  standalone: true,
+  imports: [
+    NgIf,
+    PanelModule,
+    SharedModule,
+    DividerModule,
+    TexteditorComponent,
+    AnswersComponent,
+    ConfirmDialogModule,
+    DateAgoPipe,
+    VoteComponent,
+  ],
 })
 export class QuestionDetailComponent implements OnInit {
   circle!: Circle;
@@ -57,7 +58,7 @@ export class QuestionDetailComponent implements OnInit {
   ngOnInit(): void {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
-    })
+    });
 
     /* observes params AND circles c/:id */
     const params$ = this.ar.paramMap;
@@ -81,7 +82,7 @@ export class QuestionDetailComponent implements OnInit {
     );
     this.ans.answers$.subscribe((answers: Answer[]) => {
       this.answers = answers;
-    })
+    });
   }
 
   handleEdit = (event: MouseEvent) => {
@@ -117,9 +118,23 @@ export class QuestionDetailComponent implements OnInit {
         parentId: this.question._id as string,
         parentType: 'question',
         answerText: answerEditor as string,
-        redirectId: this.question._id as string
+        redirectId: this.question._id as string,
       });
     }
     this.loading = false;
+  };
+
+  public handleUpvoteQuestion = () => {
+    this.cs.updateQuestionUpvote(
+      this.circle,
+      this.question,
+    );
+  };
+
+  public handleDownvoteQuestion = () => {
+    this.cs.updateQuestionDownvote(
+      this.circle,
+      this.question,
+    );
   };
 }

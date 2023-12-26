@@ -1,0 +1,24 @@
+<div class="flex flex-column align-items-center">
+  <p-button
+    styleClass="my-1 vote__button"
+    icon="pi pi-chevron-up"
+    [severity]="isUpvoted ? 'success' : 'secondary'"
+    [text]="true"
+    [disabled]="isUpvoted"
+    (click)="upvoteSubmit.emit()"
+  ></p-button>
+  <div
+    class="font-bold"
+    [ngClass]="isUpvoted ? 'text-success' : isDownvoted ? 'text-danger' : ''"
+  >
+    {{ upvotes.length - downvotes.length }}
+  </div>
+  <p-button
+    styleClass="my-1 vote__button"
+    icon="pi pi-chevron-down"
+    [severity]="isDownvoted ? 'danger' : 'secondary'"
+    [text]="true"
+    [disabled]="isDownvoted"
+    (click)="downvoteSubmit.emit()"
+  ></p-button>
+</div>

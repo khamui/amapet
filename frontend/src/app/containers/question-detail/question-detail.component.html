@@ -28,9 +28,12 @@
     </ng-template>
     <div class="flex jufstify-content-start">
       <div class="text-sm mr-1">
-        {{
-          (question?.upvotes?.length || 0) - (question?.downvotes?.length || 0)
-        }}
+        <ama-vote
+          [upvotes]="question?.upvotes || []"
+          [downvotes]="question?.downvotes || []"
+          (upvoteSubmit)="handleUpvoteQuestion()"
+          (downvoteSubmit)="handleDownvoteQuestion()"
+        ></ama-vote>
       </div>
       <p-divider layout="vertical"></p-divider>
       <div class="w-full">
