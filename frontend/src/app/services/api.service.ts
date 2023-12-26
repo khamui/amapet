@@ -76,7 +76,7 @@ export class ApiService<T> {
   // update as observable
   updateAsObservable$ = <T>(
     resource: string,
-    payload: T | unknown,
+    payload?: T | unknown,
     withAuth = true,
   ) => {
     return withAuth
