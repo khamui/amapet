@@ -30,6 +30,14 @@
   </div>
   @if (!answer.deleted) {
     <div class="flex mb-2">
+      <div class="text-sm">
+        <ama-vote
+          [upvotes]="answer?.upvotes || []"
+          [downvotes]="answer?.downvotes || []"
+          (upvoteSubmit)="handleUpvoteAnswer(answer)"
+          (downvoteSubmit)="handleDownvoteAnswer(answer)"
+        ></ama-vote>
+      </div>
       <p-divider layout="vertical"></p-divider>
       <div class="flex flex-column justify-content-between w-full">
         @if (answerInEditing?._id === answer?._id && !answer.deleted) {

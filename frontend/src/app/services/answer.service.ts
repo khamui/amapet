@@ -55,7 +55,7 @@ export class AnswerService {
       parentType,
       ownerId: this.as.getUserId(),
       ownerName: this.as.getUserName(),
-      answerText
+      answerText,
     };
 
     const created$ = this.api.createAsObservable$<Answer>(
@@ -162,4 +162,24 @@ export class AnswerService {
 
     return null;
   }
+
+  public updateAnswerUpvote = (answer: Answer, qid: string) => {
+    const updated$ = this.api.updateAsObservable$<Answer>(
+      `answers/${answer._id}/upvote`,
+    );
+
+    updated$.subscribe(() => {
+      this.readAnswers(qid);
+    });
+  };
+
+  public updateAnswerDownvote = (answer: Answer, qid: string) => {
+    const updated$ = this.api.updateAsObservable$<Answer>(
+      `answers/${answer._id}/downvote`,
+    );
+
+    updated$.subscribe(() => {
+      this.readAnswers(qid);
+    });
+  };
 }
