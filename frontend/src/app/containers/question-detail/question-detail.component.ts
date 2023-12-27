@@ -75,7 +75,9 @@ export class QuestionDetailComponent implements OnInit {
             if (this.currentUserId === this.question?.ownerId) {
               this.isOwner = true;
             }
-            this.ans.readAnswers(this.question._id as string);
+            if (this.question) {
+              this.ans.readAnswers(this.question._id as string);
+            }
           }
         });
       },
