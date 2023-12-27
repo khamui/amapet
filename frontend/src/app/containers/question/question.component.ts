@@ -9,21 +9,23 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DividerModule } from 'primeng/divider';
 import { NgIf } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
+import { VoteComponent } from 'src/app/components/vote/vote.component';
 
 @Component({
-    selector: 'ama-question',
-    templateUrl: './question.component.html',
-    styleUrls: ['./question.component.scss'],
-    providers: [ConfirmationService],
-    standalone: true,
-    imports: [
-        NgIf,
-        DateAgoPipe,
-        PanelModule,
-        SharedModule,
-        DividerModule,
-        ConfirmDialogModule,
-    ],
+  selector: 'ama-question',
+  templateUrl: './question.component.html',
+  styleUrls: ['./question.component.scss'],
+  providers: [ConfirmationService],
+  standalone: true,
+  imports: [
+    NgIf,
+    DateAgoPipe,
+    PanelModule,
+    SharedModule,
+    DividerModule,
+    ConfirmDialogModule,
+    VoteComponent,
+  ],
 })
 export class QuestionComponent implements OnInit {
   @Input() question!: Question;
@@ -44,7 +46,9 @@ export class QuestionComponent implements OnInit {
     }
   }
 
-  handleQuestionClicked = () => {
+  handleQuestionClicked = (event: Event) => {
+    event.preventDefault();
+    event.stopPropagation();
     this.ro.navigate([this.circle.name, 'questions', this.question._id]);
   };
 
@@ -71,5 +75,17 @@ export class QuestionComponent implements OnInit {
       },
       reject: () => {},
     });
+  };
+
+  public handleUpvoteQuestion = (event: Event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.cs.updateQuestionUpvote(this.circle, this.question);
+  };
+
+  public handleDownvoteQuestion = (event: Event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.cs.updateQuestionDownvote(this.circle, this.question);
   };
 }

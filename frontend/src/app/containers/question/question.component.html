@@ -1,4 +1,4 @@
-<div class="cursor-pointer hover:shadow-1" (click)="handleQuestionClicked()">
+<div class="cursor-pointer hover:shadow-1" (click)="handleQuestionClicked($event)">
   <p-panel>
     <ng-template pTemplate="header">
       <div class="w-full">
@@ -30,9 +30,12 @@
     </ng-template>
     <div class="flex jufstify-content-start">
       <div class="text-sm mr-1">
-        {{
-          (question?.upvotes?.length || 0) - (question?.downvotes?.length || 0)
-        }}
+        <ama-vote
+          [upvotes]="question?.upvotes || []"
+          [downvotes]="question?.downvotes || []"
+          (upvoteSubmit)="handleUpvoteQuestion($event)"
+          (downvoteSubmit)="handleDownvoteQuestion($event)"
+        ></ama-vote>
       </div>
       <p-divider layout="vertical"></p-divider>
       <div class="w-full">

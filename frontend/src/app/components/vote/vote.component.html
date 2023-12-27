@@ -5,7 +5,7 @@
     [severity]="isUpvoted ? 'success' : 'secondary'"
     [text]="true"
     [disabled]="isUpvoted"
-    (click)="upvoteSubmit.emit()"
+    (click)="upvoteSubmit.emit($event)"
   ></p-button>
   <div
     class="font-bold"
@@ -19,6 +19,6 @@
     [severity]="isDownvoted ? 'danger' : 'secondary'"
     [text]="true"
     [disabled]="isDownvoted"
-    (click)="downvoteSubmit.emit()"
+    (click)="downvoteSubmit.emit($event)"
   ></p-button>
 </div>

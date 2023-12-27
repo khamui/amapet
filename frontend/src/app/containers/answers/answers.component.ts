@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { DividerModule } from 'primeng/divider';
@@ -9,6 +9,7 @@ import { TexteditorComponent } from 'src/app/components/texteditor/texteditor.co
 import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { VoteComponent } from 'src/app/components/vote/vote.component';
 
 @Component({
   selector: 'ama-answers',
@@ -23,6 +24,7 @@ import { ConfirmationService } from 'primeng/api';
     ToggleButtonModule,
     ConfirmDialogModule,
     TexteditorComponent,
+    VoteComponent
   ],
 })
 export class AnswersComponent {
@@ -78,6 +80,16 @@ export class AnswersComponent {
     }
     this.loading = false;
   };
+
+  /* vote methods */
+  public handleUpvoteAnswer = (answer: Answer) => {
+    this.ans.updateAnswerUpvote(answer, this.questionId)
+  };
+
+  public handleDownvoteAnswer = (answer: Answer) => {
+    this.ans.updateAnswerDownvote(answer, this.questionId)
+  };
+
 
   /* owner methods */
   public toggleEditForm = (answer: Answer) => {
