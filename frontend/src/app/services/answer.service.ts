@@ -29,10 +29,6 @@ export class AnswerService {
       });
   };
 
-  public readSubAnswers$ = (byParentId: string) => {
-    return this.api.readAsObservable$<Answer[]>(`answers/${byParentId}`);
-  };
-
   public readAllAnswers = async (byQuestionId: string) => {
     const allAnswersResponse = await this.api.read(`answers/${byQuestionId}`);
     const { isError, result } = allAnswersResponse;
@@ -44,11 +40,15 @@ export class AnswerService {
     parentType,
     answerText,
     redirectId,
+    questionId,
+    circleId
   }: {
     parentId: string;
     parentType: 'question' | 'answer';
     answerText: string;
     redirectId: string;
+    questionId: string;
+    circleId: string;
   }) => {
     const payload: Answer = {
       parentId,
@@ -56,6 +56,8 @@ export class AnswerService {
       ownerId: this.as.getUserId(),
       ownerName: this.as.getUserName(),
       answerText,
+      questionId,
+      circleId
     };
 
     const created$ = this.api.createAsObservable$<Answer>(
@@ -163,13 +165,17 @@ export class AnswerService {
     return null;
   }
 
-  public updateAnswerUpvote = (answer: Answer, qid: string) => {
+  public updateAnswerUpvote = (
+    answer: Answer,
+    payload: { questionId: string; circleId: string },
+  ) => {
     const updated$ = this.api.updateAsObservable$<Answer>(
       `answers/${answer._id}/upvote`,
+      payload
     );
 
     updated$.subscribe(() => {
-      this.readAnswers(qid);
+      this.readAnswers(payload.questionId);
     });
   };
 

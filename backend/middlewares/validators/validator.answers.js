@@ -12,6 +12,8 @@ export const answerCreateSchema = Joi.object({
     .required(), 
   answerText: Joi.string()
     .required(),
+  questionId: Joi.string(),
+  circleId: Joi.string()
 })
 
 export const answerEditSchema = Joi.object({

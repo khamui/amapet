@@ -6,10 +6,13 @@
   <div class="p-toolbar-group-end">
     <ng-container *ngIf="isLoggedIn; else loginButton">
       <p-button
-        icon="pi pi-bell"
-        class="mr-2"
-        styleClass="p-button-info"
-      ></p-button>
+        styleClass="mx-3 p-3"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+      >
+        <i class="pi pi-bell" pBadge value="2" severity="danger"></i>
+      </p-button>
     </ng-container>
     <ng-template #loginButton>
       <p-button
@@ -20,6 +23,5 @@
         (onClick)="router.navigate(['signin'])"
       ></p-button>
     </ng-template>
-    <p-button icon="pi pi-search"></p-button>
   </div>
 </p-toolbar>

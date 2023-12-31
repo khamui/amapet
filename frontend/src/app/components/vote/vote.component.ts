@@ -22,11 +22,15 @@ export class VoteComponent implements OnChanges {
   @Output() upvoteSubmit = new EventEmitter();
   @Output() downvoteSubmit = new EventEmitter();
 
+  isLoggedIn = false;
   currentUserId!: string;
   isUpvoted!: boolean;
   isDownvoted!: boolean;
 
-  constructor(private as: AuthService) {
+  constructor(public as: AuthService) {
+    this.as.watchLoggedIn.subscribe((value: boolean) => {
+      this.isLoggedIn = value;
+    });
     this.currentUserId = this.as.getUserId();
   }
 

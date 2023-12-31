@@ -4,7 +4,7 @@
     icon="pi pi-chevron-up"
     [severity]="isUpvoted ? 'success' : 'secondary'"
     [text]="true"
-    [disabled]="isUpvoted"
+    [disabled]="isUpvoted || !isLoggedIn"
     (click)="upvoteSubmit.emit($event)"
   ></p-button>
   <div
@@ -18,7 +18,7 @@
     icon="pi pi-chevron-down"
     [severity]="isDownvoted ? 'danger' : 'secondary'"
     [text]="true"
-    [disabled]="isDownvoted"
+    [disabled]="isDownvoted || !isLoggedIn"
     (click)="downvoteSubmit.emit($event)"
   ></p-button>
 </div>

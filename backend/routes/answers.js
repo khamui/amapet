@@ -9,6 +9,7 @@ import { corsOptions } from "../dbaccess.js";
 // import middlewares
 import { middlewareAnswers } from "../middlewares/middleware.answers.js";
 import { middlewareAuth } from "../middlewares/middleware.auth.js";
+import { middlewareNotifications } from "../middlewares/middleware.notifications.js";
 
 const router = express.Router();
 
@@ -25,6 +26,7 @@ router.get("/answers/:parentId", cors(corsOptions), [
 router.post("/answers/create", cors(corsOptions), [
   middlewareAuth.isAuthorized,
   middlewareAnswers.answerCreateCheck,
+  middlewareNotifications.registerComment,
   controllerAnswers.createOne,
 ]);
 
@@ -52,6 +54,7 @@ router.delete("/answers/:id/delete", cors(corsOptions), [
 router.put("/answers/:id/upvote", cors(corsOptions), [
   middlewareAuth.isAuthorized,
   middlewareAuth.getUserIdFromToken,
+  middlewareNotifications.registerAnswerUpvote,
   (req, res) => controllerAnswers.updateVoteAnswer(req, res, 'up')
 ])
 

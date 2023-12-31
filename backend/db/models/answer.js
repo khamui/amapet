@@ -15,6 +15,8 @@ const answerSchema = new mongoose.Schema({
   downvotes: Array,
   deleted: Boolean,
   children: Array,
+  questionId: String,
+  circleId: String,
 });
 
 export const Answer = mongoose.model("Answer", answerSchema);

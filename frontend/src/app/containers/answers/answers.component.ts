@@ -29,6 +29,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
 })
 export class AnswersComponent {
   @Input() answers!: Answer[] | undefined;
+  @Input() circleId!: string;
   @Input() questionId!: string;
 
   public loading = false;
@@ -68,14 +69,14 @@ export class AnswersComponent {
       answer._id as string,
     );
 
-    console.log('redirectId', redirectId);
-
     if (answerText !== '') {
       this.ans.createAnswer({
         parentId: answer._id as string,
         parentType: 'answer',
         answerText: answerText as string,
         redirectId,
+        questionId: this.questionId,
+        circleId: this.circleId,
       });
     }
     this.loading = false;
@@ -83,13 +84,13 @@ export class AnswersComponent {
 
   /* vote methods */
   public handleUpvoteAnswer = (answer: Answer) => {
-    this.ans.updateAnswerUpvote(answer, this.questionId)
+    this.ans.updateAnswerUpvote(answer, { questionId: this.questionId, circleId: this.circleId })
   };
 
   public handleDownvoteAnswer = (answer: Answer) => {
     this.ans.updateAnswerDownvote(answer, this.questionId)
   };
-
+  /* vote methods */
 
   /* owner methods */
   public toggleEditForm = (answer: Answer) => {
