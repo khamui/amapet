@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
+import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'ama-answers',
@@ -18,6 +19,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
   standalone: true,
   imports: [
     NgClass,
+    FormsModule,
     DateAgoPipe,
     AsyncPipe,
     DividerModule,
@@ -36,6 +38,7 @@ export class AnswersComponent {
   public isLoggedIn = false;
   public currentUserId!: string;
   public answerInEditing!: Answer | undefined;
+  public allExpanded = true;
 
   constructor(
     private as: AuthService,
@@ -52,16 +55,13 @@ export class AnswersComponent {
     text,
     data: answer,
     editorButtonEl,
-    listButtonEl,
   }: {
     text: string;
     data: Answer;
     editorButtonEl: ToggleButton;
-    listButtonEl: ToggleButton;
   }) => {
     this.loading = true;
     editorButtonEl.checked = false;
-    listButtonEl.checked = true;
     const answerText = text;
     const allAnswers = await this.ans.readAllAnswers(this.questionId);
     const redirectId = this.ans.findFirstQuestionParentFromId(

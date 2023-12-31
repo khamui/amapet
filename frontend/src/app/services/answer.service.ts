@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { Answer } from '../typedefs/Answer.typedef';
-import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import { MessageService } from 'primeng/api';
 @Injectable({
   providedIn: 'root',
 })
 export class AnswerService {
-  private answersSubject = new BehaviorSubject<Answer[]>([]);
-  public answers$ = this.answersSubject.asObservable();
+  public answers!: Answer[];
+  public loadingList = false;
 
   constructor(
     private api: ApiService<Answer>,
@@ -17,21 +16,21 @@ export class AnswerService {
     private ms: MessageService,
   ) {}
 
-  private refreshAnswers = (newAnswers: Answer[]) => {
-    this.answersSubject.next(newAnswers);
-  };
-
   public readAnswers = (byQuestionId: string) => {
+    this.loadingList = true;
     this.api
       .readAsObservable$<Answer[]>(`answers/${byQuestionId}`)
       .subscribe((answers: Answer[]) => {
-        this.refreshAnswers(answers);
+        this.answers = answers;
+        this.loadingList = false;
       });
   };
 
   public readAllAnswers = async (byQuestionId: string) => {
+    this.loadingList = true;
     const allAnswersResponse = await this.api.read(`answers/${byQuestionId}`);
     const { isError, result } = allAnswersResponse;
+    this.loadingList = false;
     return result;
   };
 
