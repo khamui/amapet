@@ -62,18 +62,6 @@
         }
         <div class="mt-3">
           <p-toggleButton
-            #subAnswerList
-            [styleClass]="
-              'mx-1 text-xs px-2 py-1' +
-              (!answer?.children?.length || answer.deleted ? ' hidden' : '')
-            "
-            onIcon="pi pi-comments"
-            offIcon="pi pi-comments"
-            [disabled]="(answer?.children?.length || 0) <= 0"
-            [onLabel]="answer?.children?.length?.toString() || '0'"
-            [offLabel]="answer?.children?.length?.toString() || '0'"
-          ></p-toggleButton>
-          <p-toggleButton
             #subAnswerEditor
             [styleClass]="
               'mx-1 text-xs px-2 py-1' +
@@ -89,12 +77,11 @@
             <ama-texteditor
               [data]="answer"
               [editorButtonElement]="subAnswerEditor"
-              [listButtonElement]="subAnswerList"
               (submit)="submitAnswer($event)"
             ></ama-texteditor>
           </div>
         }
-        @if (subAnswerList.checked) {
+        @if (answer?.children?.length || 0 > 0) {
           <ama-answers
             [questionId]="questionId"
             [answers]="answer.children"

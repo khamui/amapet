@@ -14,6 +14,7 @@ import { AnswersComponent } from '../answers/answers.component';
 import { TexteditorComponent } from '../../components/texteditor/texteditor.component';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { NgIf } from '@angular/common';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
 
@@ -33,6 +34,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
     ConfirmDialogModule,
     DateAgoPipe,
     VoteComponent,
+    ProgressBarModule
   ],
 })
 export class QuestionDetailComponent implements OnInit {
@@ -50,7 +52,7 @@ export class QuestionDetailComponent implements OnInit {
     private ro: Router,
     private cos: ConfirmationService,
     private as: AuthService,
-    private ans: AnswerService,
+    public ans: AnswerService,
   ) {
     this.currentUserId = this.as.getUserId();
   }
@@ -72,19 +74,16 @@ export class QuestionDetailComponent implements OnInit {
                 return question._id === paramMap.get('qid');
               },
             ) as Question;
-            if (this.currentUserId === this.question?.ownerId) {
-              this.isOwner = true;
-            }
-            if (this.question) {
-              this.ans.readAnswers(this.question._id as string);
-            }
           }
         });
+        if (this.currentUserId === this.question?.ownerId) {
+          this.isOwner = true;
+        }
+        if (this.question) {
+          this.ans.readAnswers(this.question._id as string);
+        }
       },
     );
-    this.ans.answers$.subscribe((answers: Answer[]) => {
-      this.answers = answers;
-    });
   }
 
   handleEdit = (event: MouseEvent) => {
@@ -121,6 +120,8 @@ export class QuestionDetailComponent implements OnInit {
         parentType: 'question',
         answerText: answerEditor as string,
         redirectId: this.question._id as string,
+        questionId: this.question._id as string,
+        circleId: this.question._id as string,
       });
     }
     this.loading = false;

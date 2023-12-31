@@ -43,7 +43,7 @@
         </div>
         <div class="text-sm my-5">
           <i class="pi pi-comments"></i>
-          <span class="mx-2">{{ answers.length }} answers</span>
+          <span class="mx-2">{{ ans?.answers?.length || 0 }} answers</span>
         </div>
         <ng-container *ngIf="isLoggedIn">
           <div class="w-full mt-5 mb-3">
@@ -56,10 +56,19 @@
       </div>
     </div>
     <div class="my-5">
-      <ama-answers
-        [questionId]="question._id || ''"
-        [answers]="answers"
-      ></ama-answers>
+      @if (ans.loadingList) {
+        <p-progressBar
+          mode="indeterminate"
+          [style]="{ height: '6px' }"
+        ></p-progressBar>
+      }
+      @else {
+        <ama-answers
+          [questionId]="question._id || ''"
+          [circleId]="circle._id || ''"
+          [answers]="ans.answers"
+        ></ama-answers>
+      }
     </div>
   </p-panel>
 </ng-container>
