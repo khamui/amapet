@@ -10,8 +10,7 @@ const NOTIFY_THRESH_HIGH = 20;
 
 export const middlewareNotifications = {
   registerQuestionUpvote: async (req, res, next) => {
-    const circleId = req.params.id;
-    const questionId = req.params.qid;
+    const { id: circleId, qid: questionId } = req.params;
 
     const filter = {
       _id: circleId,
@@ -51,15 +50,14 @@ export const middlewareNotifications = {
     next();
   },
   registerAnswerUpvote: async (req, res, next) => {
-    const circleId = req.body.circleId;
-    const questionId = req.body.questionId;
+    const { circleId, questionId } = req.body;
     const { id } = req.params;
 
     const circleFilter = { _id: circleId };
-    const filter = { _id: id };
+    const answerFilter = { _id: id };
 
     const foundCircle = await retrieveModel(Circle, circleFilter);
-    const foundAnswer = await retrieveModel(Answer, filter);
+    const foundAnswer = await retrieveModel(Answer, answerFilter);
     const { upvotes, downvotes } = foundAnswer[0];
     const totalVotes = upvotes.length - downvotes.length + 1;
 
@@ -92,10 +90,11 @@ export const middlewareNotifications = {
     const questionId = req.body.questionId;
     const { parentId, parentType, answerText } = req.body;
 
+    const filter = { _id: circleId };
+    const foundCircle = await retrieveModel(Circle, filter);
+
     let foundParent;
     if (parentType === 'question') {
-      const filter = { _id: circleId };
-      const foundCircle = await retrieveModel(Circle, filter);
       foundParent = foundCircle[0].questions.find(
         (q) => q._id.toString() === questionId,
       );

@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
     ToggleButtonModule,
     ConfirmDialogModule,
     TexteditorComponent,
-    VoteComponent
+    VoteComponent,
   ],
 })
 export class AnswersComponent {
@@ -76,7 +76,7 @@ export class AnswersComponent {
         answerText: answerText as string,
         redirectId,
         questionId: this.questionId,
-        circleId: this.circleId
+        circleId: this.circleId,
       });
     }
     this.loading = false;
@@ -84,13 +84,12 @@ export class AnswersComponent {
 
   /* vote methods */
   public handleUpvoteAnswer = (answer: Answer) => {
-    this.ans.updateAnswerUpvote(answer, this.questionId)
+    this.ans.updateAnswerUpvote(answer, this.questionId, this.circleId);
   };
 
   public handleDownvoteAnswer = (answer: Answer) => {
-    this.ans.updateAnswerDownvote(answer, this.questionId)
+    this.ans.updateAnswerDownvote(answer, this.questionId);
   };
-
 
   /* owner methods */
   public toggleEditForm = (answer: Answer) => {

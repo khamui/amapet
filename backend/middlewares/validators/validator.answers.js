@@ -12,6 +12,10 @@ export const answerCreateSchema = Joi.object({
     .required(), 
   answerText: Joi.string()
     .required(),
+  questionId: Joi.string()
+    .required(),
+  circleId: Joi.string()
+    .required(),
 })
 
 export const answerEditSchema = Joi.object({
