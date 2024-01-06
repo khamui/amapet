@@ -10,6 +10,7 @@ import { corsOptions } from "../dbaccess.js";
 // import middlewares
 import { middlewareCircles } from "../middlewares/middleware.circles.js";
 import { middlewareAuth } from "../middlewares/middleware.auth.js";
+import { middlewareNotifications } from "../middlewares/middleware.notifications.js";
 
 const router = express.Router();
 
@@ -61,6 +62,7 @@ router.delete("/circles/:id/questions/:qid/delete", cors(corsOptions), [
 router.put("/circles/:id/questions/:qid/upvote", cors(corsOptions), [
   middlewareAuth.isAuthorized,
   middlewareAuth.getUserIdFromToken,
+  middlewareNotifications.registerQuestionUpvote,
   (req, res) => controllerCircles.updateVoteQuestion(req, res, 'up')
 ])
 

@@ -1,0 +1,54 @@
+<p-button
+  styleClass="mx-3 p-3"
+  [rounded]="true"
+  [text]="true"
+  [raised]="true"
+  (click)="notificationsPanel.toggle($event)"
+>
+  @if (notifications?.length || 0 > 0) {
+    <i
+      class="pi pi-bell"
+      pBadge
+      [value]="notifications.length.toString()"
+      severity="danger"
+    ></i>
+  } @else {
+    <i class="pi pi-bell"></i>
+  }
+</p-button>
+<p-overlayPanel #notificationsPanel>
+  @for (notification of notifications; track notification._id) {
+    @if (notification.type === "upvote") {
+      <p-button
+        [text]="!notification.unread"
+        [severity]="notification.unread ? 'primary' : 'secondary'"
+        [raised]="notification.unread"
+        (click)="handleNotification(notification)"
+        class="flex flex-column my-2"
+      >
+        <div class="flex flex-column text-left">
+          <span class="font-bold"
+            >{{ notification.value }}
+            <i class="pi pi-thumbs-up"></i> upvotes!</span
+          >
+          <div class="mt-2">Users like your answer! Go there...</div>
+        </div>
+      </p-button>
+    } @else {
+      <p-button
+        [text]="!notification.unread"
+        [severity]="notification.unread ? 'primary' : 'secondary'"
+        [raised]="notification.unread"
+        (click)="handleNotification(notification)"
+        class="flex flex-column my-2"
+      >
+        <div class="flex flex-column text-left">
+          <span class="font-bold"> New answer to your post! </span>
+          <div class="m-0 mt-2 text-left text-sm answertext__container">
+            "...{{ removeTags(notification.value) }}..."
+          </div>
+        </div>
+      </p-button>
+    }
+  }
+</p-overlayPanel>
