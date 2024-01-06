@@ -32,6 +32,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 export class AnswersComponent {
   @Input() answers!: Answer[] | undefined;
   @Input() questionId!: string;
+  @Input() circleId!: string;
 
   public loading = false;
   public isLoggedIn = false;

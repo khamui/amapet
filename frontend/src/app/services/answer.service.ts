@@ -43,11 +43,15 @@ export class AnswerService {
     parentType,
     answerText,
     redirectId,
+    questionId,
+    circleId
   }: {
     parentId: string;
     parentType: 'question' | 'answer';
     answerText: string;
     redirectId: string;
+    questionId: string;
+    circleId: string;
   }) => {
     const payload: Answer = {
       parentId,
