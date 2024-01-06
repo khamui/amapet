@@ -11,4 +11,6 @@ export type Answer = {
   downvotes?: string[];
   deleted?: boolean;
   children?: Answer[];
+  questionId?: string;
+  circleId?: string;
 }

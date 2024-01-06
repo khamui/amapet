@@ -44,7 +44,7 @@ export class AnswerService {
     answerText,
     redirectId,
     questionId,
-    circleId
+    circleId,
   }: {
     parentId: string;
     parentType: 'question' | 'answer';
@@ -59,6 +59,8 @@ export class AnswerService {
       ownerId: this.as.getUserId(),
       ownerName: this.as.getUserName(),
       answerText,
+      questionId,
+      circleId,
     };
 
     const created$ = this.api.createAsObservable$<Answer>(
@@ -166,13 +168,21 @@ export class AnswerService {
     return null;
   }
 
-  public updateAnswerUpvote = (answer: Answer, qid: string) => {
+  public updateAnswerUpvote = (
+    answer: Answer,
+    questionId: string,
+    circleId: string,
+  ) => {
     const updated$ = this.api.updateAsObservable$<Answer>(
       `answers/${answer._id}/upvote`,
+      {
+        questionId,
+        circleId,
+      },
     );
 
     updated$.subscribe(() => {
-      this.readAnswers(qid);
+      this.readAnswers(questionId);
     });
   };
 
