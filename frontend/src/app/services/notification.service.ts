@@ -16,6 +16,9 @@ export class NotificationService {
   };
 
   // markRead(notificationId)
+  markAsRead = (resource: string) => {
+    return this.api.updateAsObservable$<Notification>(resource);
+  }
 
   // markUnread(notificationId)
 

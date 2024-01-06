@@ -19,6 +19,7 @@ const INTERVAL_IN_MS = 180000; // 3 mins
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   notifications!: Notification[];
+  unreadItems = 0;
   timerSubscription$!: Subscription;
 
   constructor(
@@ -34,6 +35,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       )
       .subscribe((notificationsResponse: unknown) => {
         this.notifications = notificationsResponse as Notification[];
+        this.unreadItems = this.notifications.filter((n) => n.unread).length;
       });
   }
 
@@ -46,11 +48,21 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   };
 
   public handleNotification = (notification: Notification) => {
-    console.log('markread -> api call');
     this.ro.navigate([
       notification.originCircleName,
       'questions',
       notification.originQuestionId,
     ]);
+
+    if (notification.unread) {
+      this.nos.markAsRead(`notifications/${notification._id}`).subscribe(() => {
+        this.nos
+          .getAll('notifications')
+          .subscribe((notificationsResponse: unknown) => {
+            this.notifications = notificationsResponse as Notification[];
+            this.unreadItems = this.notifications.filter((n) => n.unread).length;
+          });
+      });
+    }
   };
 }

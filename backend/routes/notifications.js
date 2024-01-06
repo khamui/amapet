@@ -20,4 +20,13 @@ router.get("/notifications", cors(corsOptions), [
   controllerNotifications.readAll,
 ]);
 
+/*
+ * PUT one notification and mark as read.
+ */
+router.put("/notifications/:id", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  controllerNotifications.markAsRead,
+]);
+
 export default router;
