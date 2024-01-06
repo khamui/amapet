@@ -5,11 +5,11 @@
   [raised]="true"
   (click)="notificationsPanel.toggle($event)"
 >
-  @if (notifications?.length || 0 > 0) {
+  @if (unreadItems > 0) {
     <i
       class="pi pi-bell"
       pBadge
-      [value]="notifications.length.toString()"
+      [value]="unreadItems.toString()"
       severity="danger"
     ></i>
   } @else {
