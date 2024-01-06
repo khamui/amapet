@@ -121,7 +121,7 @@ export class QuestionDetailComponent implements OnInit {
         answerText: answerEditor as string,
         redirectId: this.question._id as string,
         questionId: this.question._id as string,
-        circleId: this.question._id as string,
+        circleId: this.circle._id as string,
       });
     }
     this.loading = false;

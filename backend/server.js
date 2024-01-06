@@ -9,6 +9,7 @@ import { connect } from './dbaccess.js';
 import signinRoutes from './routes/signins.js';
 import circleRoutes from './routes/circles.js';
 import answerRoutes from './routes/answers.js';
+import notificationRoutes from './routes/notifications.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use('/', signinRoutes);
 app.use('/', circleRoutes);
 app.use('/', answerRoutes);
+app.use('/', notificationRoutes);
 
 const port = process.env.PORT || '5200';
 app.set('port', port);

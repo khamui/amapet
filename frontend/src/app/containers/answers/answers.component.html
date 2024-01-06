@@ -67,9 +67,8 @@
               'mx-1 text-xs px-2 py-1' +
               (isLoggedIn && !answer.deleted ? '' : ' hidden')
             "
-            onIcon="pi pi-angle-down"
-            onIcon="pi pi-comment"
-            offIcon="pi pi-comment"
+            onIcon="pi pi-minus text-xs"
+            offIcon="pi pi-reply text-xs"
           ></p-toggleButton>
         </div>
         @if (isLoggedIn && subAnswerEditor.checked) {

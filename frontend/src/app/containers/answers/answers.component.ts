@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'ama-answers',
@@ -32,6 +32,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 export class AnswersComponent {
   @Input() answers!: Answer[] | undefined;
   @Input() questionId!: string;
+  @Input() circleId!: string;
 
   public loading = false;
   public isLoggedIn = false;
@@ -68,14 +69,14 @@ export class AnswersComponent {
       answer._id as string,
     );
 
-    console.log('redirectId', redirectId);
-
     if (answerText !== '') {
       this.ans.createAnswer({
         parentId: answer._id as string,
         parentType: 'answer',
         answerText: answerText as string,
         redirectId,
+        questionId: this.questionId,
+        circleId: this.circleId
       });
     }
     this.loading = false;

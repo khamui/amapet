@@ -4,14 +4,9 @@
     <span>amapet.org</span>
   </div>
   <div class="p-toolbar-group-end">
-    <ng-container *ngIf="isLoggedIn; else loginButton">
-      <p-button
-        icon="pi pi-bell"
-        class="mr-2"
-        styleClass="p-button-info"
-      ></p-button>
-    </ng-container>
-    <ng-template #loginButton>
+    @if (isLoggedIn) {
+      <ama-notifications></ama-notifications>
+    } @else {
       <p-button
         label="Login"
         icon="pi pi-sign-in"
@@ -19,7 +14,6 @@
         styleClass="p-button-warning"
         (onClick)="router.navigate(['signin'])"
       ></p-button>
-    </ng-template>
-    <p-button icon="pi pi-search"></p-button>
+    }
   </div>
 </p-toolbar>
