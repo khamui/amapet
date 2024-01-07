@@ -10,10 +10,10 @@ import { EditQuestionComponent } from './containers/edit-question/edit-question.
 
 const routes: Routes = [
   { path: 'explore', component: ExploreComponent },
-  { path: 'c/:id', component: CircleComponent  },
+  { path: 'c/:name', component: CircleComponent  },
   { path: 'c/:id/questions/create', component: CreateQuestionComponent },
   { path: 'c/:id/questions/:qid/edit', component: EditQuestionComponent },
-  { path: 'c/:id/questions/:qid', component: QuestionDetailComponent },
+  { path: 'c/:name/questions/:qid', component: QuestionDetailComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'profile', component: ProfileComponent },
   { path: '', redirectTo: 'explore', pathMatch: 'full' }

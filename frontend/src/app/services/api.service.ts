@@ -41,11 +41,11 @@ export class ApiService<T> {
   };
 
   // read
-  read = async (resource: string, withAuth = false) => {
+  read = async <T>(resource: string, withAuth = false) => {
     try {
       const response = withAuth
-        ? await lastValueFrom(this.http.get(API + resource, this.getHeaders()))
-        : await lastValueFrom(this.http.get(API + resource));
+        ? await lastValueFrom(this.http.get<T>(API + resource, this.getHeaders()))
+        : await lastValueFrom(this.http.get<T>(API + resource));
       return { isError: false, result: response };
     } catch (error) {
       return { isError: true, result: error };

@@ -24,12 +24,19 @@ export class CircleService {
     this.readCircles();
   }
 
+  /* ########### CIRCLES ############ */
   private readCircles = () => {
     this.api
       .readAsObservable$<Circle[]>('circles')
       .subscribe((circles: Circle[]) => {
         this.updateCircles(circles);
       });
+  };
+
+  public readCircle = async (circleName: string) => {
+    return await this.api.read<Circle>(
+      `circles/${circleName}`,
+    );
   };
 
   private updateCircles = (newCircles: Circle[]) => {
@@ -64,10 +71,12 @@ export class CircleService {
       }
     });
   };
+  /* ########### CIRCLES ############ */
 
-  public readCircleQuestion = (circleId: string, questionId: string) => {
-    return this.api.readAsObservable$<Question>(
-      `circles/${circleId}/questions/${questionId}`,
+  /* ########### QUESTIONS ############ */
+  public readCircleQuestion = async (circleName: string, questionId: string) => {
+    return await this.api.read<Question>(
+      `circles/${circleName}/questions/${questionId}`,
     );
   };
 
@@ -91,9 +100,7 @@ export class CircleService {
     createdQuestion$.subscribe((newQuestion: Question) => {
       try {
         this.readCircles();
-        this.circles$.subscribe(() => {
-          this.ro.navigate([circle.name, 'questions', newQuestion._id]);
-        });
+        this.ro.navigate([circle.name, 'questions', newQuestion._id]);
         this.ms.add({
           severity: 'success',
           summary: 'Question created!',
@@ -197,4 +204,5 @@ export class CircleService {
       this.readCircles();
     });
   };
+  /* ########### QUESTIONS ############ */
 }

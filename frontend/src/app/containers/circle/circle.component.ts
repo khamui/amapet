@@ -9,6 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { NgIf } from '@angular/common';
 
 @Component({
+    host: { ngSkipHydration: 'true' },
     selector: 'app-circle',
     templateUrl: './circle.component.html',
     styleUrls: ['./circle.component.scss'],
@@ -37,13 +38,17 @@ export class CircleComponent implements OnInit {
 
     /* refetch circles after arriving c/:id */
     const params$ = this.ar.paramMap;
-    combineLatest([params$, this.cs.circles$])
-      .subscribe(([paramMap, circles]) => {
-        this.circle = circles.find((circle: Circle) => {
-          return circle.name === `c/${paramMap.get('id')}`
-        }) as Circle
-      })
+    params$.subscribe(async (paramMap: any) => {
+      const circleName = paramMap.get('name');
+
+      this.circle = await this.getCircle(circleName);
+    });
   }
+
+  private getCircle = async (circleName: string) => {
+    const { isError, result } = await this.cs.readCircle(circleName);
+    return result as Circle;
+  };
 
   navigateToCreateForm = () => {
     if (this.circle) {

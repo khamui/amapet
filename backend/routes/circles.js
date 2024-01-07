@@ -14,18 +14,19 @@ import { middlewareNotifications } from "../middlewares/middleware.notifications
 
 const router = express.Router();
 
+// ############ CIRCLES #############
+/*
+ * GET a circle by circle name.
+ */
+router.get("/circles/:name", cors(corsOptions), [
+  controllerCircles.readOne,
+]);
+
 /*
  * GET all circles.
  */
 router.get("/circles", cors(corsOptions), [
   controllerCircles.readAll
-]);
-
-/*
- * Create a question in circle.
- */
-router.get("/circles/:id/questions/:qid", cors(corsOptions), [
-  controllerCircles.readOneQuestion,
 ]);
 
 /*
@@ -37,8 +38,17 @@ router.post("/circles", cors(corsOptions), [
   controllerCircles.createOne,
 ]);
 
+// ############ QUESTIONS #############
+
 /*
- * Create a question in circle.
+ * GET a question in circle by circle name.
+ */
+router.get("/circles/:name/questions/:qid", cors(corsOptions), [
+  controllerCircles.readOneQuestion,
+]);
+
+/*
+ * Create a question in circle by circle id.
  */
 router.post("/circles/:id/questions/create", cors(corsOptions), [
   middlewareAuth.isAuthorized,
@@ -47,7 +57,7 @@ router.post("/circles/:id/questions/create", cors(corsOptions), [
 ]);
 
 /*
- * Update a question in circle.
+ * Update a question in circle by circle id.
  */
 router.put("/circles/:id/questions/:qid/update", cors(corsOptions), [
   middlewareAuth.isAuthorized,
@@ -56,7 +66,7 @@ router.put("/circles/:id/questions/:qid/update", cors(corsOptions), [
 ]);
 
 /*
- * Delete a question in circle.
+ * Delete a question in circle by circle id.
  */
 router.delete("/circles/:id/questions/:qid/delete", cors(corsOptions), [
   middlewareAuth.isAuthorized,
