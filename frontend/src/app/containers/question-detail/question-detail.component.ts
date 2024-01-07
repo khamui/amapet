@@ -66,31 +66,38 @@ export class QuestionDetailComponent implements OnInit {
     /* get circle id by circle name */
     /* fetch get question */
     const params$ = this.ar.paramMap;
-    params$.subscribe((paramMap: any) => {
+    params$.subscribe(async (paramMap: any) => {
       const questionId = paramMap.get('qid');
-      const circleName = paramMap.get('id');
+      const circleName = paramMap.get('name');
 
-      this.cs.getCircles().subscribe((circles: Circle[]) => {
-        this.circle = circles.find(
-          (c) => c.name === `c/${circleName}`,
-        ) as Circle;
+      this.circle = await this.getCircle(circleName);
+      //this.question = await this.getQuestion(circleName, questionId);
+      this.question = this.circle.questions.find(
+        (q) => q._id === questionId,
+      ) as Question;
 
-        this.circle &&
-          this.cs
-            .readCircleQuestion(this.circle._id as string, questionId)
-            .subscribe((question: Question) => {
-              this.question = question;
-              if (this.currentUserId === this.question?.ownerId) {
-                this.isOwner = true;
-              }
+      if (this.currentUserId === this.question?.ownerId) {
+        this.isOwner = true;
+      }
 
-              if (this.question) {
-                this.ans.readAnswers(this.question._id as string);
-              }
-            });
-      });
+      if (this.question) {
+        this.ans.readAnswers(this.question._id as string);
+      }
     });
   }
+
+  private getCircle = async (circleName: string) => {
+    const { isError, result } = await this.cs.readCircle(circleName);
+    return result as Circle;
+  };
+
+  private getQuestion = async (circleName: string, questionId: string) => {
+    const { isError, result } = await this.cs.readCircleQuestion(
+      circleName,
+      questionId,
+    );
+    return result as Question;
+  };
 
   handleEdit = (event: MouseEvent) => {
     event.stopPropagation();

@@ -8,27 +8,22 @@ import { Circle } from "../db/models/circle.js";
 import mongoose from "mongoose";
 
 export const controllerCircles = {
-  readAll: async (req, res) => {
+  readOne: async (req, res) => {
+    const { name: circleName } = req.params;
     try {
-      const circles = await retrieveModel(Circle);
-      res.status(200).json(circles);
+      const filter = {
+        name: `c/${circleName}`,
+      };
+      const foundCircle = await retrieveModel(Circle, filter);
+      res.status(200).json(foundCircle[0]);
     } catch (error) {
       res.status(500).send("couldn't retrieve model");
     }
   },
-  readOneQuestion: async (req, res) => {
-    const { id: circleId, qid: questionId } = req.params;
+  readAll: async (req, res) => {
     try {
-      const filter = {
-        _id: circleId,
-        "questions._id": new mongoose.Types.ObjectId(questionId),
-      };
-
-      const foundCircle = await retrieveModel(Circle, filter);
-      const foundQuestion = Array.from(foundCircle[0].questions).find(
-        (q) => q._id.toString() === questionId,
-      );
-      res.status(200).json(foundQuestion);
+      const circles = await retrieveModel(Circle);
+      res.status(200).json(circles);
     } catch (error) {
       res.status(500).send("couldn't retrieve model");
     }
@@ -51,6 +46,22 @@ export const controllerCircles = {
       res.status(201).json(newCircle);
     } catch (error) {
       res.status(500).send(error);
+    }
+  },
+  readOneQuestion: async (req, res) => {
+    const { name: circleName, qid: questionId } = req.params;
+    try {
+      const filter = {
+        name: `c/${circleName}`,
+        "questions._id": new mongoose.Types.ObjectId(questionId),
+      };
+      const foundCircle = await retrieveModel(Circle, filter);
+      const foundQuestion = Array.from(foundCircle[0].questions).find(
+        (q) => q._id.toString() === questionId,
+      );
+      res.status(200).json(foundQuestion);
+    } catch (error) {
+      res.status(500).send("couldn't retrieve model");
     }
   },
   createOneQuestion: async (req, res) => {
