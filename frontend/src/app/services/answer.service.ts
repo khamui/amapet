@@ -67,9 +67,9 @@ export class AnswerService {
       'answers/create',
       payload,
     );
-    created$.subscribe(() => {
+    created$.subscribe((newAnswer: Answer) => {
       try {
-        this.readAnswers(redirectId);
+        this.readAnswers(newAnswer.parentId);
         this.ms.add({
           severity: 'success',
           summary: 'Answer created!',

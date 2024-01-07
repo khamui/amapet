@@ -22,6 +22,13 @@ router.get("/circles", cors(corsOptions), [
 ]);
 
 /*
+ * Create a question in circle.
+ */
+router.get("/circles/:id/questions/:qid", cors(corsOptions), [
+  controllerCircles.readOneQuestion,
+]);
+
+/*
  * Create a circle.
  */
 router.post("/circles", cors(corsOptions), [

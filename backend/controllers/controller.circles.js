@@ -13,7 +13,24 @@ export const controllerCircles = {
       const circles = await retrieveModel(Circle);
       res.status(200).json(circles);
     } catch (error) {
-      res.status(500).send('couldn\'t retrieve model');
+      res.status(500).send("couldn't retrieve model");
+    }
+  },
+  readOneQuestion: async (req, res) => {
+    const { id: circleId, qid: questionId } = req.params;
+    try {
+      const filter = {
+        _id: circleId,
+        "questions._id": new mongoose.Types.ObjectId(questionId),
+      };
+
+      const foundCircle = await retrieveModel(Circle, filter);
+      const foundQuestion = Array.from(foundCircle[0].questions).find(
+        (q) => q._id.toString() === questionId,
+      );
+      res.status(200).json(foundQuestion);
+    } catch (error) {
+      res.status(500).send("couldn't retrieve model");
     }
   },
   createOne: async (req, res) => {
@@ -26,7 +43,7 @@ export const controllerCircles = {
       about: "",
       questions,
       memberCount: 1,
-      moderators: [ownerId]
+      moderators: [ownerId],
     };
 
     try {
@@ -43,7 +60,7 @@ export const controllerCircles = {
       created_at: Date.now(),
       circleId: req.params.id,
       upvotes: [req.body.ownerId],
-      downvotes: []
+      downvotes: [],
     };
     const filter = { _id: req.params.id };
     const addExpr = { $push: { questions: payload } };
@@ -83,7 +100,7 @@ export const controllerCircles = {
     const questionId = req.params.qid;
 
     try {
-      await deleteModel(Circle, circleId, 'questions', questionId);
+      await deleteModel(Circle, circleId, "questions", questionId);
       res.status(204).send();
     } catch (error) {
       res.status(500).send(error.message);
@@ -100,25 +117,23 @@ export const controllerCircles = {
 
     const upvoteExpr = {
       $addToSet: {
-        "questions.$.upvotes": req.userPayload._id
+        "questions.$.upvotes": req.userPayload._id,
       },
       $pull: {
-        "questions.$.downvotes": req.userPayload._id
+        "questions.$.downvotes": req.userPayload._id,
       },
     };
 
     const downvoteExpr = {
       $addToSet: {
-        "questions.$.downvotes": req.userPayload._id
+        "questions.$.downvotes": req.userPayload._id,
       },
       $pull: {
-        "questions.$.upvotes": req.userPayload._id
+        "questions.$.upvotes": req.userPayload._id,
       },
     };
 
-    const updateExpr = direction === 'up'
-      ? upvoteExpr
-      : downvoteExpr;
+    const updateExpr = direction === "up" ? upvoteExpr : downvoteExpr;
 
     try {
       const updated = await updateModel(Circle, filter, updateExpr);

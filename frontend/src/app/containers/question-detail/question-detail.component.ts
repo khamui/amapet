@@ -34,7 +34,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
     ConfirmDialogModule,
     DateAgoPipe,
     VoteComponent,
-    ProgressBarModule
+    ProgressBarModule,
   ],
 })
 export class QuestionDetailComponent implements OnInit {
@@ -62,28 +62,34 @@ export class QuestionDetailComponent implements OnInit {
       this.isLoggedIn = value;
     });
 
-    /* observes params AND circles c/:id */
+    /* observes params */
+    /* get circle id by circle name */
+    /* fetch get question */
     const params$ = this.ar.paramMap;
-    combineLatest([params$, this.cs.circles$]).subscribe(
-      ([paramMap, circles]) => {
-        circles.find((circle: Circle) => {
-          if (circle.name === `c/${paramMap.get('id')}`) {
-            this.circle = circle;
-            this.question = ((circle as Circle).questions as Question[]).find(
-              (question: Question) => {
-                return question._id === paramMap.get('qid');
-              },
-            ) as Question;
-          }
-        });
-        if (this.currentUserId === this.question?.ownerId) {
-          this.isOwner = true;
-        }
-        if (this.question) {
-          this.ans.readAnswers(this.question._id as string);
-        }
-      },
-    );
+    params$.subscribe((paramMap: any) => {
+      const questionId = paramMap.get('qid');
+      const circleName = paramMap.get('id');
+
+      this.cs.getCircles().subscribe((circles: Circle[]) => {
+        this.circle = circles.find(
+          (c) => c.name === `c/${circleName}`,
+        ) as Circle;
+
+        this.circle &&
+          this.cs
+            .readCircleQuestion(this.circle._id as string, questionId)
+            .subscribe((question: Question) => {
+              this.question = question;
+              if (this.currentUserId === this.question?.ownerId) {
+                this.isOwner = true;
+              }
+
+              if (this.question) {
+                this.ans.readAnswers(this.question._id as string);
+              }
+            });
+      });
+    });
   }
 
   handleEdit = (event: MouseEvent) => {
@@ -128,16 +134,10 @@ export class QuestionDetailComponent implements OnInit {
   };
 
   public handleUpvoteQuestion = () => {
-    this.cs.updateQuestionUpvote(
-      this.circle,
-      this.question,
-    );
+    this.cs.updateQuestionUpvote(this.circle, this.question);
   };
 
   public handleDownvoteQuestion = () => {
-    this.cs.updateQuestionDownvote(
-      this.circle,
-      this.question,
-    );
+    this.cs.updateQuestionDownvote(this.circle, this.question);
   };
 }
