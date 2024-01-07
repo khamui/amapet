@@ -1,15 +1,20 @@
-import {
-  retrieveModel,
-  updateModel,
-} from "../dbaccess.js";
+import { retrieveModelLimited, updateModel } from "../dbaccess.js";
 import { Notification } from "../db/models/notification.js";
+
+const LIMIT = 100;
 
 export const controllerNotifications = {
   readAll: async (req, res) => {
     const { _id: userId } = req.userPayload;
     try {
-      const userNotifications = await retrieveModel(Notification, { userId });
-      res.status(200).json(userNotifications.reverse());
+      const userNotifications = await retrieveModelLimited(
+        Notification,
+        LIMIT,
+        {
+          userId,
+        },
+      );
+      res.status(200).json(userNotifications);
     } catch (error) {
       res.status(500).send(error);
     }
@@ -25,5 +30,5 @@ export const controllerNotifications = {
     } catch (error) {
       res.status(500).send(error);
     }
-  }
+  },
 };

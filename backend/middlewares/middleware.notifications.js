@@ -4,7 +4,7 @@ import { Answer } from "../db/models/answer.js";
 import { Notification } from "../db/models/notification.js";
 import { retrieveModel, generateModel } from "../dbaccess.js";
 
-const NOTIFY_THRESH_LOW = 0;
+const NOTIFY_THRESH_LOW = 5;
 const NOTIFY_THRESH_MID = 10;
 const NOTIFY_THRESH_HIGH = 20;
 
@@ -35,14 +35,14 @@ export const middlewareNotifications = {
         created_at: Date.now(),
       };
 
-      if (totalVotes >= NOTIFY_THRESH_LOW) {
+      if (totalVotes === NOTIFY_THRESH_LOW) {
         payload.value = 5;
         await generateModel(Notification, payload);
         // write to notifications db
-      } else if (totalVotes >= NOTIFY_THRESH_MID) {
+      } else if (totalVotes === NOTIFY_THRESH_MID) {
         payload.value = 10;
         await generateModel(Notification, payload);
-      } else if (totalVotes >= NOTIFY_THRESH_HIGH) {
+      } else if (totalVotes === NOTIFY_THRESH_HIGH) {
         payload.value = 15;
         await generateModel(Notification, payload);
       }
@@ -72,13 +72,13 @@ export const middlewareNotifications = {
         created_at: Date.now(),
       };
 
-      if (totalVotes >= NOTIFY_THRESH_LOW) {
+      if (totalVotes === NOTIFY_THRESH_LOW) {
         payload.value = 5;
         await generateModel(Notification, payload);
-      } else if (totalVotes >= NOTIFY_THRESH_MID) {
+      } else if (totalVotes === NOTIFY_THRESH_MID) {
         payload.value = 10;
         await generateModel(Notification, payload);
-      } else if (totalVotes >= NOTIFY_THRESH_HIGH) {
+      } else if (totalVotes === NOTIFY_THRESH_HIGH) {
         payload.value = 15;
         await generateModel(Notification, payload);
       }

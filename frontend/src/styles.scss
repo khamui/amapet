@@ -7,3 +7,11 @@ body {
   margin: 0;
   font-family: var(--font-family);
 }
+
+// overwrite primeng styles
+// used in:
+// - notifications.component
+.p-overlaypanel-content {
+  max-height: 60vh;
+  overflow: auto;
+}
