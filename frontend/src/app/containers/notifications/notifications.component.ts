@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Subscription, switchMap, timer } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Notification } from 'src/app/typedefs/Notification.typedef';
@@ -18,6 +18,8 @@ const INTERVAL_IN_MS = 180000; // 3 mins
   styleUrl: './notifications.component.scss',
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+  @ViewChild('notificationsPanel') notificationsPanel!: OverlayPanel;
+
   notifications!: Notification[];
   unreadItems = 0;
   timerSubscription$!: Subscription;
@@ -48,6 +50,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   };
 
   public handleNotification = (notification: Notification) => {
+    this.notificationsPanel.hide();
     this.ro.navigate([
       notification.originCircleName,
       'questions',
