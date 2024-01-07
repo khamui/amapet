@@ -19,6 +19,13 @@ export const retrieveModel = async (model, expr) => {
   return results;
 };
 
+export const retrieveModelLimited = async (model, limit, expr) => {
+  const results = expr
+    ? await model.find(expr).sort('-created_at').limit(limit)
+    : await model.find({}).limit(limit);
+  return results;
+}
+
 export const retrieveModelById = async (model, id) => {
   const result = await model.findById(id);
   return result;
