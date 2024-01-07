@@ -65,6 +65,12 @@ export class CircleService {
     });
   };
 
+  public readCircleQuestion = (circleId: string, questionId: string) => {
+    return this.api.readAsObservable$<Question>(
+      `circles/${circleId}/questions/${questionId}`,
+    );
+  };
+
   public createCircleQuestion = (
     circle: Circle,
     titleInput: string,
@@ -111,11 +117,11 @@ export class CircleService {
   ) => {
     const payload: Partial<Question> = {
       title: titleInput,
-      body: bodyEditor
-    }
+      body: bodyEditor,
+    };
     const updatedQuestion$ = this.api.updateAsObservable$<Question>(
       `circles/${circle._id}/questions/${question._id}/update`,
-      payload as Question
+      payload as Question,
     );
 
     updatedQuestion$.subscribe(() => {
@@ -160,8 +166,7 @@ export class CircleService {
         });
       }
     });
-
-  }
+  };
 
   public getCircles = () => this.circles$;
 
@@ -175,21 +180,21 @@ export class CircleService {
 
   public updateQuestionUpvote = (circle: Circle, question: Question) => {
     const updated$ = this.api.updateAsObservable$<Circle>(
-      `circles/${circle._id}/questions/${question._id}/upvote`
+      `circles/${circle._id}/questions/${question._id}/upvote`,
     );
 
     updated$.subscribe(() => {
       this.readCircles();
-    })
-  }
+    });
+  };
 
   public updateQuestionDownvote = (circle: Circle, question: Question) => {
     const updated$ = this.api.updateAsObservable$<Circle>(
-      `circles/${circle._id}/questions/${question._id}/downvote`
+      `circles/${circle._id}/questions/${question._id}/downvote`,
     );
 
     updated$.subscribe(() => {
       this.readCircles();
-    })
-  }
+    });
+  };
 }
