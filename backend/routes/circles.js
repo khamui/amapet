@@ -30,6 +30,14 @@ router.get("/circles", cors(corsOptions), [
 ]);
 
 /*
+ * GET exists circle by circle name.
+ */
+router.get("/circles/:name/exists", cors(corsOptions), [
+  controllerCircles.existsOne,
+]);
+
+
+/*
  * Create a circle.
  */
 router.post("/circles", cors(corsOptions), [

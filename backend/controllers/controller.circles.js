@@ -28,6 +28,18 @@ export const controllerCircles = {
       res.status(500).send("couldn't retrieve model");
     }
   },
+  existsOne: async (req, res) => {
+    const { name: circleName } = req.params;
+    try {
+      const filter = {
+        name: `c/${circleName}`,
+      };
+      const foundCircle = await retrieveModel(Circle, filter);
+      res.status(200).json({ exists: !!foundCircle[0] });
+    } catch (error) {
+      res.status(500).send("couldn't retrieve model");
+    }
+  },
   createOne: async (req, res) => {
     const { ownerId, name, questions } = req.body;
 

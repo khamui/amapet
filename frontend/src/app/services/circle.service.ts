@@ -43,6 +43,12 @@ export class CircleService {
     this.circlesSubject.next(newCircles);
   };
 
+  public circleExists = (circleName: string) => {
+     return this.api.readAsObservable$<{exists: boolean}>(
+      `circles/${circleName}/exists`,
+    );
+  };
+
   public createCircle = (name: string) => {
     const payload: Circle = {
       ownerId: this.as.getUserId(),
