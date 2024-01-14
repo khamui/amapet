@@ -63,11 +63,7 @@ export class AnswersComponent {
     this.loading = true;
     editorButtonEl.checked = false;
     const answerText = text;
-    const allAnswers = await this.ans.readAllAnswers(this.questionId);
-    const redirectId = this.ans.findFirstQuestionParentFromId(
-      allAnswers as Answer[],
-      answer._id as string,
-    );
+    const redirectId = await this.ans.getRedirectId(this.questionId, answer)
 
     if (answerText !== '') {
       this.ans.createAnswer({
@@ -135,13 +131,14 @@ export class AnswersComponent {
     this.answerInEditing = undefined;
   };
 
-  handleDelete = (answer: Answer) => {
+  handleDelete = async (answer: Answer) => {
+    const redirectId = await this.ans.getRedirectId(this.questionId, answer)
     this.cos.confirm({
       message: 'Are you sure that you want to delete this answer?',
       header: 'Delete answer?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.ans.deleteAnswer({ id: answer._id as string });
+        this.ans.deleteAnswer({ id: answer._id as string, redirectId });
       },
       reject: () => {},
     });

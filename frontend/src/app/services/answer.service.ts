@@ -30,7 +30,7 @@ export class AnswerService {
     return this.api.readAsObservable$<Answer[]>(`answers/${byParentId}`);
   };
 
-  public readAllAnswers = async (byQuestionId: string) => {
+  private readAllAnswers = async (byQuestionId: string) => {
     this.loadingList = true;
     const allAnswersResponse = await this.api.read(`answers/${byQuestionId}`);
     const { isError, result } = allAnswersResponse;
@@ -67,9 +67,9 @@ export class AnswerService {
       'answers/create',
       payload,
     );
-    created$.subscribe((newAnswer: Answer) => {
+    created$.subscribe(() => {
       try {
-        this.readAnswers(newAnswer.parentId);
+        this.readAnswers(redirectId);
         this.ms.add({
           severity: 'success',
           summary: 'Answer created!',
@@ -114,12 +114,19 @@ export class AnswerService {
     return updated;
   };
 
-  public deleteAnswer = ({ id }: { id: string }) => {
+  public deleteAnswer = ({
+    id,
+    redirectId,
+  }: {
+    id: string;
+    redirectId: string;
+  }) => {
     const deleted = this.api.deleteAsObservable$<Answer>(
       `answers/${id}/delete`,
     );
     deleted.subscribe(() => {
       try {
+        this.readAnswers(redirectId);
         this.ms.add({
           severity: 'success',
           summary: 'Answer deleted!',
@@ -150,7 +157,7 @@ export class AnswerService {
     return null;
   }
 
-  public findFirstQuestionParentFromId(answers: Answer[], id: string) {
+  private findFirstQuestionParentFromId(answers: Answer[], id: string) {
     const startElement = this.findParentById(answers, id);
     if (!startElement) {
       return null;
@@ -166,6 +173,14 @@ export class AnswerService {
     }
 
     return null;
+  }
+
+  public getRedirectId = async (questionId: string, answer: Answer) => {
+    const allAnswers = await this.readAllAnswers(questionId);
+    return this.findFirstQuestionParentFromId(
+      allAnswers as Answer[],
+      answer._id as string,
+    );
   }
 
   public updateAnswerUpvote = (
