@@ -10,7 +10,6 @@ import {
 import { AppRoutingModule } from './app/app-routing.module';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import {
-  provideClientHydration,
   BrowserModule,
   bootstrapApplication,
 } from '@angular/platform-browser';
@@ -53,7 +52,6 @@ bootstrapApplication(AppComponent, {
         },
       } as SocialAuthServiceConfig,
     },
-    provideClientHydration(),
     provideAnimations(),
     provideHttpClient(withInterceptorsFromDi()),
   ],
