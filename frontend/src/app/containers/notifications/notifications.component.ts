@@ -30,10 +30,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    let counter = 0;
     this.timerSubscription$ = timer(0, INTERVAL_IN_MS)
       .pipe(
-        switchMap(() => this.nos.getAll(`notifications?reqno=${counter++}`)),
+        switchMap(() => this.nos.getAll(`notifications`)),
       )
       .subscribe((notificationsResponse: unknown) => {
         this.notifications = notificationsResponse as Notification[];
