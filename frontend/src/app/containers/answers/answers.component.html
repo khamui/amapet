@@ -83,6 +83,7 @@
         @if (answer?.children?.length || 0 > 0) {
           <ama-answers
             [questionId]="questionId"
+            [circleId]="circleId"
             [answers]="answer.children"
           ></ama-answers>
         }

@@ -39,7 +39,10 @@
       <div class="w-full">
         <div class="ml-1">
           <h4 class="m-0">{{ question.title }}</h4>
-          <p [innerHtml]="question.body" class="text-left text-sm"></p>
+          <p
+            [innerHtml]="question.body"
+            class="text-left text-sm font-bold"
+          ></p>
         </div>
         <div class="text-sm my-5">
           <i class="pi pi-comments"></i>
@@ -61,8 +64,7 @@
           mode="indeterminate"
           [style]="{ height: '6px' }"
         ></p-progressBar>
-      }
-      @else {
+      } @else {
         <ama-answers
           [questionId]="question._id || ''"
           [circleId]="circle._id || ''"
