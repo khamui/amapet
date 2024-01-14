@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, SharedModule } from 'primeng/api';
-import { Observable, map } from 'rxjs';
+import { Observable, Subject, debounceTime } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
@@ -30,6 +30,8 @@ export class CircleBoxComponent implements OnInit {
 
   circles$!: Observable<Circle[]>;
   circleMenuItems: MenuItem[] = [];
+  circleNameInput = new Subject<string>;
+  circleExists = false;
 
   isLoggedIn = false;
 
@@ -50,5 +52,17 @@ export class CircleBoxComponent implements OnInit {
           command: () => this.router.navigate([circle.name]),
         })) as MenuItem[]
       })
+
+    this.circleNameInput.pipe(debounceTime(250))
+      .subscribe(this.checkCircleExists)
+  }
+
+  public checkUserInput = (circleName: string) => {
+    this.circleNameInput.next(circleName);
+  };
+
+  private checkCircleExists = (circleName: string) => {
+    this.cs.circleExists(circleName)
+      .subscribe(({ exists }) => this.circleExists = exists)
   }
 }
