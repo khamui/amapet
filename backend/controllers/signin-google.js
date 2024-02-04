@@ -2,11 +2,11 @@ import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import { User } from "../db/models/user.js";
 import { generateModel, retrieveOneModelByQuery } from "../dbaccess.js";
+import * as dotenv from "dotenv";
 
 const EXP_IN_S = 604800; // 7 days expiration time
 // const EXP_IN_S = 15; // 15 s expiration time
-const GOOGLE_CLIENT_ID =
-  "265914185201-bgvd5l7u0bqijnknsqqo17kg51thnmpi.apps.googleusercontent.com";
+const { GOOGLE_CLIENT_ID } = process.env;
 const client = new OAuth2Client();
 
 export const signin = (req, res, next) => {
