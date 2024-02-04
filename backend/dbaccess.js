@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 
-export const corsOptions = { origin: ["http://localhost:8181"] };
+export const corsOptions = { origin: ["http://localhost:4200"] };
 
 export const connect = () => {
   // mongodb initialization
