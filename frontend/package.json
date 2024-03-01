@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "17.0.8",
     "@angular/platform-server": "17.0.8",
     "@angular/router": "17.0.8",
-    "@angular/ssr": "17.1.2",
+    "@angular/ssr": "17.2.2",
     "express": "4.18.3",
     "jwt-decode": "4.0.0",
     "primeflex": "3.3.1",
@@ -34,8 +34,8 @@
     "zone.js": "0.14.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "17.1.2",
-    "@angular/cli": "17.1.2",
+    "@angular-devkit/build-angular": "17.2.2",
+    "@angular/cli": "17.2.2",
     "@angular/compiler-cli": "17.0.8",
     "typescript": "5.2.2"
   }
