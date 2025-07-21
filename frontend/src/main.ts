@@ -9,16 +9,15 @@ import {
 } from '@angular/common/http';
 import { AppRoutingModule } from './app/app-routing.module';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import {
-  BrowserModule,
-  bootstrapApplication,
-} from '@angular/platform-browser';
+import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import {
   GoogleLoginProvider,
   SocialAuthServiceConfig,
   SocialLoginModule,
 } from '@abacritt/angularx-social-login';
 import { MessageService } from 'primeng/api';
+import { providePrimeNG } from 'primeng/config';
+import Lara from '@primeng/themes/lara';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -53,6 +52,11 @@ bootstrapApplication(AppComponent, {
       } as SocialAuthServiceConfig,
     },
     provideAnimations(),
+    providePrimeNG({
+      theme: {
+        preset: Lara,
+      },
+    }),
     provideHttpClient(withInterceptorsFromDi()),
   ],
 }).catch((err) => console.error(err));
