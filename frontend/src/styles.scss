@@ -3,6 +3,10 @@
 @import "primeflex/primeflex.css";
 @import "primeicons/primeicons.css";
 
+html {
+  font-size: 12px;
+}
+
 body {
   margin: 0;
   font-family: var(--font-family);
