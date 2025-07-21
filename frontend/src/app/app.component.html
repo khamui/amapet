@@ -1,18 +1,18 @@
 <div class="mb-3 fixed w-full z-5">
   <ama-topbar></ama-topbar>
 </div>
-<div class="grid p-topbar w-full">
-  <div class="col-3 flex justify-content-end">
+<div class="flex flex-row w-full pt-30">
+  <div class="w-2/8">
     <div class="p-3">
       <ama-circle-box></ama-circle-box>
     </div>
   </div>
-  <div class="col-6">
+  <div class="w-4/8">
     <div class="p-3">
       <router-outlet></router-outlet>
     </div>
   </div>
-  <div class="col-3 flex justify-content-start">
+  <div class="w-2/8">
     <ng-container *ngIf="isLoggedIn">
       <div class="p-3">
         <ama-sidebox [items]="menuItems"></ama-sidebox>
