@@ -6,8 +6,8 @@ export const corsOptions = { origin: ["http://localhost:4200"] };
 export const connect = () => {
   // mongodb initialization
   dotenv.config();
-  const { ATLAS_URI } = process.env;
-  mongoose.connect(ATLAS_URI);
+  const { MONGO_DB_URL } = process.env;
+  mongoose.connect(MONGO_DB_URL);
   //mongoose.createConnection(ATLAS_URI);
 };
 
