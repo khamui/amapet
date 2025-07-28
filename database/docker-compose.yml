@@ -1,0 +1,30 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb_auth
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    env_file:
+      - path: ./db.env
+    volumes:
+      # Persistent data storage
+      - mongodb_data:/data/db
+      # Configuration files (optional)
+      - mongodb_config:/data/configdb
+      # Initialization scripts (optional)
+      - ./mongo-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: |
+        echo 'db.runCommand("ping").ok' | mongosh localhost:27017/admin --authenticationDatabase admin -u $${MONGO_INITDB_ROOT_USERNAME} -p $${MONGO_INITDB_ROOT_PASSWORD} --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    command: ["mongod", "--auth"]
+
+volumes:
+  mongodb_data:
+    driver: local
+  mongodb_config:
+    driver: local

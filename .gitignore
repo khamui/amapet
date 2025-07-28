@@ -2,6 +2,8 @@
 */package-lock.json
 
 backend/.env
-frontend/.angular/
 
+database/db.env
+
+frontend/.angular/
 frontend/dist/
