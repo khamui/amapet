@@ -9,6 +9,7 @@ import { SharedModule } from 'primeng/api';
 import { EditorModule } from 'primeng/editor';
 import { InputTextModule } from 'primeng/inputtext';
 import { isPlatformBrowser } from '@angular/common';
+import { AutoFocusModule } from 'primeng/autofocus'
 
 @Component({
     selector: 'ama-create-question',
@@ -21,6 +22,7 @@ import { isPlatformBrowser } from '@angular/common';
         EditorModule,
         SharedModule,
         ButtonModule,
+        AutoFocusModule
     ],
 })
 export class CreateQuestionComponent implements OnInit {
