@@ -8,17 +8,17 @@
         {{ question.created_at | dateAgo }}
       </span>
       <ng-container *ngIf="isOwner">
-        <span class="text-xs">
+        <span class="text-xs ms-auto">
           <button
             type="button"
-            class="btn__link mx-1 btn--reset"
+            class="btn__link me-1"
             (click)="handleEdit($event)"
           >
             Edit
           </button>
           <button
             type="button"
-            class="btn__link mx-1 btn--reset"
+            class="btn__link"
             (click)="handleDelete($event)"
           >
             Delete

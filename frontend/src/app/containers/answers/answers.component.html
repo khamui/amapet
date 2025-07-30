@@ -13,14 +13,14 @@
       <span class="text-xs">
         <button
           type="button"
-          class="btn__link mx-1 btn--reset"
+          class="btn__link mx-1"
           (click)="toggleEditForm(answer)"
         >
           Edit
         </button>
         <button
           type="button"
-          class="btn__link mx-1 btn--reset"
+          class="btn__link mx-1"
           (click)="handleDelete(answer)"
         >
           Delete
@@ -39,7 +39,7 @@
         ></ama-vote>
       </div>
       <p-divider layout="vertical"></p-divider>
-      <div class="flex flex-column justify-content-between w-full">
+      <div class="flex flex-col justify-between w-full">
         @if (answerInEditing?._id === answer?._id && !answer.deleted) {
           <div class="my-3">
             <ama-texteditor
@@ -63,12 +63,13 @@
         <div class="mt-3">
           <p-toggleButton
             #subAnswerEditor
+            class="mx-1 text-xs p-1"
             [styleClass]="
-              'mx-1 text-xs px-2 py-1' +
-              (isLoggedIn && !answer.deleted ? '' : ' hidden')
+              (isLoggedIn && !answer.deleted ? '' : 'hidden')
             "
-            onIcon="pi pi-minus text-xs"
-            offIcon="pi pi-reply text-xs"
+            onLabel="Cancel"
+            offLabel="Reply"
+            size="small"
           ></p-toggleButton>
         </div>
         @if (isLoggedIn && subAnswerEditor.checked) {
