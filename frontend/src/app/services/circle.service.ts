@@ -25,7 +25,7 @@ export class CircleService {
   }
 
   /* ########### CIRCLES ############ */
-  private readCircles = () => {
+  public readCircles = () => {
     this.api
       .readAsObservable$<Circle[]>('circles')
       .subscribe((circles: Circle[]) => {
