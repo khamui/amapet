@@ -119,6 +119,7 @@ export class QuestionDetailComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.cs.deleteCircleQuestion(this.circle, this.question);
+        this.ro.navigate([this.circle.name]);
       },
       reject: () => {},
     });
