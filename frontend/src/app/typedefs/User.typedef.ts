@@ -9,5 +9,7 @@ export type User = {
   subcomments: [],
   circles: [],
   followedQuestions: [],
-  followedCircles: []
+  followedCircles: [],
+  numOfCircles?: number,
+  numOfQuestions?: number,
 }

@@ -1,5 +1,5 @@
-<div class="grid">
-  <div class="col-12">
+<div class="grid grid-cols-2 gap-4">
+  <div class="col-span-2">
     <p-card subheader="Account">
       <h2 class="mb-2">
         {{ user.firstname }} {{ user.lastname }}
@@ -7,45 +7,50 @@
       <span class="font-medium text-500 text-sm font-italic">{{
         user.email
       }}</span>
-      <p class="text-cyan-500 font-medium font-italic capitalize italic">
+      <!--<p class="text-cyan-500 font-medium font-italic capitalize italic">
         {{ user.level }}
-      </p>
+      </p>-->
         <p class="text-600 text-sm">
         You received
-        <span class="text-cyan-500 font-medium font-italic text-md">
+        <!--<span class="text-cyan-500 font-medium font-italic text-md">
           {{ user.respect }}
-        </span>
+        </span>-->
         respect from other users.
       </p>
     </p-card>
   </div>
-</div>
-<div class="grid">
-  <div class="col-6">
+  <div>
     <p-card subheader="Avatar">
-      <p><span>N/A</span></p>
+      <p><span>tbd</span></p>
     </p-card>
   </div>
-  <div class="col-6">
+  <div>
     <p-card subheader="Circles">
       <p>
-        <span>{{ user.circles.length }}</span>
+        <span>{{ user.numOfCircles }}</span>
       </p>
     </p-card>
   </div>
-</div>
-<div class="grid">
-  <div class="col-6">
+  <div>
+    <p-card subheader="Questions">
+      <p>
+        <span>{{ user.numOfQuestions }}</span>
+      </p>
+    </p-card>
+  </div>
+  <div>
     <p-card subheader="Comments">
       <p>
-        <span>{{ user.comments.length }}</span>
+        <!--<span>{{ user.comments.length }}</span>-->
+        tbd
       </p>
     </p-card>
   </div>
-  <div class="col-6">
+  <div>
     <p-card subheader="Following">
       <p>
-        <span>{{ user.followedCircles.length }}</span>
+        <!--<span>{{ user.followedCircles.length }}</span>-->
+        tbd
       </p>
     </p-card>
   </div>
