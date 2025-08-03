@@ -1,24 +1,24 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Subscription, switchMap, timer } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Notification } from 'src/app/typedefs/Notification.typedef';
 import { JsonPipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { Popover, PopoverModule } from 'primeng/popover';
 
 const INTERVAL_IN_MS = 180000; // 3 mins
 
 @Component({
   selector: 'ama-notifications',
   standalone: true,
-  imports: [OverlayPanelModule, ButtonModule, BadgeModule, JsonPipe],
+  imports: [ButtonModule, BadgeModule, JsonPipe, PopoverModule],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
-  @ViewChild('notificationsPanel') notificationsPanel!: OverlayPanel;
+  @ViewChild('notificationsPanel') notificationsPanel!: Popover;
 
   notifications!: Notification[];
   unreadItems = 0;
@@ -67,4 +67,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       });
     }
   };
+
+  public handleNotificationsToggle = (event: any, el: any) => {
+    // fixme: little hack to make sure popover is not placed far down
+    // when the page is scrolled down, before the popover is opened
+    scrollTo(0, 0);
+    el.toggle(event);
+  }
 }
