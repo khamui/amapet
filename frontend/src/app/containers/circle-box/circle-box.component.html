@@ -1,6 +1,6 @@
 <div>
   @if (circleMenuItems.length > 0) {
-    <div class="mb-3">
+    <div class="max-h-[calc(100vh-16rem)] overflow-y-auto mb-3">
       <ama-sidebox [items]="circleMenuItems"></ama-sidebox>
     </div>
   }
@@ -14,7 +14,7 @@
       [raised]="true"
       (onClick)="createPopup.toggle($event)"
     ></p-button>
-    <p-overlayPanel #createPopup>
+    <p-popover #createPopup>
       <ng-template pTemplate="content">
         <div class="p-inputgroup">
           <span class="p-inputgroup-addon"> c/ </span>
@@ -39,7 +39,7 @@
           <div class="mt-2 text-red-600">Circle already exists.</div>
         }
       </ng-template>
-    </p-overlayPanel>
+    </p-popover>
   }
   <!--
   <p-button (click)="op.toggle($event)" icon="pi pi-image" label="Show"></p-button>
