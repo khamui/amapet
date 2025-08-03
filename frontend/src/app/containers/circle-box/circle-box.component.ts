@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, SharedModule } from 'primeng/api';
 import { Observable, Subject, debounceTime } from 'rxjs';
@@ -6,10 +6,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { InputTextModule } from 'primeng/inputtext';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import { SideboxComponent } from '../../components/sidebox/sidebox.component';
 import { NgIf } from '@angular/common';
+import { PopoverModule } from 'primeng/popover';
+
 
 @Component({
     selector: 'ama-circle-box',
@@ -20,14 +21,12 @@ import { NgIf } from '@angular/common';
         NgIf,
         SideboxComponent,
         ButtonModule,
-        OverlayPanelModule,
+        PopoverModule,
         SharedModule,
         InputTextModule,
     ],
 })
 export class CircleBoxComponent implements OnInit {
-  @Input() items!: MenuItem[];
-
   circles$!: Observable<Circle[]>;
   circleMenuItems: MenuItem[] = [];
   circleNameInput = new Subject<string>;
