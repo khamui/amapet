@@ -11,7 +11,6 @@ import { SideboxComponent } from '../../components/sidebox/sidebox.component';
 import { NgIf } from '@angular/common';
 import { PopoverModule } from 'primeng/popover';
 
-
 @Component({
     selector: 'ama-circle-box',
     templateUrl: './circle-box.component.html',
@@ -45,10 +44,14 @@ export class CircleBoxComponent implements OnInit {
       this.isLoggedIn = value;
     });
 
-    this.cs.circles$.subscribe((circles: Circle[]) => {
+    this.cs.circles$.subscribe(async(circles: Circle[]) => {
+        const followedCircles = await this.as.getFollowedCircles();
         this.circleMenuItems = circles.map((circle: Circle) => ({
           label: circle.name,
           command: () => this.router.navigate([circle.name]),
+          state: {
+            isFollowed: followedCircles.includes(circle.name),
+          }
         })) as MenuItem[]
       })
 

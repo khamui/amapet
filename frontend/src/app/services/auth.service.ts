@@ -128,4 +128,14 @@ export class AuthService {
     const payload = jwtToken && decode(jwtToken);
     return (payload as any)?._id;
   };
+
+  /***
+   *
+   * Get logged in user's followed circles
+   *
+   ***/
+  public getFollowedCircles = async() => {
+    const { isError, result } = await this.api.read('profile', true);
+    return (result as any).profile.followedCircles || [];
+  };
 }
