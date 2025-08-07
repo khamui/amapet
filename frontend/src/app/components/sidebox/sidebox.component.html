@@ -1,1 +1,29 @@
-<p-menu [model]="items"></p-menu>
+<p-menu [model]="items">
+  <ng-template #item let-item>
+    <a class="flex items-center p-menu-item-link justify-between">
+      <span class="ml-2">{{ item.label }}</span>
+      @if (context === 'circles') {
+        @if (item?.state?.isFollowed) {
+          <p-button
+            icon="pi pi-star-fill"
+            aria-label="Star circle"
+            size="small"
+            [rounded]="true"
+            [text]="true"
+            (onClick)="handleFollowCircle($event, item)"
+          />
+
+        } @else {
+          <p-button
+            icon="pi pi-star"
+            aria-label="Star circle"
+            size="small"
+            [rounded]="true"
+            [text]="true"
+            (onClick)="handleFollowCircle($event, item)"
+          />
+        }
+      }
+    </a>
+  </ng-template>
+</p-menu>

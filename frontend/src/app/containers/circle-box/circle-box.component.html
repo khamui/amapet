@@ -1,7 +1,7 @@
 <div>
   @if (circleMenuItems.length > 0) {
     <div class="max-h-[calc(100vh-16rem)] overflow-y-auto mb-3">
-      <ama-sidebox [items]="circleMenuItems"></ama-sidebox>
+      <ama-sidebox [items]="circleMenuItems" context="circles"></ama-sidebox>
     </div>
   }
   @if (isLoggedIn) {
