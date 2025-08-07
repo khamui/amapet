@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 // import controllers
-import { getProfile } from "../controllers/profile.js";
+import { controllerProfile } from "../controllers/controller.profile.js";
 
 // import middlewares
 import { middlewareAuth } from "../middlewares/middleware.auth.js";
@@ -16,7 +16,17 @@ const router = express.Router();
 router.get("/profile", cors(corsOptions), [
   middlewareAuth.isAuthorized,
   middlewareAuth.getUserIdFromToken,
-  (req, res) => getProfile(req, res)
+  controllerProfile.getProfile,
+]);
+
+/*
+ * Follow a circle.
+ */
+router.post("/follow-circle", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  //middlewareCircles.circleCreateCheck,
+  controllerProfile.followCircle,
 ]);
 
 export default router;

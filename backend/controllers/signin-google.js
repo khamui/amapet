@@ -36,6 +36,9 @@ const getUserOrCreateUser = async (originalPayload) => {
   if (!result) {
     const newUser = {
       ...originalPayload,
+      followedCircles: [],
+      followedQuestions: [],
+      respectPoints: 0
     }
     result = await generateModel(User, newUser);
   }
