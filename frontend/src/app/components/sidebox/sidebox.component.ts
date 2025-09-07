@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { ApiService } from 'src/app/services/api.service';
@@ -9,7 +10,7 @@ import { FollowResponse } from 'src/app/typedefs/FollowResponse.typedef';
   templateUrl: './sidebox.component.html',
   styleUrls: ['./sidebox.component.scss'],
   standalone: true,
-  imports: [MenuModule, ButtonModule],
+  imports: [MenuModule, ButtonModule, RouterLink],
 })
 export class SideboxComponent {
   @Input() items: any;
