@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "clean": "rm -rf node_modules",
-    "cstart": "npm run clean && npm cache clean --force && npm i --legacy-peer-deps && npm start"
+    "cstart": "npm run clean && npm cache clean --force && npm i && npm start"
   },
   "private": true,
   "dependencies": {

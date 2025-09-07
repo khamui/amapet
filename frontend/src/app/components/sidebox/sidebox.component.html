@@ -1,6 +1,9 @@
 <p-menu [model]="items">
   <ng-template #item let-item>
-    <a class="flex items-center p-menu-item-link justify-between">
+    <a
+      class="flex items-center p-menu-item-link justify-between"
+      [routerLink]="item.routerLink"
+    >
       <span class="ml-2">{{ item.label }}</span>
       @if (context === 'circles') {
         @if (item?.state?.isFollowed) {
