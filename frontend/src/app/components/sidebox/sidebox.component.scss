@@ -1,3 +1,15 @@
 .p-menu {
   width: 100%;
 }
+
+a {
+  > p-button[icon="pi pi-star"] {
+    visibility: hidden;
+  }
+
+  &:hover {
+    & > p-button[icon="pi pi-star"] {
+      visibility: visible;
+    }
+  }
+}
