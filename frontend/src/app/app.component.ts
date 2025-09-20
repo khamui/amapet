@@ -3,7 +3,6 @@ import { Router, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from './services/auth.service';
 import { ToastModule } from 'primeng/toast';
-import { NgIf } from '@angular/common';
 import { SideboxComponent } from './components/sidebox/sidebox.component';
 import { CircleBoxComponent } from './containers/circle-box/circle-box.component';
 import { TopbarComponent } from './containers/topbar/topbar.component';
@@ -15,7 +14,6 @@ import { TopbarComponent } from './containers/topbar/topbar.component';
     standalone: true,
     imports: [
         RouterOutlet,
-        NgIf,
         ToastModule,
         SideboxComponent,
         CircleBoxComponent,

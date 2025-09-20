@@ -6,12 +6,21 @@
   <div class="p-toolbar-group-end">
     @if (isLoggedIn) {
       <ama-notifications></ama-notifications>
+      <p-button
+        label="Logout"
+        icon="pi pi-sign-out"
+        class="mr-2 danger-50"
+        styleClass="p-button-danger"
+        size="small"
+        (onClick)="handleLogout()"
+      ></p-button>
     } @else {
       <p-button
         label="Login"
         icon="pi pi-sign-in"
         class="mr-2 primary-50"
         styleClass="p-button-warning"
+        size="small"
         (onClick)="router.navigate(['signin'])"
       ></p-button>
     }

@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { FollowResponse } from 'src/app/typedefs/FollowResponse.typedef';
 
 @Component({
@@ -12,11 +13,22 @@ import { FollowResponse } from 'src/app/typedefs/FollowResponse.typedef';
   standalone: true,
   imports: [MenuModule, ButtonModule, RouterLink],
 })
-export class SideboxComponent {
+export class SideboxComponent implements OnInit {
   @Input() items: any;
   @Input() context!: string;
 
-  constructor(private api: ApiService<any>) {}
+  public isLoggedIn = false;
+
+  constructor(
+    private api: ApiService<any>,
+    private as: AuthService,
+  ) {}
+
+  ngOnInit(): void {
+    this.as.watchLoggedIn.subscribe((value: boolean) => {
+      this.isLoggedIn = value;
+    });
+  }
 
   public async handleFollowCircle(event: MouseEvent, item: any) {
     event.stopPropagation();
