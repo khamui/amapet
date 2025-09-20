@@ -60,25 +60,39 @@
             ></div>
           }
         }
-        <div class="mt-3">
-          <p-toggleButton
-            #subAnswerEditor
-            class="mx-1 text-xs p-1"
-            [styleClass]="
-              (isLoggedIn && !answer.deleted ? '' : 'hidden')
-            "
-            onLabel="Cancel"
-            offLabel="Reply"
-            size="small"
-          ></p-toggleButton>
-        </div>
-        @if (isLoggedIn && subAnswerEditor.checked) {
-          <div class="my-3">
-            <ama-texteditor
-              [data]="answer"
-              [editorButtonElement]="subAnswerEditor"
-              (submit)="submitAnswer($event)"
-            ></ama-texteditor>
+        @if (isLoggedIn) {
+          <div class="mt-3">
+            <p-toggleButton
+              #subAnswerEditor
+              class="mx-1 text-xs p-1"
+              [styleClass]="
+                (isLoggedIn && !answer.deleted ? '' : 'hidden')
+              "
+              onLabel="Cancel"
+              offLabel="Reply"
+              size="small"
+            ></p-toggleButton>
+          </div>
+          @if (subAnswerEditor.checked) {
+            <div class="my-3">
+              <ama-texteditor
+                [data]="answer"
+                [editorButtonElement]="subAnswerEditor"
+                (submit)="submitAnswer($event)"
+              ></ama-texteditor>
+            </div>
+          }
+        } @else {
+          <div class="mt-3">
+            <p-button
+              label="Login to reply"
+              icon="pi pi-sign-in"
+              class="mr-2 primary-50"
+              styleClass="p-button-warning"
+              size="small"
+              [outlined]="true"
+              (onClick)="router.navigate(['signin'])"
+            ></p-button>
           </div>
         }
         @if (answer?.children?.length || 0 > 0) {

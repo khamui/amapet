@@ -11,6 +11,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
 import { FormsModule } from '@angular/forms';
+import { Button } from 'primeng/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ama-answers',
@@ -27,6 +29,7 @@ import { FormsModule } from '@angular/forms';
     ConfirmDialogModule,
     TexteditorComponent,
     VoteComponent,
+    Button
   ],
 })
 export class AnswersComponent {
@@ -44,6 +47,7 @@ export class AnswersComponent {
     private as: AuthService,
     private ans: AnswerService,
     private cos: ConfirmationService,
+    public router: Router
   ) {
     this.currentUserId = this.as.getUserId();
     this.as.watchLoggedIn.subscribe((value: boolean) => {

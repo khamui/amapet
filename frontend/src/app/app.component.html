@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="mb-3 fixed w-full z-5">
   <ama-topbar></ama-topbar>
 </div>
@@ -13,11 +14,10 @@
     </div>
   </div>
   <div class="w-2/8">
-    <ng-container *ngIf="isLoggedIn">
+    @if (isLoggedIn) {
       <div class="p-3">
         <ama-sidebox [items]="menuItems"></ama-sidebox>
       </div>
-    </ng-container>
+    }
   </div>
 </div>
-<p-toast></p-toast>

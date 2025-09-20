@@ -10,7 +10,6 @@ import { NotificationsComponent } from '../notifications/notifications.component
   selector: 'ama-topbar',
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
-  providers: [MessageService],
   standalone: true,
   imports: [ToolbarModule, ButtonModule, NotificationsComponent],
 })
@@ -20,11 +19,28 @@ export class TopbarComponent implements OnInit {
   constructor(
     public router: Router,
     public as: AuthService,
+    private ms: MessageService,
   ) {}
 
   ngOnInit(): void {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
+      if (value) {
+        this.ms.add({
+          severity: 'success',
+          summary: 'Logged in!',
+          detail: 'You have been successfully logged in.',
+        });
+      }
     });
+  }
+
+  handleLogout() {
+    this.ms.add({
+      severity: 'success',
+      summary: 'Logged out!',
+      detail: 'You have been successfully logged out.',
+    });
+    this.as.logout();
   }
 }

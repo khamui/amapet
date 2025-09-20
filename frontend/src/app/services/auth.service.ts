@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { jwtDecode as decode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User } from '../typedefs/User.typedef';
+import { MessageService } from 'primeng/api';
 
 // CONSTANTS
 const TOKEN_NAME = 'amapet_token';
@@ -21,6 +22,7 @@ export class AuthService {
     private sas: SocialAuthService,
     private api: ApiService<Token>,
     private router: Router,
+    private ms: MessageService
   ) {}
 
   /***
@@ -36,18 +38,35 @@ export class AuthService {
 
     if (!storedToken) {
       this.sas.authState.subscribe(async (user: SocialUser) => {
-        const token = await this.requestToken(user);
-        if (!token.isError) {
-          this.setToken((token.result as Token).token);
+        try {
+          const token = user && await this.requestToken(user);
+          if (token && !token.isError) {
+            this.setToken((token.result as Token).token);
+            this.watchLoggedIn.next(true);
+            this.router.navigate(['/'], { replaceUrl: true });
+          }
+        } catch (error: any) {
+          if (error.name !== 'AbortError') {
+            this.ms.add({
+              severity: 'error',
+              summary: 'Login failed!',
+              detail: 'An error occurred during login. Please try again.',
+            });
+          }
         }
-        this.router.navigate(['/'], { replaceUrl: true });
-        this.watchLoggedIn.next(true);
       });
     } else {
       const payload = decode(storedToken);
       this.setLoggedInWithExpiration((payload as any).exp);
       console.log('Still valid token. Expiry date to be checked');
     }
+  };
+
+  public logout = async () => {
+    await this.sas.signOut();
+    localStorage.removeItem(TOKEN_NAME);
+    this.watchLoggedIn.next(false);
+    this.router.navigate(['/'], { replaceUrl: true });
   };
 
   private setLoggedInWithExpiration = (exp: number) => {
@@ -71,6 +90,14 @@ export class AuthService {
   ***/
   private requestToken = async (user: SocialUser) => {
     const { idToken: token } = user;
+    if (!token) {
+      this.ms.add({
+        severity: 'error',
+        summary: 'Login failed!',
+        detail: 'No token received from Google.',
+      });
+      return;
+    }
     const authToken = await this.api.create('google-signin', {
       token,
     });
