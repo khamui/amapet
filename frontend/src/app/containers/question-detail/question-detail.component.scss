@@ -2,3 +2,28 @@ button.btn__link {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.intention-chip {
+  display: inline-block;
+  padding: .2rem .5rem;
+  border-radius: 1rem;
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 0.75rem;
+
+  &--question {
+    background-color: var(--intention-question-bg);
+  }
+
+  &--advice {
+    background-color: var(--intention-advice-bg);
+  }
+
+  &--discussion {
+    background-color: var(--intention-discussion-bg);
+  }
+
+  &--information {
+    background-color: var(--intention-information-bg);
+  }
+}

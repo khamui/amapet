@@ -25,6 +25,9 @@ export const questionCreateSchema = Joi.object({
     .required(),
   body: Joi.string()
     .max(3000)
+    .allow('')
+    .optional(),
+  intentionId: Joi.string()
     .required()
 })
 

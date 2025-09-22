@@ -7,7 +7,6 @@ import { Question } from 'src/app/typedefs/Question.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DividerModule } from 'primeng/divider';
-import { NgIf } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
 
@@ -18,7 +17,6 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
   providers: [ConfirmationService],
   standalone: true,
   imports: [
-    NgIf,
     DateAgoPipe,
     PanelModule,
     SharedModule,

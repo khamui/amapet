@@ -18,3 +18,10 @@ body {
   max-height: 60vh;
   overflow: auto;
 }
+
+:root {
+  --intention-question-bg: #a3c4f3; // pastel-blue in hex #a3c4f3;
+  --intention-advice-bg: #f3a3c4; // pastel-rose in hex #f3a3c4;
+  --intention-discussion-bg: #c4a3f3; // pastel-violet in hex #c4a3f3 ;
+  --intention-information-bg: #f3f3f3; // light gray in hexa #f3f3f3  ;
+}

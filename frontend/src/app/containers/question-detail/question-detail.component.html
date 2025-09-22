@@ -1,4 +1,4 @@
-<ng-container *ngIf="question">
+@if (question) {
   <p-panel>
     <ng-template pTemplate="header">
       <span class="text-xs text-bluegray-300">
@@ -7,7 +7,7 @@
       <span class="text-xs text-bluegray-500 mx-1 font-semibold">
         {{ question.created_at | dateAgo }}
       </span>
-      <ng-container *ngIf="isOwner">
+      @if (isOwner) {
         <span class="text-xs ms-auto">
           <button
             type="button"
@@ -24,7 +24,7 @@
             Delete
           </button>
         </span>
-      </ng-container>
+      }
     </ng-template>
     <div class="flex jufstify-content-start">
       <div class="text-sm mr-1">
@@ -39,6 +39,20 @@
       <div class="w-full">
         <div class="ml-1">
           <h4 class="m-0">{{ question.title }}</h4>
+          <div
+            class="intention-chip my-2"
+            [ngClass]="
+              question.intentionId === 'question'
+                ? 'intention-chip--question'
+                : question.intentionId === 'advice'
+                ? 'intention-chip--advice'
+                : question.intentionId === 'discussion'
+                ? 'intention-chip--discussion'
+                : question.intentionId === 'information'
+                ? 'intention-chip--information'
+                : 'intention-chip--question'
+            "
+          >{{ question.intentionId || 'question' }}</div>
           <p
             [innerHtml]="question.body"
             class="text-left text-sm font-bold my-10"
@@ -48,14 +62,14 @@
           <i class="pi pi-comments"></i>
           <span class="mx-2">{{ ans?.answers?.length || 0 }} answers</span>
         </div>
-        <ng-container *ngIf="isLoggedIn">
+        @if (isLoggedIn) {
           <div class="w-full mt-5 mb-3">
             <ama-texteditor
               (submit)="submitAnswer($event)"
               [loading]="loading"
             ></ama-texteditor>
           </div>
-        </ng-container>
+        }
       </div>
     </div>
     <div class="my-5">
@@ -73,5 +87,5 @@
       }
     </div>
   </p-panel>
-</ng-container>
+}
 <p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>

@@ -10,12 +10,20 @@
       [pAutoFocus]="true"
     />
   </div>
+  <div class="my-3">
+    <p-selectbutton
+      [options]="questionIntentions"
+      formControlName="intentionSelect"
+      optionLabel="label"
+      optionValue="id"
+    />
+  </div>
   <div class="w-full my-3">
     @if (isBrowserOnly) {
       <p-editor
         formControlName="bodyEditor"
         [style]="{ height: '12rem' }"
-        placeholder="Your question goes here..."
+        placeholder="Elaborate on your question..."
       >
         <ng-template pTemplate="header">
           <span class="ql-formats">

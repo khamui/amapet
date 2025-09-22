@@ -1,7 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
-import { combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { AnswerService } from 'src/app/services/answer.service';
 import { CircleService } from 'src/app/services/circle.service';
@@ -15,7 +14,7 @@ import { TexteditorComponent } from '../../components/texteditor/texteditor.comp
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
 
 @Component({
@@ -25,7 +24,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
   providers: [ConfirmationService],
   standalone: true,
   imports: [
-    NgIf,
+    NgClass,
     PanelModule,
     SharedModule,
     DividerModule,

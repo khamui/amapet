@@ -9,4 +9,5 @@ export type Question = {
   body: string,
   upvotes?: string[],
   downvotes?: string[],
+  intentionId?: string
 }

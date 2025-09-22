@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { QuestionsComponent } from '../questions/questions.component';
 import { InputTextModule } from 'primeng/inputtext';
-import { NgIf } from '@angular/common';
 
 @Component({
     host: { ngSkipHydration: 'true' },
@@ -15,7 +13,6 @@ import { NgIf } from '@angular/common';
     styleUrls: ['./circle.component.scss'],
     standalone: true,
     imports: [
-        NgIf,
         InputTextModule,
         QuestionsComponent,
     ],

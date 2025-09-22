@@ -13,6 +13,7 @@ const questionSchema = new mongoose.Schema({
   body: String,
   upvotes: Array,
   downvotes: Array,
+  intentionId: String,
 });
 
 export const Question = mongoose.model("Question", questionSchema);
