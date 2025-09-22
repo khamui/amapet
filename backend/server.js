@@ -11,6 +11,7 @@ import circleRoutes from './routes/circles.js';
 import answerRoutes from './routes/answers.js';
 import notificationRoutes from './routes/notifications.js';
 import profileRoutes from './routes/profile.js';
+import settingsRoutes from './routes/settings.js';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/', circleRoutes);
 app.use('/', answerRoutes);
 app.use('/', notificationRoutes);
 app.use('/', profileRoutes);
+app.use('/', settingsRoutes);
 
 const port = process.env.PORT || '5200';
 app.set('port', port);

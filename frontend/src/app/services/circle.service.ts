@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Question } from '../typedefs/Question.typedef';
+import { Settings } from '../typedefs/Settings.typedef';
 
 @Injectable({
   providedIn: 'root',
@@ -90,6 +91,7 @@ export class CircleService {
     circle: Circle,
     titleInput: string,
     bodyEditor: string,
+    intentionId: string,
   ) => {
     const payload: Question = {
       circleId: circle._id as string,
@@ -97,6 +99,7 @@ export class CircleService {
       ownerName: this.as.getUserName(),
       title: titleInput,
       body: bodyEditor,
+      intentionId,
     };
     const createdQuestion$ = this.api.createAsObservable$(
       `circles/${circle._id}/questions/create`,
@@ -211,4 +214,14 @@ export class CircleService {
     });
   };
   /* ########### QUESTIONS ############ */
+
+  /* ########### SETTINGS ############ */
+  public readIntentions = async () => {
+    const settings = await this.api.read<Settings>(
+      `settings/question_intentions`,
+      true
+    );
+    return (settings.result as any)[0] as Settings;
+  };
+  /* ########### SETTINGS ############ */
 }

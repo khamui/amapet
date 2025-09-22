@@ -8,7 +8,7 @@
         <span class="text-xs text-bluegray-500 mx-1 font-semibold">
           {{ question.created_at | dateAgo }}
         </span>
-        <ng-container *ngIf="isOwner">
+        @if (isOwner) {
           <span class="text-xs">
             <button
               type="button"
@@ -25,7 +25,7 @@
               Delete
             </button>
           </span>
-        </ng-container>
+        }
       </div>
     </ng-template>
     <div class="flex jufstify-content-start">
