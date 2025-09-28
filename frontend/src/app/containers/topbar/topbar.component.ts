@@ -35,12 +35,16 @@ export class TopbarComponent implements OnInit {
     });
   }
 
-  handleLogout() {
+  public handleNavigateHome() {
+    this.router.navigate(['explore']);
+  }
+
+  public async handleLogout() {
+    await this.as.logout();
     this.ms.add({
       severity: 'success',
       summary: 'Logged out!',
       detail: 'You have been successfully logged out.',
     });
-    this.as.logout();
   }
 }
