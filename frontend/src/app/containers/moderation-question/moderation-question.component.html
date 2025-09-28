@@ -1,0 +1,53 @@
+<div
+  class="override__p-panel"
+  [attr.status]="status"
+>
+  <p-panel>
+    <ng-template pTemplate="header">
+      <div class="w-full">
+        <span class="text-xs text-bluegray-300">
+          Posted by {{ question.ownerName }}
+        </span>
+        <span class="text-xs text-bluegray-500 mx-1 font-semibold">
+          {{ question.created_at | dateAgo }}
+        </span>
+          <span class="text-xs">
+            <button
+              type="button"
+              class="btn__link me-1"
+              (click)="handleModerate($event)"
+            >
+              Moderate
+            </button>
+          </span>
+      </div>
+    </ng-template>
+    <div class="flex jufstify-content-start items-center">
+      <div
+        class="text-md mr-1"
+        [ngClass]="
+          (question.upvotes?.length || 0) - (question.downvotes?.length || 0) > 0
+            ? 'text-green-600'
+            : (question.upvotes?.length || 0) - (question.downvotes?.length || 0) < 0
+            ? 'text-red-700'
+            : ''
+        "
+      >
+        {{ (question.upvotes?.length || 0) - (question.downvotes?.length || 0) }}
+      </div>
+      <p-divider layout="vertical"></p-divider>
+      <div class="w-full">
+        <div class="ml-1">
+          <h4 class="m-0">{{ question.title }}</h4>
+          <p [innerHtml]="question.body" class="text-left text-sm my-4"></p>
+        </div>
+        <p-divider layout="horizontal"></p-divider>
+        <div class="text-sm">
+          <i class="pi pi-comments"></i>
+          <span> tbd num of answers </span>
+        </div>
+      </div>
+    </div>
+  </p-panel>
+</div>
+<p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>
