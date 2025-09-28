@@ -165,4 +165,14 @@ export class AuthService {
     const { isError, result } = await this.api.read('profile', true);
     return (result as any).profile.followedCircles || [];
   };
+
+  /***
+   *
+   * Get logged in user's followed circles
+   *
+   ***/
+  public getModeratedCircles = async() => {
+    const { isError, result } = await this.api.read('moderatedCircleIds', true);
+    return (result as any).moderatedCircles || [];
+  };
 }

@@ -6,7 +6,8 @@ const userSchema = new Schema({
   email: String,
   followedCircles: Array,
   followedQuestions: Array,
-  respectPoints: Number
+  respectPoints: Number,
+  moderatedCircles: Array,
 });
 
 export const User = model("User", userSchema);

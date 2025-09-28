@@ -8,17 +8,17 @@ import { CircleBoxComponent } from './containers/circle-box/circle-box.component
 import { TopbarComponent } from './containers/topbar/topbar.component';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: true,
-    imports: [
-        RouterOutlet,
-        ToastModule,
-        SideboxComponent,
-        CircleBoxComponent,
-        TopbarComponent
-    ],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    ToastModule,
+    SideboxComponent,
+    CircleBoxComponent,
+    TopbarComponent,
+  ],
 })
 export class AppComponent implements OnInit {
   menuItems: MenuItem[] = [];
@@ -29,17 +29,26 @@ export class AppComponent implements OnInit {
     public router: Router,
     private as: AuthService,
   ) {
-    this.menuItems = [
-      // { label: 'Create new Post', icon: 'pi pi-plus', routerLink: 'create' },
-      { label: 'Profile', icon: 'pi pi-user', routerLink: 'profile' },
-      //{ label: 'Questions', icon: 'pi pi-history', routerLink: 'questions' },
-    ];
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
     });
     this.as.subscribeLogin();
+
+    const moderatedCircles = await this.as.getModeratedCircles();
+
+    this.menuItems = [
+      // { label: 'Create new Post', icon: 'pi pi-plus', routerLink: 'create' },
+      { label: 'Profile', icon: 'pi pi-user', routerLink: 'profile' },
+      {
+        label: 'Moderation',
+        icon: 'pi pi-user',
+        routerLink: 'moderation',
+        disabled: moderatedCircles.length > 0 ? false : true,
+      },
+      //{ label: 'Questions', icon: 'pi pi-history', routerLink: 'questions' },
+    ];
   }
 }
