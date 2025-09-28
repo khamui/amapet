@@ -22,7 +22,7 @@ export class AuthService {
     private sas: SocialAuthService,
     private api: ApiService<Token>,
     private router: Router,
-    private ms: MessageService
+    private ms: MessageService,
   ) {}
 
   /***
@@ -39,7 +39,7 @@ export class AuthService {
     if (!storedToken) {
       this.sas.authState.subscribe(async (user: SocialUser) => {
         try {
-          const token = user && await this.requestToken(user);
+          const token = user && (await this.requestToken(user));
           if (token && !token.isError) {
             this.setToken((token.result as Token).token);
             this.watchLoggedIn.next(true);
@@ -63,10 +63,10 @@ export class AuthService {
   };
 
   public logout = async () => {
-    await this.sas.signOut();
     localStorage.removeItem(TOKEN_NAME);
     this.watchLoggedIn.next(false);
     this.router.navigate(['/'], { replaceUrl: true });
+    await this.sas.signOut();
   };
 
   private setLoggedInWithExpiration = (exp: number) => {
@@ -161,8 +161,9 @@ export class AuthService {
    * Get logged in user's followed circles
    *
    ***/
-  public getFollowedCircles = async() => {
+  public getFollowedCircles = async () => {
     const { isError, result } = await this.api.read('profile', true);
     return (result as any).profile.followedCircles || [];
   };
+
 }

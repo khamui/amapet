@@ -7,6 +7,9 @@ import { CircleComponent } from './containers/circle/circle.component';
 import { CreateQuestionComponent } from './containers/create-question/create-question.component';
 import { QuestionDetailComponent } from './containers/question-detail/question-detail.component';
 import { EditQuestionComponent } from './containers/edit-question/edit-question.component';
+import { ModerationComponent } from './containers/moderation/moderation.component';
+import { ModerationQuestionsComponent } from './containers/moderation-questions/moderation-questions.component';
+import { ModerationQuestionDetailComponent } from './containers/moderation-question-details/moderation-question-detail.component';
 
 const routes: Routes = [
   { path: 'explore', component: ExploreComponent },
@@ -16,6 +19,9 @@ const routes: Routes = [
   { path: 'c/:name/questions/:qid', component: QuestionDetailComponent },
   { path: 'signin', component: SignInComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'moderation', component: ModerationComponent},
+  { path: 'moderate/c/:name', component: ModerationQuestionsComponent},
+  { path: 'moderate/c/:name/q/:qid', component: ModerationQuestionDetailComponent},
   { path: '', redirectTo: 'explore', pathMatch: 'full' }
 ];
 
