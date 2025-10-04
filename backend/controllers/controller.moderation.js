@@ -1,4 +1,5 @@
 import { User } from "../db/models/user.js";
+import { Circle } from "../db/models/circle.js";
 import { retrieveModelById } from "../dbaccess.js";
 
 export const controllerModeration = {
@@ -6,44 +7,33 @@ export const controllerModeration = {
     try {
       const id = req.userPayload._id;
       const dbUser = await retrieveModelById(User, id);
-      const { moderatedCircles } = dbUser;
+      const { moderatedCircleIds } = dbUser;
 
-      return res.status(200).json({ moderatedCircles });
+      return res.status(200).json({ moderatedCircleIds });
     } catch (error) {
       console.error("Error retrieving profile:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
   },
-  //followCircle: async (req, res, next) => {
-  //  const { circleName } = req.body;
-  //  const userId = req.userPayload._id;
+  getModeratedCircles: async (req, res, next) => {
+    try {
+      // get users' moderated circles
+      const id = req.userPayload._id;
+      const dbUser = await retrieveModelById(User, id);
+      const { moderatedCircleIds } = dbUser;
+      const moderatedCircles = [];
 
-  //  try {
-  //    const user = await retrieveModelById(User, userId);
-  //    if (!user.followedCircles.includes(circleName)) {
-  //      // follow the circle
-  //      user.followedCircles.push(circleName);
-  //      await user.save();
-  //      return res.status(200).json({
-  //        message: "Circle followed successfully",
-  //        action: "followed",
-  //      });
-  //    } else {
-  //      // unfollow the circle
-  //      user.followedCircles = user.followedCircles.filter(
-  //        (circle) => circle !== circleName,
-  //      );
-  //      await user.save();
-  //      return res
-  //        .status(200)
-  //        .json({
-  //          message: "Circle unfollowed successfully",
-  //          action: "unfollowed",
-  //        });
-  //    }
-  //  } catch (error) {
-  //    console.error("Error following circle:", error);
-  //    return res.status(500).json({ error: "Internal server error" });
-  //  }
-  //},
+      // get circle details from moderatedCirclesIds
+      for (const circleId of moderatedCircleIds) {
+        const foundCircle = await retrieveModelById(Circle, circleId);
+        if (foundCircle) {
+          moderatedCircles.push(foundCircle);
+        }
+      }
+      res.status(200).json({ moderatedCircles });
+
+    } catch (error) {
+      res.status(500).send("couldn't retrieve model");
+    }
+  },
 };
