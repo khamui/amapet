@@ -7,7 +7,7 @@ const userSchema = new Schema({
   followedCircles: Array,
   followedQuestions: Array,
   respectPoints: Number,
-  moderatedCircles: Array,
+  moderatedCircleIds: Array,
 });
 
 export const User = model("User", userSchema);
