@@ -19,6 +19,13 @@ router.get("/moderatedCircleIds", cors(corsOptions), [
   controllerModeration.getModeratedCircleIds,
 ]);
 
+// get profile information from db & db queries
+router.get("/moderatedCircles", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  controllerModeration.getModeratedCircles,
+]);
+
 /*
  * Add user as moderator of a circle.
  */
