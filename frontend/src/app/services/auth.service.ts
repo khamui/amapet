@@ -165,4 +165,5 @@ export class AuthService {
     const { isError, result } = await this.api.read('profile', true);
     return (result as any).profile.followedCircles || [];
   };
+
 }
