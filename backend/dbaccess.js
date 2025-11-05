@@ -3,8 +3,6 @@ import * as dotenv from "dotenv";
 
 export const corsOptions = { origin: ["http://localhost:4200"] };
 
-const mongoose = require('mongoose');
-
 async function connectWithRetry(mongodb_url) {
   const maxRetries = 10;
   const retryInterval = 3000;
