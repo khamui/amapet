@@ -28,8 +28,37 @@
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
             echo ""
-            echo "Commands:"
-            echo "  dev-all       - Start everything in tmux"
+            # Create registries config
+            mkdir -p $HOME/.config/containers
+
+            cat > $HOME/.config/containers/registries.conf << EOF
+            [registries.search]
+            registries = ['docker.io']
+
+            [registries.insecure]
+            registries = []
+
+            [registries.block]
+            registries = []
+            EOF
+
+              # Create policy.json
+              cat > $HOME/.config/containers/policy.json << EOF
+            {
+              "default": [
+                {
+                  "type": "insecureAcceptAnything"
+                }
+              ],
+              "transports": {
+                "docker-daemon": {
+                  "": [{"type": "insecureAcceptAnything"}]
+                }
+              }
+            }
+            EOF
+
+              echo "Podman configured with Docker Hub and policy"
           '';
         };
       }
