@@ -3,11 +3,31 @@ import * as dotenv from "dotenv";
 
 export const corsOptions = { origin: ["http://localhost:4200"] };
 
+const mongoose = require('mongoose');
+
+async function connectWithRetry(mongodb_url) {
+  const maxRetries = 10;
+  const retryInterval = 3000;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      await mongoose.connect(mongodb_url);
+      console.log('Connected to MongoDB');
+      return;
+    } catch (err) {
+      console.log(`MongoDB connection attempt ${i + 1} failed, retrying in ${retryInterval}ms...`);
+      await new Promise(resolve => setTimeout(resolve, retryInterval));
+    }
+  }
+  
+  throw new Error('Could not connect to MongoDB after max retries');
+}
+
 export const connect = () => {
   // mongodb initialization
   dotenv.config();
   const { MONGO_DB_URL } = process.env;
-  mongoose.connect(MONGO_DB_URL);
+  connectWithRetry(MONGO_DB_URL);
   //mongoose.createConnection(ATLAS_URI);
 };
 
