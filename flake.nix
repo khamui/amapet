@@ -21,6 +21,7 @@
             nodePackages.npm
             podman
             podman-compose
+            mongodb-compass
           ];
 
           shellHook = ''
