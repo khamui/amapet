@@ -32,6 +32,9 @@
             echo "Node: $(node --version)"
             echo "npm: $(npm --version)"
             echo ""
+            # Create env for mongodb uri
+            export DB_URI="mongodb://localhost:27017/helpaws"
+
             # Create registries config
             mkdir -p $HOME/.config/containers
 

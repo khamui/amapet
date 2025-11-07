@@ -9,7 +9,7 @@ async function connectWithRetry(mongodb_url) {
   
   for (let i = 0; i < maxRetries; i++) {
     try {
-      await mongoose.connect(mongodb_url);
+      await mongoose.connect(mongodb_url, { autoCreate: false, autoIndex: false});
       console.log('Connected to MongoDB');
       return;
     } catch (err) {
