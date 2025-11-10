@@ -26,7 +26,7 @@ tmux send-keys -t $SESSION:services.1 "cd backend && npm run clean && npm i && n
 tmux send-keys -t $SESSION:services.2 "cd frontend && npm run clean && npm i && npm start" C-m
 
 # Pane 3 (bottom right): mongodb-compass
-tmux send-keys -t $SESSION:services.3 "mongodb-compass --url 'mongodb://hpdev:engage4kha@localhost:27017/helpaws?authSource=admin'" C-m
+tmux send-keys -t $SESSION:services.3 "mongodb-compass 'mongodb://hpdev:engage4kha@localhost:27017'" C-m
 
 # Select backend pane by default
 tmux select-pane -t $SESSION:services.1
