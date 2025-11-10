@@ -1,0 +1,50 @@
+::ng-deep .override__p-panel .p-panel .p-panel-header {
+  background-color: var(--p-surface-0);
+}
+
+::ng-deep .button--approve .p-button-text {
+  color: var(--p-yellow-500);
+}
+
+::ng-deep .button--block .p-button-text {
+  color: var(--p-yellow-500);
+}
+
+::ng-deep .button--approve-actions .p-button-text {
+  color: var(--p-yellow-500);
+
+}
+
+::ng-deep .p-toggleswitch-slider {
+  scale: 0.7;
+}
+
+.approve-actions__container {
+  border: 1px solid var(--p-yellow-200);
+  border-radius: 6px;
+}
+
+.intention-chip {
+  display: inline-block;
+  padding: .2rem .5rem;
+  border-radius: 1rem;
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 0.75rem;
+
+  &--question {
+    background-color: var(--intention-question-bg);
+  }
+
+  &--advice {
+    background-color: var(--intention-advice-bg);
+  }
+
+  &--discussion {
+    background-color: var(--intention-discussion-bg);
+  }
+
+  &--information {
+    background-color: var(--intention-information-bg);
+  }
+}

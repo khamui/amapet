@@ -1,0 +1,21 @@
+<h4 class="text-lg font-bold mb-4 text-yellow-500">Moderate: {{ currentCircle()?.name }}</h4>
+<p-tabs value="unread">
+  <p-tablist>
+      <p-tab value="unread">Unread</p-tab>
+      <p-tab value="approved">Approved</p-tab>
+      <p-tab value="blocked">Blocked</p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    @for (modQuestion of currentCircle()?.questions; track modQuestion.title)         {
+      <p-tabpanel [value]="modQuestion.moderationInfo?.status || 'unread'">
+        <div class="my-2">
+          <ama-moderation-question
+            [circle]="currentCircle()"
+            [question]="modQuestion"
+            [status]="modQuestion.moderationInfo?.status || 'unread'"
+          ></ama-moderation-question>
+        </div>
+      </p-tabpanel>
+    }
+  </p-tabpanels>
+</p-tabs>
