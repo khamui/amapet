@@ -1,6 +1,6 @@
 services:
   mongodb:
-    image: mongo:7.0
+    image: docker.io/mongo:latest
     container_name: mongodb_auth
     restart: unless-stopped
     ports:
