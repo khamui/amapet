@@ -1,35 +1,46 @@
 #!/usr/bin/env bash
+SESSION="amapet"
 
-SESSION="dev"
+if [ "$1" = "stop" ]; then
+  podman kill "$(podman ps -q)"
+  tmux kill-session -t $SESSION 2>/dev/null
+else
+  # Kill existing session if it exists
+  tmux kill-session -t $SESSION 2>/dev/null
 
-# Kill existing session if it exists
-tmux kill-session -t $SESSION 2>/dev/null
+  # Create new session with first window
+  tmux new-session -d -s $SESSION -n "db"
 
-# Create new session with first window
-tmux new-session -d -s $SESSION -n "services"
+  # Split into 2 vertical panes (top/bottom)
+  tmux split-window -h -t $SESSION:db.0
 
-# Split into 3 vertical panes
-tmux split-window -v -t $SESSION:services
-tmux split-window -h -t $SESSION:services.1
-tmux split-window -v -t $SESSION:services.2
+  # Adjust pane sizes to be equal
+  tmux select-layout -t $SESSION:db even-horizontal
 
-# Adjust pane sizes (optional - makes them more equal)
-tmux select-layout -t $SESSION:services even-horizontal
+  # New window
+  tmux new-window -t $SESSION -n "app"
 
-# Pane 0 (top left): Database
-tmux send-keys -t $SESSION:services.0 "cd database && podman compose up" C-m
+  # Split into 2 vertical panes (top/bottom)
+  tmux split-window -h -t $SESSION:app.0
 
-# Pane 1 (bottom left): Backend
-tmux send-keys -t $SESSION:services.1 "cd backend && npm run clean && npm i && npm start" C-m
+  # Adjust pane sizes to be equal
+  tmux select-layout -t $SESSION:app even-horizontal
 
-# Pane 2 (top right): Frontend
-tmux send-keys -t $SESSION:services.2 "cd frontend && npm run clean && npm i && npm start" C-m
+  # Pane 0 (top): Database
+  tmux send-keys -t $SESSION:db.0 "cd database && podman compose up" C-m
 
-# Pane 3 (bottom right): mongodb-compass
-tmux send-keys -t $SESSION:services.3 "mongodb-compass 'mongodb://hpdev:engage4kha@localhost:27017'" C-m
+  # Pane 1 (bottom): mongodb-compass
+  tmux send-keys -t $SESSION:db.1 "mongodb-compass 'mongodb://hpdev:engage4kha@localhost:27017'" C-m
 
-# Select backend pane by default
-tmux select-pane -t $SESSION:services.1
+  # Pane 0 (top): Backend
+  tmux send-keys -t $SESSION:app.0 "cd backend && npm run clean && npm i && npm start" C-m
 
-# Attach to session
-tmux attach-session -t $SESSION
+  # Pane 1 (bottom): Frontend
+  tmux send-keys -t $SESSION:app.1 "cd frontend && npm run clean && npm i && npm start" C-m
+
+  # Select backend pane by default
+  tmux select-pane -t $SESSION:app.0
+
+  # Attach to session
+  tmux attach-session -t $SESSION
+fi
