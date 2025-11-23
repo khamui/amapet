@@ -22,7 +22,7 @@ jobs:
 # -----------------------------
 # Navigate to your deployment directory
 # -----------------------------
-cd /home/${USER}/containers/helpaws
+cd /home/mui/containers/helpaws
 
 # -----------------------------
 # Write .env (correct nested heredoc)
