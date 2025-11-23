@@ -51,7 +51,7 @@ jobs:
       - name: Deploy changed services
         run: |
           ssh -o StrictHostKeyChecking=no -p 2233 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'EOF'
-            cd /home/user/amapet
+            cd /home/${{ secrets.VPS_USER }}/containers/helpaws
 
             # Create .env from GitHub secrets
             cat <<EOT > .env
