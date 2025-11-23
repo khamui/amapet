@@ -50,24 +50,24 @@ jobs:
 
       - name: Deploy changed services
         run: |
-          ssh -o StrictHostKeyChecking=no -p 2233 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'EOF'
+          ssh -o StrictHostKeyChecking=no -p 2233 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'SSH_EOF'
             cd /home/${{ secrets.VPS_USER }}/containers/helpaws
 
-            # Create .env from GitHub secrets
-            cat <<EOF > .env
-            MONGO_USER=${{ secrets.MONGO_USER }}
-            MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}
-            MONGO_DB=${{ secrets.MONGO_DB }}
-            BACKEND_PORT=${{ secrets.BACKEND_PORT }}
-            FRONTEND_PORT=${{ secrets.FRONTEND_PORT }}
-            EOF
+# Create .env from GitHub secrets
+cat <<EOF > .env
+MONGO_USER=${{ secrets.MONGO_USER }}
+MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}
+MONGO_DB=${{ secrets.MONGO_DB }}
+BACKEND_PORT=${{ secrets.BACKEND_PORT }}
+FRONTEND_PORT=${{ secrets.FRONTEND_PORT }}
+EOF
 
-            if [ "${CHANGED_FRONTEND}" = "true" ]; then
-              docker compose build frontend
-            fi
-            if [ "${CHANGED_BACKEND}" = "true" ]; then
-              docker compose build backend
-            fi
-            # Up only recreates containers that changed
-            docker-compose up -d frontend backend mongo
-          EOF
+if [ "${CHANGED_FRONTEND}" = "true" ]; then
+  docker compose build frontend
+fi
+if [ "${CHANGED_BACKEND}" = "true" ]; then
+  docker compose build backend
+fi
+# Up only recreates containers that changed
+docker-compose up -d frontend backend mongo
+SSH_EOF
