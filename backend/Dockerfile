@@ -1,11 +1,16 @@
-FROM node:lts-hydrogen
+FROM node:20-alpine
+WORKDIR /app
 
-WORKDIR /usr/app
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install --production
 
-COPY package.json /usr/app
-
-RUN npm install
-
+# Copy backend source code
 COPY . .
 
-CMD ["node", "server.js"]
+# Expose backend port
+EXPOSE 3000
+
+# Start backend
+CMD ["npm", "start"]
+

@@ -2,6 +2,7 @@
 */package-lock.json
 
 backend/.env
+deployment/.env
 
 database/db.env
 
