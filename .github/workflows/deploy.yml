@@ -7,18 +7,17 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to VPS
     runs-on: ubuntu-latest
 
     steps:
       # -----------------------------
-      # Checkout
+      # Checkout repository
       # -----------------------------
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
       # -----------------------------
-      # Detect which services changed
+      # Detect changed directories
       # -----------------------------
       - name: Detect changes
         id: changes
@@ -34,31 +33,28 @@ jobs:
             BACKEND_CHANGED="true"
           fi
 
-          echo "frontend=${FRONTEND_CHANGED}" >> $GITHUB_OUTPUT
-          echo "backend=${BACKEND_CHANGED}" >> $GITHUB_OUTPUT
+          echo "frontend=$FRONTEND_CHANGED" >> $GITHUB_OUTPUT
+          echo "backend=$BACKEND_CHANGED" >> $GITHUB_OUTPUT
 
       # -----------------------------
-      # Start SSH Agent & load key
+      # SSH agent + key
       # -----------------------------
-      - name: Start SSH agent
+      - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.VPS_DEPLOY_KEY }}
 
       # -----------------------------
-      # Deployment: SSH into VPS
+      # Deploy on server
       # -----------------------------
-      - name: Deploy over SSH
+      - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no -p 2233 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash <<'SSH_EOF'
-# -----------------------------
-# Navigate to your deployment directory
-# -----------------------------
-cd /home/mui/containers/helpaws
+          ssh -o StrictHostKeyChecking=no \
+              -p 2233 \
+              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+              bash << 'SSH_EOF'
+cd /home/${VPS_USER}/containers/helpaws
 
-# -----------------------------
-# Write .env (correct nested heredoc)
-# -----------------------------
 cat > .env <<EOF
 MONGO_USER="${MONGO_USER}"
 MONGO_PASSWORD="${MONGO_PASSWORD}"
@@ -67,32 +63,24 @@ BACKEND_PORT="${BACKEND_PORT}"
 FRONTEND_PORT="${FRONTEND_PORT}"
 EOF
 
-# -----------------------------
-# Rebuild only changed services
-# -----------------------------
 if [ "$CHANGED_FRONTEND" = "true" ]; then
-  echo "Rebuilding FRONTEND…"
+  echo "Rebuilding frontend"
   docker compose build frontend
 fi
 
 if [ "$CHANGED_BACKEND" = "true" ]; then
-  echo "Rebuilding BACKEND…"
+  echo "Rebuilding backend"
   docker compose build backend
 fi
 
-# -----------------------------
-# Always restart containers
-# -----------------------------
 docker compose up -d
 SSH_EOF
         env:
-          # Secrets from GitHub → Sent as env vars during SSH
           MONGO_USER: ${{ secrets.MONGO_USER }}
           MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
           MONGO_DB: ${{ secrets.MONGO_DB }}
           BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
           FRONTEND_PORT: ${{ secrets.FRONTEND_PORT }}
-
-          # Change detection flags
+          VPS_USER: ${{ secrets.VPS_USER }}
           CHANGED_FRONTEND: ${{ steps.changes.outputs.frontend }}
           CHANGED_BACKEND: ${{ steps.changes.outputs.backend }}
