@@ -1,11 +1,8 @@
 name: CI/CD — Deploy Amapet
 
-# Trigger on pushes to main and merged pull requests
+# Trigger on pushes to main
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -26,11 +23,7 @@ jobs:
           echo "CHANGED_BACKEND=false" >> $GITHUB_ENV
 
           # Determine base commit for diff
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE_COMMIT=$(git merge-base HEAD origin/main)
-          else
-            BASE_COMMIT=${{ github.event_before }}
-          fi
+          BASE_COMMIT=${{ github.event_before }}
 
           echo "Base commit: $BASE_COMMIT"
 
@@ -51,7 +44,7 @@ jobs:
           echo "Backend changed?  $CHANGED_BACKEND"
 
       - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.8.1
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
