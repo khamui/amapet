@@ -1,6 +1,5 @@
-name: CI/CD — Deploy Amapet
+name: Deploy
 
-# Trigger on pushes to main
 on:
   push:
     branches:
@@ -8,66 +7,92 @@ on:
 
 jobs:
   deploy:
+    name: Deploy to VPS
     runs-on: ubuntu-latest
 
     steps:
+      # -----------------------------
+      # Checkout
+      # -----------------------------
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # fetch full history for git diff
 
-      - name: Determine changed components
-        id: detect_changes
+      # -----------------------------
+      # Detect which services changed
+      # -----------------------------
+      - name: Detect changes
+        id: changes
         run: |
-          echo "CHANGED_FRONTEND=false" >> $GITHUB_ENV
-          echo "CHANGED_BACKEND=false" >> $GITHUB_ENV
+          FRONTEND_CHANGED="false"
+          BACKEND_CHANGED="false"
 
-          # Determine base commit for diff
-          BASE_COMMIT=${{ github.event_before }}
-
-          echo "Base commit: $BASE_COMMIT"
-
-          CHANGED=$(git diff --name-only $BASE_COMMIT HEAD)
-          echo "Changed files:"
-          echo "$CHANGED"
-
-          if echo "$CHANGED" | grep -q "^frontend/"; then
-            echo "CHANGED_FRONTEND=true" >> $GITHUB_ENV
-          fi
-          if echo "$CHANGED" | grep -q "^backend/"; then
-            echo "CHANGED_BACKEND=true" >> $GITHUB_ENV
+          if git diff --name-only HEAD~1 HEAD | grep -q '^frontend/'; then
+            FRONTEND_CHANGED="true"
           fi
 
-      - name: Print changed components
-        run: |
-          echo "Frontend changed? $CHANGED_FRONTEND"
-          echo "Backend changed?  $CHANGED_BACKEND"
+          if git diff --name-only HEAD~1 HEAD | grep -q '^backend/'; then
+            BACKEND_CHANGED="true"
+          fi
 
-      - name: Setup SSH
+          echo "frontend=${FRONTEND_CHANGED}" >> $GITHUB_OUTPUT
+          echo "backend=${BACKEND_CHANGED}" >> $GITHUB_OUTPUT
+
+      # -----------------------------
+      # Start SSH Agent & load key
+      # -----------------------------
+      - name: Start SSH agent
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.VPS_DEPLOY_KEY }}
 
-      - name: Deploy changed services
+      # -----------------------------
+      # Deployment: SSH into VPS
+      # -----------------------------
+      - name: Deploy over SSH
         run: |
-          ssh -o StrictHostKeyChecking=no -p 2233 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'SSH_EOF'
-            cd /home/${{ secrets.VPS_USER }}/containers/helpaws
+          ssh -o StrictHostKeyChecking=no -p 2233 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash <<'SSH_EOF'
+# -----------------------------
+# Navigate to your deployment directory
+# -----------------------------
+cd /home/${VPS_USER}/containers/helpaws
 
-# Create .env from GitHub secrets
-cat <<EOF > .env
-MONGO_USER=${{ secrets.MONGO_USER }}
-MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }}
-MONGO_DB=${{ secrets.MONGO_DB }}
-BACKEND_PORT=${{ secrets.BACKEND_PORT }}
-FRONTEND_PORT=${{ secrets.FRONTEND_PORT }}
+# -----------------------------
+# Write .env (correct nested heredoc)
+# -----------------------------
+cat > .env <<EOF
+MONGO_USER="${MONGO_USER}"
+MONGO_PASSWORD="${MONGO_PASSWORD}"
+MONGO_DB="${MONGO_DB}"
+BACKEND_PORT="${BACKEND_PORT}"
+FRONTEND_PORT="${FRONTEND_PORT}"
 EOF
 
-if [ "${CHANGED_FRONTEND}" = "true" ]; then
+# -----------------------------
+# Rebuild only changed services
+# -----------------------------
+if [ "$CHANGED_FRONTEND" = "true" ]; then
+  echo "Rebuilding FRONTEND…"
   docker compose build frontend
 fi
-if [ "${CHANGED_BACKEND}" = "true" ]; then
+
+if [ "$CHANGED_BACKEND" = "true" ]; then
+  echo "Rebuilding BACKEND…"
   docker compose build backend
 fi
-# Up only recreates containers that changed
-docker-compose up -d frontend backend mongo
+
+# -----------------------------
+# Always restart containers
+# -----------------------------
+docker compose up -d
 SSH_EOF
+        env:
+          # Secrets from GitHub → Sent as env vars during SSH
+          MONGO_USER: ${{ secrets.MONGO_USER }}
+          MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+          MONGO_DB: ${{ secrets.MONGO_DB }}
+          BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
+          FRONTEND_PORT: ${{ secrets.FRONTEND_PORT }}
+
+          # Change detection flags
+          CHANGED_FRONTEND: ${{ steps.changes.outputs.frontend }}
+          CHANGED_BACKEND: ${{ steps.changes.outputs.backend }}
