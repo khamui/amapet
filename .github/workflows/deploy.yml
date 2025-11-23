@@ -50,7 +50,7 @@ jobs:
 
       - name: Deploy changed services
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'EOF'
+          ssh -o StrictHostKeyChecking=no -p 2233 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'EOF'
             cd /home/user/amapet
 
             # Create .env from GitHub secrets
@@ -63,11 +63,11 @@ jobs:
             EOT
 
             if [ "${CHANGED_FRONTEND}" = "true" ]; then
-              docker-compose build frontend
+              docker compose build frontend
             fi
             if [ "${CHANGED_BACKEND}" = "true" ]; then
-              docker-compose build backend
+              docker compose build backend
             fi
             # Up only recreates containers that changed
-            docker-compose up -d frontend backend
+            docker-compose up -d frontend backend mongo
           EOF
