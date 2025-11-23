@@ -56,25 +56,25 @@ jobs:
           cd /home/${VPS_USER}/containers/helpaws
 
           cat > .env <<EOF
-MONGO_USER="${MONGO_USER}"
-MONGO_PASSWORD="${MONGO_PASSWORD}"
-MONGO_DB="${MONGO_DB}"
-BACKEND_PORT="${BACKEND_PORT}"
-FRONTEND_PORT="${FRONTEND_PORT}"
-EOF
+          MONGO_USER="${MONGO_USER}"
+          MONGO_PASSWORD="${MONGO_PASSWORD}"
+          MONGO_DB="${MONGO_DB}"
+          BACKEND_PORT="${BACKEND_PORT}"
+          FRONTEND_PORT="${FRONTEND_PORT}"
+          EOF
 
-if [ "$CHANGED_FRONTEND" = "true" ]; then
-  echo "Rebuilding frontend"
-  docker compose build frontend
-fi
+          if [ "$CHANGED_FRONTEND" = "true" ]; then
+            echo "Rebuilding frontend"
+            docker compose build frontend
+          fi
 
-if [ "$CHANGED_BACKEND" = "true" ]; then
-  echo "Rebuilding backend"
-  docker compose build backend
-fi
+          if [ "$CHANGED_BACKEND" = "true" ]; then
+            echo "Rebuilding backend"
+            docker compose build backend
+          fi
 
-docker compose up -d
-SSH_EOF
+          docker compose up -d
+          SSH_EOF
         env:
           MONGO_USER: ${{ secrets.MONGO_USER }}
           MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}

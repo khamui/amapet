@@ -25,17 +25,17 @@ jobs:
           cd /home/${VPS_USER}/containers/helpaws
 
           cat > .env <<EOF
-MONGO_USER="${MONGO_USER}"
-MONGO_PASSWORD="${MONGO_PASSWORD}"
-MONGO_DB="${MONGO_DB}"
-BACKEND_PORT="${BACKEND_PORT}"
-FRONTEND_PORT="${FRONTEND_PORT}"
-EOF
+          MONGO_USER="${MONGO_USER}"
+          MONGO_PASSWORD="${MONGO_PASSWORD}"
+          MONGO_DB="${MONGO_DB}"
+          BACKEND_PORT="${BACKEND_PORT}"
+          FRONTEND_PORT="${FRONTEND_PORT}"
+          EOF
 
-docker compose build frontend
-docker compose build backend
-docker compose up -d
-SSH_EOF
+          docker compose build frontend
+          docker compose build backend
+          docker compose up -d
+          SSH_EOF
         env:
           # Secrets from GitHub → Sent as env vars during SSH
           MONGO_USER: ${{ secrets.MONGO_USER }}
