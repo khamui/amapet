@@ -24,7 +24,7 @@ jobs:
               bash << 'SSH_EOF'
           cd /home/${VPS_USER}/containers/helpaws
 
-cat > .env <<EOF
+          cat > .env <<EOF
 MONGO_USER="${MONGO_USER}"
 MONGO_PASSWORD="${MONGO_PASSWORD}"
 MONGO_DB="${MONGO_DB}"
