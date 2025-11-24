@@ -21,10 +21,12 @@ services:
       - "${BACKEND_PORT}:3000"
     environment:
       MONGO_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=admin
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     depends_on:
       - mongo
     networks:
       - amapet-network
+      - npm
 
   frontend:
     build:
@@ -37,9 +39,13 @@ services:
       - backend
     networks:
       - amapet-network
+      - npm
 
 networks:
   amapet-network:
+  npm:
+    external: true
+    name: nginx-proxy-manager_default
 
 volumes:
   mongo-data:
