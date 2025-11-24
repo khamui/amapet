@@ -12,7 +12,7 @@ RUN npm run build --prod
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
-COPY --from=build /app/dist/amapet /usr/share/nginx/html
+COPY --from=build /app/dist/frontend /usr/share/nginx/html
 
 # Optional: copy custom nginx config
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
