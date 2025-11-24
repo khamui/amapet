@@ -24,8 +24,8 @@ async function connectWithRetry(mongodb_url) {
 export const connect = () => {
   // mongodb initialization
   dotenv.config();
-  const { MONGO_DB_URL } = process.env;
-  connectWithRetry(MONGO_DB_URL);
+  const { MONGO_URI } = process.env;
+  connectWithRetry(MONGO_URI);
   //mongoose.createConnection(ATLAS_URI);
 };
 
