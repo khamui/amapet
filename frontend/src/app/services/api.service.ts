@@ -3,9 +3,8 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 
 // pointing to remote backend
-// const API = 'https://amapet-rest-api-ybteve7ska-ey.a.run.app/';
-// const API = 'https://amapet-rest-api-v0-0-1-ybteve7ska-lz.a.run.app/';
-const API = 'http://localhost:5200/';
+// const API = 'http://localhost:5200/';
+const API = 'https://api.helpa.ws/';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +43,9 @@ export class ApiService<T> {
   read = async <T>(resource: string, withAuth = false) => {
     try {
       const response = withAuth
-        ? await lastValueFrom(this.http.get<T>(API + resource, this.getHeaders()))
+        ? await lastValueFrom(
+            this.http.get<T>(API + resource, this.getHeaders()),
+          )
         : await lastValueFrom(this.http.get<T>(API + resource));
       return { isError: false, result: response };
     } catch (error) {
