@@ -1,5 +1,5 @@
 on:
-  workflow_dispatch:   # Allows manual run
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -11,39 +11,52 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # Setup SSH key
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.VPS_DEPLOY_KEY }}
 
-      - name: Deploy to VPS
+      # 1️⃣ Create .env file locally
+      - name: Create .env file
         run: |
-          ssh -o StrictHostKeyChecking=no \
-              -p 2233 \
-              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-              bash << 'SSH_EOF'
-          cd /home/mui/containers/helpaws
-
           cat > .env <<EOF
-          MONGO_USER="${MONGO_USER}"
-          MONGO_PASSWORD="${MONGO_PASSWORD}"
-          MONGO_DB="${MONGO_DB}"
-          BACKEND_PORT="${BACKEND_PORT}"
-          FRONTEND_PORT="${FRONTEND_PORT}"
+          MONGO_USER="${{ secrets.MONGO_USER }}"
+          MONGO_PASSWORD="${{ secrets.MONGO_PASSWORD }}"
+          MONGO_DB="${{ secrets.MONGO_DB }}"
+          BACKEND_PORT="${{ secrets.BACKEND_PORT }}"
+          FRONTEND_PORT="${{ secrets.FRONTEND_PORT }}"
           EOF
 
+      # 2️⃣ Copy project + .env to VPS
+      - name: Upload files to VPS
+        run: |
+          scp -o StrictHostKeyChecking=no -P 2233 \
+            .env \
+            -r ./ \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/${{ secrets.VPS_USER }}/containers/amapet-temp
+
+      # 3️⃣ SSH deploy script
+      - name: Deploy on VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no -p 2233 \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+
+          set -e
+
+          # Move into place
+          rm -rf /home/${{ secrets.VPS_USER }}/containers/amapet
+          mv /home/${{ secrets.VPS_USER }}/containers/amapet-temp /home/${{ secrets.VPS_USER }}/containers/amapet
+          cd /home/${{ secrets.VPS_USER }}/containers/amapet
+
+          chmod 600 .env
+
+          echo "Building containers..."
           docker compose build frontend
           docker compose build backend
+
+          echo "Starting containers..."
           docker compose up -d
-          SSH_EOF
-        env:
-          # Secrets from GitHub → Sent as env vars during SSH
-          MONGO_USER: ${{ secrets.MONGO_USER }}
-          MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-          MONGO_DB: ${{ secrets.MONGO_DB }}
-          BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
-          FRONTEND_PORT: ${{ secrets.FRONTEND_PORT }}
-          VPS_USER: ${{ secrets.VPS_USER }}
-          # Change detection flags
-          CHANGED_FRONTEND: ${{ steps.changes.outputs.frontend }}
-          CHANGED_BACKEND: ${{ steps.changes.outputs.backend }}
+
+          echo "Deployment complete."
+          EOF

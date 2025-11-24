@@ -45,42 +45,69 @@ jobs:
           ssh-private-key: ${{ secrets.VPS_DEPLOY_KEY }}
 
       # -----------------------------
-      # Deploy on server
+      # Create .env locally in GitHub runner
       # -----------------------------
-      - name: Deploy to VPS
+      - name: Create .env
         run: |
-          ssh -o StrictHostKeyChecking=no \
-              -p 2233 \
-              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-              bash << 'SSH_EOF'
-          cd /home/mui/containers/helpaws
-
           cat > .env <<EOF
-          MONGO_USER="${MONGO_USER}"
-          MONGO_PASSWORD="${MONGO_PASSWORD}"
-          MONGO_DB="${MONGO_DB}"
-          BACKEND_PORT="${BACKEND_PORT}"
-          FRONTEND_PORT="${FRONTEND_PORT}"
+          MONGO_USER="${{ secrets.MONGO_USER }}"
+          MONGO_PASSWORD="${{ secrets.MONGO_PASSWORD }}"
+          MONGO_DB="${{ secrets.MONGO_DB }}"
+          BACKEND_PORT="${{ secrets.BACKEND_PORT }}"
+          FRONTEND_PORT="${{ secrets.FRONTEND_PORT }}"
           EOF
 
-          if [ "$CHANGED_FRONTEND" = "true" ]; then
+      # -----------------------------
+      # Upload repository + .env to VPS using SCP
+      # -----------------------------
+      - name: Upload to VPS
+        run: |
+          # Create temp deploy folder on server
+          ssh -o StrictHostKeyChecking=no -p 2233 \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+            "rm -rf /home/${{ secrets.VPS_USER }}/containers/amapet-temp && mkdir -p /home/${{ secrets.VPS_USER }}/containers/amapet-temp"
+
+          # Upload repository
+          scp -o StrictHostKeyChecking=no -P 2233 -r ./* \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/${{ secrets.VPS_USER }}/containers/amapet-temp
+
+          # Upload .env
+          scp -o StrictHostKeyChecking=no -P 2233 .env \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/${{ secrets.VPS_USER }}/containers/amapet-temp/.env
+
+      # -----------------------------
+      # Execute deployment on VPS
+      # -----------------------------
+      - name: Deploy on VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no -p 2233 \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+
+          set -e
+
+          cd /home/${{ secrets.VPS_USER }}/containers
+
+          # Replace old deployment with new files
+          rm -rf amapet
+          mv amapet-temp amapet
+          cd amapet
+
+          chmod 600 .env
+
+          # Conditional rebuilds
+          if [ "${{ steps.changes.outputs.frontend }}" = "true" ]; then
             echo "Rebuilding frontend"
             docker compose build frontend
           fi
 
-          if [ "$CHANGED_BACKEND" = "true" ]; then
+          if [ "${{ steps.changes.outputs.backend }}" = "true" ]; then
             echo "Rebuilding backend"
             docker compose build backend
           fi
 
+          # Restart containers
+          echo "Starting containers..."
           docker compose up -d
-          SSH_EOF
-        env:
-          MONGO_USER: ${{ secrets.MONGO_USER }}
-          MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-          MONGO_DB: ${{ secrets.MONGO_DB }}
-          BACKEND_PORT: ${{ secrets.BACKEND_PORT }}
-          FRONTEND_PORT: ${{ secrets.FRONTEND_PORT }}
-          VPS_USER: ${{ secrets.VPS_USER }}
-          CHANGED_FRONTEND: ${{ steps.changes.outputs.frontend }}
-          CHANGED_BACKEND: ${{ steps.changes.outputs.backend }}
+
+          echo "Deployment complete."
+          EOF
