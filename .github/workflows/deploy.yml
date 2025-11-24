@@ -10,15 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # -----------------------------
-      # Checkout repository
-      # -----------------------------
+      # Checkout
       - name: Checkout
         uses: actions/checkout@v3
 
-      # -----------------------------
-      # Detect changed directories
-      # -----------------------------
+      # Detect changes
       - name: Detect changes
         id: changes
         run: |
@@ -36,20 +32,17 @@ jobs:
           echo "frontend=$FRONTEND_CHANGED" >> $GITHUB_OUTPUT
           echo "backend=$BACKEND_CHANGED" >> $GITHUB_OUTPUT
 
-      # -----------------------------
-      # SSH agent + key
-      # -----------------------------
+      # Setup SSH
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.VPS_DEPLOY_KEY }}
 
-      # -----------------------------
-      # Create .env locally in GitHub runner
-      # -----------------------------
+      # Create .env inside deployment/
       - name: Create .env
         run: |
-          cat > .env <<EOF
+          mkdir -p deployment
+          cat > deployment/.env <<EOF
           MONGO_USER="${{ secrets.MONGO_USER }}"
           MONGO_PASSWORD="${{ secrets.MONGO_PASSWORD }}"
           MONGO_DB="${{ secrets.MONGO_DB }}"
@@ -57,27 +50,18 @@ jobs:
           FRONTEND_PORT="${{ secrets.FRONTEND_PORT }}"
           EOF
 
-      # -----------------------------
-      # Upload repository + .env to VPS using SCP
-      # -----------------------------
+      # Upload files to VPS (deployment/, frontend/, backend/)
       - name: Upload to VPS
         run: |
-          # Create temp deploy folder on server
           ssh -o StrictHostKeyChecking=no -p 2233 \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
             "rm -rf /home/${{ secrets.VPS_USER }}/containers/amapet-temp && mkdir -p /home/${{ secrets.VPS_USER }}/containers/amapet-temp"
 
-          # Upload repository
-          scp -o StrictHostKeyChecking=no -P 2233 -r ./* \
+          scp -o StrictHostKeyChecking=no -P 2233 -r \
+            deployment frontend backend \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/${{ secrets.VPS_USER }}/containers/amapet-temp
 
-          # Upload .env
-          scp -o StrictHostKeyChecking=no -P 2233 .env \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/home/${{ secrets.VPS_USER }}/containers/amapet-temp/.env
-
-      # -----------------------------
-      # Execute deployment on VPS
-      # -----------------------------
+      # Deploy on VPS
       - name: Deploy on VPS
         run: |
           ssh -o StrictHostKeyChecking=no -p 2233 \
@@ -87,14 +71,12 @@ jobs:
 
           cd /home/${{ secrets.VPS_USER }}/containers
 
-          # Replace old deployment with new files
           rm -rf amapet
           mv amapet-temp amapet
-          cd amapet
+          cd amapet/deployment
 
           chmod 600 .env
 
-          # Conditional rebuilds
           if [ "${{ steps.changes.outputs.frontend }}" = "true" ]; then
             echo "Rebuilding frontend"
             docker compose build frontend
@@ -105,9 +87,8 @@ jobs:
             docker compose build backend
           fi
 
-          # Restart containers
-          echo "Starting containers..."
           docker compose up -d
 
           echo "Deployment complete."
           EOF
+
