@@ -26,7 +26,7 @@ app.use('/', notificationRoutes);
 app.use('/', profileRoutes);
 app.use('/', settingsRoutes);
 
-const port = process.env.PORT || '5200';
+const port = process.env.PORT || '3000';
 app.set('port', port);
 
 connect();

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 
-export const corsOptions = { origin: ["http://localhost:4200"] };
+export const corsOptions = { origin: ["http://localhost:4200", "https://helpa.ws", "https://www.helpa.ws"] };
 
 async function connectWithRetry(mongodb_url) {
   const maxRetries = 10;
