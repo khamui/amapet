@@ -1,0 +1,20 @@
+::ng-deep .override__p-panel .p-panel .p-panel-header {
+  background-color: var(--p-yellow-100);
+}
+
+::ng-deep .override__p-panel[status="approved"] .p-panel .p-panel-header {
+  background-color: var(--p-green-100);
+}
+
+::ng-deep .override__p-panel[status="blocked"] .p-panel .p-panel-header {
+  background-color: var(--p-red-100);
+}
+
+.p-panel-content {
+  padding: 0.5rem!important;
+}
+
+button.btn__link {
+  text-decoration: underline;
+  cursor: pointer;
+}

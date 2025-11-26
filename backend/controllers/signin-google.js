@@ -33,11 +33,13 @@ const getUserOrCreateUser = async (originalPayload) => {
   let result = await retrieveOneModelByQuery(User, {
     email: originalPayload.email,
   });
+  console.log('getUserOrCreateUser result:', result);
   if (!result) {
     const newUser = {
       ...originalPayload,
       followedCircles: [],
       followedQuestions: [],
+      moderatedCircleIds: [],
       respectPoints: 0
     }
     result = await generateModel(User, newUser);

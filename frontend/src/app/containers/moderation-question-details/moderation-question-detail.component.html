@@ -1,0 +1,125 @@
+@if (question) {
+  <h3 class="mb-3">Moderate Question: {{ question.title }}</h3>
+  <div class="override__p-panel">
+    <p-panel>
+      <ng-template #header>
+        <span class="text-xs text-bluegray-300 inline">
+          Posted by {{ question.ownerName }}
+          <span class="text-xs text-bluegray-500 mx-1 font-semibold inline">
+            {{ question.created_at | dateAgo }}
+          </span>
+        </span>
+      </ng-template>
+      <ng-template #icons>
+        <p-button
+          label="Approve"
+          class="mr-2 button--approve"
+          severity="success"
+          variant="text"
+          size="small"
+          [raised]="true"
+        ></p-button>
+        <p-button
+          label="Block"
+          class="button--block"
+          severity="danger"
+          variant="text"
+          size="small"
+          [raised]="true"
+        ></p-button>
+      </ng-template>
+      <div class="flex jufstify-content-start">
+        <div
+          class="text-md mr-1 flex items-center"
+          [ngClass]="
+            (question.upvotes?.length || 0) - (question.downvotes?.length || 0) >
+            0
+              ? 'text-green-600'
+              : (question.upvotes?.length || 0) -
+                    (question.downvotes?.length || 0) <
+                  0
+                ? 'text-red-700'
+                : ''
+          "
+        >
+          <div>
+            {{
+              (question.upvotes?.length || 0) - (question.downvotes?.length || 0)
+            }}
+          </div>
+        </div>
+        <p-divider layout="vertical"></p-divider>
+        <div class="w-full">
+          <div class="ml-1">
+            <h4 class="m-0">{{ question.title }}</h4>
+            <div
+              class="intention-chip my-2"
+              [ngClass]="
+                question.intentionId === 'question'
+                  ? 'intention-chip--question'
+                  : question.intentionId === 'advice'
+                    ? 'intention-chip--advice'
+                    : question.intentionId === 'discussion'
+                      ? 'intention-chip--discussion'
+                      : question.intentionId === 'information'
+                        ? 'intention-chip--information'
+                        : 'intention-chip--question'
+              "
+            >
+              {{ question.intentionId || "question" }}
+            </div>
+            <p
+              [innerHtml]="question.body"
+              class="text-left text-sm font-bold my-10"
+            ></p>
+          </div>
+          <div class="text-sm my-5">
+            <i class="pi pi-comments"></i>
+            <span class="mx-2">{{ ans?.answers?.length || 0 }} answers</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-sm my-5 mx-3 p-3 approve-actions__container">
+        <p-button
+          label="Add Moderator's Note..."
+          icon="pi pi-plus"
+          class="mr-2 button--approve-actions"
+          severity="secondary"
+          size="small"
+          [text]="true"
+        />
+        <div class="flex items-center mt-2">
+          <p-toggleswitch
+            inputId="toggleCommenting"
+            class="button--approve-actions mr-2"
+            (onChange)="handleToggleCommenting($event)"
+          />
+          <label
+            class="font-bold cursor-pointer"
+            for="toggleCommenting"
+            [ngClass]="{
+              'text-yellow-500': !questionClosed(),
+              'text-gray-600': questionClosed()
+            }"
+          >
+            Close commenting section...
+          </label>
+        </div>
+      </div>
+      <div class="my-5">
+        @if (ans.loadingList) {
+          <p-progressBar
+            mode="indeterminate"
+            [style]="{ height: '6px' }"
+          ></p-progressBar>
+        } @else {
+          <ama-moderation-answers
+            [questionId]="question._id || ''"
+            [circleId]="circle._id || ''"
+            [answers]="ans.answers"
+          ></ama-moderation-answers>
+        }
+      </div>
+    </p-panel>
+  </div>
+}
