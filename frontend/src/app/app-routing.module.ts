@@ -8,19 +8,21 @@ import { CreateQuestionComponent } from './containers/create-question/create-que
 import { QuestionDetailComponent } from './containers/question-detail/question-detail.component';
 import { EditQuestionComponent } from './containers/edit-question/edit-question.component';
 
-const routes: Routes = [
-  { path: 'explore', component: ExploreComponent },
-  { path: 'c/:name', component: CircleComponent  },
-  { path: 'c/:id/questions/create', component: CreateQuestionComponent },
-  { path: 'c/:id/questions/:qid/edit', component: EditQuestionComponent },
-  { path: 'c/:name/questions/:qid', component: QuestionDetailComponent },
-  { path: 'signin', component: SignInComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: '', redirectTo: 'explore', pathMatch: 'full' }
-];
+//const routes: Routes = [
+//  { path: 'explore', component: ExploreComponent },
+//  { path: 'c/:name', component: CircleComponent  },
+//  { path: 'c/:id/questions/create', component: CreateQuestionComponent },
+//  { path: 'c/:id/questions/:qid/edit', component: EditQuestionComponent },
+//  { path: 'c/:name/questions/:qid', component: QuestionDetailComponent },
+//  { path: 'signin', component: SignInComponent },
+//  { path: 'profile', component: ProfileComponent },
+//  { path: '', redirectTo: 'explore', pathMatch: 'full' }
+//];
+
+const routes: Routes = [{ path: '*', redirectTo: '', pathMatch: 'full' }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
