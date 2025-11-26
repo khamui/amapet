@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 
 const EXP_IN_S = 604800; // 7 days expiration time
 // const EXP_IN_S = 15; // 15 s expiration time
-const { GOOGLE_CLIENT_ID } = process.env;
+const { GOOGLE_CLIENT_ID, GOOGLE_JWT_SECRET } = process.env;
 const client = new OAuth2Client();
 
 export const signin = (req, res, next) => {
@@ -18,7 +18,7 @@ export const signin = (req, res, next) => {
     const originalPayload = getPayload(ticket);
     const userPayload = await getUserOrCreateUser(originalPayload);
 
-    let token = jwt.sign(userPayload.toJSON(), process.env.JWT_SECRET, {
+    let token = jwt.sign(userPayload.toJSON(), GOOGLE_JWT_SECRET, {
       expiresIn: EXP_IN_S,
     });
     return token;
