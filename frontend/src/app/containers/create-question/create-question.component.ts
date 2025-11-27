@@ -53,7 +53,8 @@ export class CreateQuestionComponent implements OnInit {
 
   async ngOnInit() {
     const settingsIntentions = await this.cs.readIntentions();
-    this.questionIntentions = settingsIntentions.values;
+    this.questionIntentions =
+      settingsIntentions.value as QuestionIntentionsValue[];
     this.questionForm.controls.intentionSelect.setValue(
       this.questionIntentions[0].id,
     );
