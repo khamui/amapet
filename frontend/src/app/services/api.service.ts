@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
-// pointing to remote backend
-// const API = 'http://localhost:5200/';
-const API = 'https://api.helpa.ws/';
+const API = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root',
