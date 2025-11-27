@@ -3,10 +3,13 @@ import { Router, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from './services/auth.service';
 import { ToastModule } from 'primeng/toast';
+import { MessageModule } from 'primeng/message';
 import { SideboxComponent } from './components/sidebox/sidebox.component';
 import { CircleBoxComponent } from './containers/circle-box/circle-box.component';
 import { TopbarComponent } from './containers/topbar/topbar.component';
 import { SoonAvailableComponent } from './containers/soon-available/soon-available.component';
+import { SettingsService } from './services/settings.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -20,15 +23,19 @@ import { SoonAvailableComponent } from './containers/soon-available/soon-availab
     CircleBoxComponent,
     TopbarComponent,
     SoonAvailableComponent,
+    MessageModule,
+    NgClass,
   ],
 })
 export class AppComponent implements OnInit {
   public router = inject(Router);
   private as = inject(AuthService);
+  private ses = inject(SettingsService);
 
   public menuItems: MenuItem[] = [];
   public isLoggedIn = false;
-  public appIsAvailable = false;
+  public appIsAvailable!: boolean;
+  public isMaintenance!: boolean;
 
   constructor() {
     this.menuItems = [
@@ -38,10 +45,13 @@ export class AppComponent implements OnInit {
     ];
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
     });
     this.as.subscribeLogin();
+
+    this.isMaintenance = await this.ses.getIsMaintenance();
+    this.appIsAvailable = await this.ses.getAppIsAvailable();
   }
 }

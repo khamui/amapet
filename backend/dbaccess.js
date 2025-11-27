@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import * as dotenv from "dotenv";
+import { MONGO_URI } from "./server.js";
 
 export const corsOptions = { origin: ["http://localhost:4200", "https://helpa.ws", "https://www.helpa.ws"] };
 
@@ -23,8 +23,6 @@ async function connectWithRetry(mongodb_url) {
 
 export const connect = () => {
   // mongodb initialization
-  dotenv.config();
-  const { MONGO_URI } = process.env;
   connectWithRetry(MONGO_URI);
   //mongoose.createConnection(ATLAS_URI);
 };

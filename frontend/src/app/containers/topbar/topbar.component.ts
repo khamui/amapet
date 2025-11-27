@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
@@ -14,18 +14,18 @@ import { NotificationsComponent } from '../notifications/notifications.component
   imports: [ToolbarModule, ButtonModule, NotificationsComponent],
 })
 export class TopbarComponent implements OnInit {
-  isLoggedIn = false;
+  public router = inject(Router);
+  public as = inject(AuthService);
+  private ms = inject(MessageService);
 
-  constructor(
-    public router: Router,
-    public as: AuthService,
-    private ms: MessageService,
-  ) {}
+  public isLoggedIn = false;
+  public hasPermLevel = false;
 
   ngOnInit(): void {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
       if (value) {
+        this.hasPermLevel = this.as.getPermLevel();
         this.ms.add({
           severity: 'success',
           summary: 'Logged in!',
@@ -36,11 +36,11 @@ export class TopbarComponent implements OnInit {
   }
 
   handleLogout() {
+    this.as.logout();
     this.ms.add({
       severity: 'success',
       summary: 'Logged out!',
       detail: 'You have been successfully logged out.',
     });
-    this.as.logout();
   }
 }

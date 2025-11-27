@@ -22,4 +22,13 @@ router.get("/settings/:key", cors(corsOptions), [
   controllerSettings.readValuesByKey,
 ]);
 
+/*
+ * GET all settings.
+ */
+router.get("/settings", cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  controllerSettings.readSettings,
+]);
+
+
 export default router;

@@ -11,4 +11,12 @@ export const controllerSettings = {
       res.status(500).send("couldn't retrieve model");
     }
   },
+  readSettings: async (req, res) => {
+     try {
+      const settings = await retrieveModel(Settings);
+      res.status(200).json(settings);
+    } catch (error) {
+      res.status(500).send("couldn't retrieve model");
+    }
+  }
 }

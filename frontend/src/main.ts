@@ -13,17 +13,13 @@ import {
   SocialLoginModule,
 } from '@abacritt/angularx-social-login';
 import { providePrimeNG } from 'primeng/config';
-import Lara from '@primeng/themes/lara';
+import Aura from '@primeng/themes/aura';
 import { MessageService } from 'primeng/api';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(
-      BrowserModule,
-      AppRoutingModule,
-      SocialLoginModule,
-    ),
+    importProvidersFrom(BrowserModule, AppRoutingModule, SocialLoginModule),
     MessageService,
     {
       provide: SOCIAL_AUTH_CONFIG,
@@ -50,7 +46,7 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     providePrimeNG({
       theme: {
-        preset: Lara,
+        preset: Aura,
       },
     }),
     provideHttpClient(withInterceptorsFromDi()),
