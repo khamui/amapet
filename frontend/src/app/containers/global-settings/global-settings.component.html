@@ -1,0 +1,15 @@
+@for (setting of settings;track setting.key) {
+  <div>{{ setting.key | displayName }}</div>
+  @if (setting.inputType === 'multiopts' && Array.isArray(setting.value)) {
+    @for (opt of setting.value;track opt.id) {
+      <div class="flex items-center">
+        <p-checkbox
+          inputId="{{opt.id}}"
+          name="{{opt.id}}"
+          value="{{opt.id}}"
+        />
+        <label for="ingredient1" class="ml-2"> {{ opt.label }} </label>
+      </div>
+    }
+  }
+}

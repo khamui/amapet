@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
   public menuItems: MenuItem[] = [];
   public isLoggedIn = false;
-  public appIsAvailable = false;
+  public appIsAvailable = true;
 
   constructor() {
     this.menuItems = [
