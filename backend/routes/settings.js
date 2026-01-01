@@ -18,7 +18,6 @@ const router = express.Router();
  * GET settings value by settings key.
  */
 router.get("/settings/:key", cors(corsOptions), [
-  middlewareAuth.isAuthorized,
   controllerSettings.readValuesByKey,
 ]);
 
@@ -26,7 +25,6 @@ router.get("/settings/:key", cors(corsOptions), [
  * GET all settings.
  */
 router.get("/settings", cors(corsOptions), [
-  middlewareAuth.isAuthorized,
   controllerSettings.readSettings,
 ]);
 
