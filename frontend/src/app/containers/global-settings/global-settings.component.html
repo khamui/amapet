@@ -1,0 +1,37 @@
+<h1 class="text-lg mt-4 mb-6">Platform settings</h1>
+@for (setting of settings;track setting.key) {
+  <div
+    class="flex w-full justify-around p-3"
+    [ngClass]="{
+      'items-center': setting.inputType !== 'multiopts'
+    }"
+  >
+    <h2 class="text-md">{{ setting.key | displayName }}</h2>
+    @if (setting.inputType === 'multiopts' && Array.isArray(setting.value)) {
+      <div class="flex flex-col self-start">
+        @for (opt of setting.value;track opt.id) {
+          <div class="flex items-center">
+            <p-checkbox
+                inputId="{{opt.id}}"
+                name="{{opt.id}}"
+                value="{{opt.id}}"
+                [(ngModel)]="opt.active"
+                [binary]="true"
+            />
+            <label for="ingredient1" class="ml-2"> {{ opt.label }} </label>
+          </div>
+        }
+      </div>
+    }
+    @if (setting.inputType === 'binary') {
+      <p-togglebutton
+        [(ngModel)]="setting.value"
+        [inputId]="setting.key"
+        onLabel="On"
+        offLabel="Off"
+        class="w-24"
+        size="small"
+      />
+    }
+  </div>
+}

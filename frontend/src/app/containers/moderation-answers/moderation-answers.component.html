@@ -1,0 +1,48 @@
+@for (answer of answers; track answer._id) {
+  <div class="mb-2 mt-4">
+    <span class="text-xs text-500 hover:text-700">{{ answer.ownerName }}</span
+    ><span class="mx-2 text-xs text-500 hover:text-700">{{
+      answer.created_at | dateAgo
+    }}</span>
+    @if (answer.modded_at && !answer.deleted) {
+      <span class="mr-3 text-xs font-italic">(edited)</span>
+    } @else if (answer.deleted) {
+      <span class="mr-3 text-xs font-italic">(deleted)</span>
+    }
+  </div>
+  @if (!answer.deleted) {
+    <div class="flex mb-2">
+      <div
+        class="text-sm flex items-center mr-1"
+        [ngClass]="
+          (answer.upvotes?.length || 0) - (answer.downvotes?.length || 0) > 0
+            ? 'text-green-600'
+            : (answer.upvotes?.length || 0) - (answer.downvotes?.length || 0) <
+              0
+            ? 'text-red-700'
+            : ''
+        "
+      >
+        <div>
+          {{ (answer.upvotes?.length || 0) - (answer.downvotes?.length || 0) }}
+        </div>
+      </div>
+      <p-divider layout="vertical"></p-divider>
+      <div class="flex flex-col justify-between w-full">
+        @if (!answer.deleted) {
+          <div
+            class="text-sm font-bold my-3"
+            [innerHtml]="answer.answerText"
+          ></div>
+        }
+        @if (answer?.children?.length || 0 > 0) {
+          <ama-moderation-answers
+            [questionId]="questionId"
+            [circleId]="circleId"
+            [answers]="answer.children"
+          ></ama-moderation-answers>
+        }
+      </div>
+    </div>
+  }
+}

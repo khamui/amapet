@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { GOOGLE_JWT_SECRET } from '../server.js';
 
 export const middlewareAuth = {
   isAuthorized: (req, res, next) => {
@@ -6,7 +7,7 @@ export const middlewareAuth = {
 
     if (token) {
       try {
-        jwt.verify(token, process.env.JWT_SECRET);
+        jwt.verify(token, GOOGLE_JWT_SECRET);
         next();
       } catch (error) {
         res.status(401).send(error);
@@ -19,7 +20,7 @@ export const middlewareAuth = {
     const token = req.headers.authorization.split(' ')[1];
     if (token) {
       try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, GOOGLE_JWT_SECRET);
         req.userPayload = decoded;
         next();
       } catch (error) {

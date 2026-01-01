@@ -1,9 +1,21 @@
 <p-toolbar>
-  <div class="p-toolbar-group-start">
+  <button (click)="handleNavigateHome()" class="p-toolbar-group-start cursor-pointer">
     <img class="image" src="../../../assets/image.png" />
     <span>helpa.ws</span>
-  </div>
+  </button>
   <div class="p-toolbar-group-end">
+    @if (hasPermLevel) {
+      <p-button
+        #globalSettingsButton
+        styleClass="p-3"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        (click)="router.navigate(['global-settings'])"
+      >
+        <i class="pi pi-cog"></i>
+      </p-button>
+    }
     @if (isLoggedIn) {
       <ama-notifications></ama-notifications>
       <p-button
