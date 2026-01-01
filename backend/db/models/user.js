@@ -7,7 +7,7 @@ const userSchema = new Schema({
   followedCircles: Array,
   followedQuestions: Array,
   respectPoints: Number,
-  permLevel: Number // 1 = platform maintainer
+  permLevel: Number, // 1 = platform maintainer
   moderatedCircleIds: Array,
 });
 
