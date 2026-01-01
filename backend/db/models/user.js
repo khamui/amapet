@@ -8,6 +8,7 @@ const userSchema = new Schema({
   followedQuestions: Array,
   respectPoints: Number,
   permLevel: Number // 1 = platform maintainer
+  moderatedCircleIds: Array,
 });
 
 export const User = model("User", userSchema);

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+mport { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
@@ -35,8 +35,12 @@ export class TopbarComponent implements OnInit {
     });
   }
 
-  handleLogout() {
-    this.as.logout();
+  public handleNavigateHome() {
+    this.router.navigate(['explore']);
+  }
+
+  public async handleLogout() {
+    await this.as.logout();
     this.ms.add({
       severity: 'success',
       summary: 'Logged out!',

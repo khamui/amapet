@@ -1,8 +1,8 @@
 <p-toolbar>
-  <div class="p-toolbar-group-start">
+  <button (click)="handleNavigateHome()" class="p-toolbar-group-start cursor-pointer">
     <img class="image" src="../../../assets/image.png" />
     <span>helpa.ws</span>
-  </div>
+  </button>
   <div class="p-toolbar-group-end">
     @if (hasPermLevel) {
       <p-button

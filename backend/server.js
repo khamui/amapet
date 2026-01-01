@@ -12,6 +12,7 @@ import answerRoutes from './routes/answers.js';
 import notificationRoutes from './routes/notifications.js';
 import profileRoutes from './routes/profile.js';
 import settingsRoutes from './routes/settings.js';
+import moderationRoutes from './routes/moderation.js';
 
 // env
 import * as dotenv from "dotenv";
@@ -37,6 +38,7 @@ app.use('/', answerRoutes);
 app.use('/', notificationRoutes);
 app.use('/', profileRoutes);
 app.use('/', settingsRoutes);
+app.use('/', moderationRoutes);
 
 const port = PORT || '3000';
 app.set('port', port);
