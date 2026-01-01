@@ -12,17 +12,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-    selector: 'ama-edit-question',
-    templateUrl: './edit-question.component.html',
-    styleUrls: ['./edit-question.component.scss'],
-    standalone: true,
-    imports: [
-        ReactiveFormsModule,
-        InputTextModule,
-        EditorModule,
-        SharedModule,
-        ButtonModule,
-    ],
+  selector: 'ama-edit-question',
+  templateUrl: './edit-question.component.html',
+  styleUrls: ['./edit-question.component.scss'],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    InputTextModule,
+    EditorModule,
+    SharedModule,
+    ButtonModule,
+  ],
 })
 export class EditQuestionComponent implements OnInit {
   circles: Circle[] = [];
@@ -34,7 +34,7 @@ export class EditQuestionComponent implements OnInit {
   constructor(
     private cs: CircleService,
     private ar: ActivatedRoute,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   get isBrowserOnly(): boolean {
