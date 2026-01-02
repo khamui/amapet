@@ -13,9 +13,13 @@ import {
   SocialLoginModule,
 } from '@abacritt/angularx-social-login';
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';
 import { MessageService } from 'primeng/api';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { StandardTheme } from './assets/themes/standard/standard-theme';
+
+const DefaultOptions = {
+  darkModeSelector: '.darkmode',
+};
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -46,7 +50,8 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: StandardTheme,
+        options: DefaultOptions,
       },
     }),
     provideHttpClient(withInterceptorsFromDi()),
