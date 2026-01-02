@@ -24,6 +24,7 @@ import { filter } from 'rxjs';
     ToastModule,
     SideboxComponent,
     CircleBoxComponent,
+    CircleBoxModerationComponent,
     TopbarComponent,
     SoonAvailableComponent,
     MessageModule,
