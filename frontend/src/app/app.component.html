@@ -16,7 +16,12 @@
   >
     <div class="w-2/8">
       <div class="p-3">
-        <ama-circle-box></ama-circle-box>
+        @if (isInModerationView) {
+          <ama-circle-box-moderation></ama-circle-box-moderation>
+        }
+        @if (isInCircleView && !isInModerationView) {
+          <ama-circle-box></ama-circle-box>
+        }
       </div>
     </div>
     <div class="w-4/8">
