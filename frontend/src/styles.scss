@@ -6,19 +6,6 @@ html {
   font-size: 14px;
 }
 
-body {
-  margin: 0;
-  font-family: "Arial"
-}
-
-// overwrite primeng styles
-// used in:
-// - notifications.component
-.p-overlaypanel-content {
-  max-height: 60vh;
-  overflow: auto;
-}
-
 :root {
   // ACCENT COLORS
   --ama-primary: #00b898;

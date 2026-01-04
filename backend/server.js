@@ -12,6 +12,19 @@ import answerRoutes from './routes/answers.js';
 import notificationRoutes from './routes/notifications.js';
 import profileRoutes from './routes/profile.js';
 import settingsRoutes from './routes/settings.js';
+import moderationRoutes from './routes/moderation.js';
+
+// env
+import * as dotenv from "dotenv";
+dotenv.config();
+
+export const {
+  GOOGLE_CLIENT_ID, 
+  GOOGLE_JWT_SECRET,
+  MONGO_URI,
+  PORT
+
+} = process.env
 
 const app = express();
 
@@ -25,8 +38,9 @@ app.use('/', answerRoutes);
 app.use('/', notificationRoutes);
 app.use('/', profileRoutes);
 app.use('/', settingsRoutes);
+app.use('/', moderationRoutes);
 
-const port = process.env.PORT || '3000';
+const port = PORT || '3000';
 app.set('port', port);
 
 connect();

@@ -5,6 +5,7 @@ import {
   updateModel,
 } from "../dbaccess.js";
 import { Circle } from "../db/models/circle.js";
+import { User } from "../db/models/user.js";
 import mongoose from "mongoose";
 
 export const controllerCircles = {
@@ -52,9 +53,12 @@ export const controllerCircles = {
       memberCount: 1,
       moderators: [ownerId],
     };
-
     try {
       const newCircle = await generateModel(Circle, payload);
+      // register owner as first moderator in User
+      const userFilter = { _id: new mongoose.Types.ObjectId(ownerId) };
+      const addExpr = { $push: { moderatedCircleIds: newCircle._id } };
+      await updateModel(User, userFilter, addExpr);
       res.status(201).json(newCircle);
     } catch (error) {
       res.status(500).send(error);

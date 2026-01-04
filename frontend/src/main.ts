@@ -13,17 +13,17 @@ import {
   SocialLoginModule,
 } from '@abacritt/angularx-social-login';
 import { providePrimeNG } from 'primeng/config';
-import Lara from '@primeng/themes/lara';
 import { MessageService } from 'primeng/api';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { StandardTheme } from './assets/themes/standard/standard-theme';
+
+const DefaultOptions = {
+  darkModeSelector: '.darkmode',
+};
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(
-      BrowserModule,
-      AppRoutingModule,
-      SocialLoginModule,
-    ),
+    importProvidersFrom(BrowserModule, AppRoutingModule, SocialLoginModule),
     MessageService,
     {
       provide: SOCIAL_AUTH_CONFIG,
@@ -50,7 +50,8 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     providePrimeNG({
       theme: {
-        preset: Lara,
+        preset: StandardTheme,
+        options: DefaultOptions,
       },
     }),
     provideHttpClient(withInterceptorsFromDi()),

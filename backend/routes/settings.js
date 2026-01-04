@@ -18,8 +18,15 @@ const router = express.Router();
  * GET settings value by settings key.
  */
 router.get("/settings/:key", cors(corsOptions), [
-  middlewareAuth.isAuthorized,
   controllerSettings.readValuesByKey,
 ]);
+
+/*
+ * GET all settings.
+ */
+router.get("/settings", cors(corsOptions), [
+  controllerSettings.readSettings,
+]);
+
 
 export default router;

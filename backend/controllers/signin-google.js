@@ -2,13 +2,11 @@ import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
 import { User } from "../db/models/user.js";
 import { generateModel, retrieveOneModelByQuery } from "../dbaccess.js";
-import * as dotenv from "dotenv";
+import { GOOGLE_CLIENT_ID, GOOGLE_JWT_SECRET } from "../server.js";
 
 const EXP_IN_S = 604800; // 7 days expiration time
 // const EXP_IN_S = 15; // 15 s expiration time
-const { GOOGLE_CLIENT_ID, GOOGLE_JWT_SECRET } = process.env;
 const client = new OAuth2Client();
-
 export const signin = (req, res, next) => {
   async function verify() {
     const ticket = await client.verifyIdToken({
@@ -33,15 +31,18 @@ const getUserOrCreateUser = async (originalPayload) => {
   let result = await retrieveOneModelByQuery(User, {
     email: originalPayload.email,
   });
+  console.log('getUserOrCreateUser result:', result);
   if (!result) {
     const newUser = {
       ...originalPayload,
       followedCircles: [],
       followedQuestions: [],
+      moderatedCircleIds: [],
       respectPoints: 0
     }
     result = await generateModel(User, newUser);
   }
+  console.log('result', result);
   return result;
 };
 
