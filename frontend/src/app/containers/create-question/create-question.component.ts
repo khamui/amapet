@@ -1,4 +1,12 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  computed,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -16,7 +24,10 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { isPlatformBrowser } from '@angular/common';
 import { AutoFocusModule } from 'primeng/autofocus';
-import { QuestionIntentionsValue } from 'src/app/typedefs/Settings.typedef';
+import {
+  IntentionId,
+  QuestionIntentionsValue,
+} from 'src/app/typedefs/Settings.typedef';
 
 @Component({
   selector: 'ama-create-question',
@@ -41,6 +52,8 @@ export class CreateQuestionComponent implements OnInit {
   public circle!: Circle | undefined;
   public questionIntentions: QuestionIntentionsValue[] = [];
 
+  public selectedIntention = signal<IntentionId>('question');
+
   constructor(
     private cs: CircleService,
     private ar: ActivatedRoute,
@@ -55,9 +68,10 @@ export class CreateQuestionComponent implements OnInit {
     const settingsIntentions = await this.cs.readIntentions();
     this.questionIntentions =
       settingsIntentions.value as QuestionIntentionsValue[];
-    this.questionForm.controls.intentionSelect.setValue(
-      this.questionIntentions[0].id,
-    );
+
+    //this.questionForm.controls.intentionSelect.setValue(
+    //  this.questionIntentions[0].id,
+    //);
 
     /* creating two observables and combine their results */
     const params$ = this.ar.paramMap;
@@ -91,4 +105,11 @@ export class CreateQuestionComponent implements OnInit {
     }
     this.loading = false;
   };
+
+  public toggleStyle = computed(() => {
+    return {
+      '--p-togglebutton-content-checked-background': `var(--p-intention-${this.selectedIntention()})`,
+      '--p-togglebutton-content-checked-border-color': `var(--p-intention-${this.selectedIntention()})`,
+    };
+  });
 }

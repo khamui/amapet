@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class SettingsService {
-  private api = inject(ApiService<MaintenanceMode>);
+  private api = inject(ApiService<any>);
 
   public getSettings = async () => {
     const { result } = await this.api.read<Settings[]>('settings', true);
@@ -31,5 +31,22 @@ export class SettingsService {
   public getAppIsAvailable = async () => {
     const isMaintenance = await this.getIsMaintenance();
     return !isMaintenance || environment.current !== 'prod';
+  };
+
+  public updateIsMaintenance = async (
+    settingId: string,
+    settingValue: boolean,
+  ) => {
+    const { result } = await this.api.update(
+      'settings',
+      {
+        id: settingId,
+        value: {
+          isMaintenanceMode: settingValue,
+        },
+      },
+      true,
+    );
+    return result as any;
   };
 }

@@ -1,4 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  WritableSignal,
+  inject,
+  signal,
+} from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from './services/auth.service';
@@ -37,20 +43,14 @@ export class AppComponent implements OnInit {
   private ses = inject(SettingsService);
   private moderationStore = inject(ModerationStore);
 
-  public menuItems: MenuItem[] = [];
+  public menuItems: WritableSignal<MenuItem[]> = signal<MenuItem[]>([]);
   public isLoggedIn = false;
   public appIsAvailable!: boolean;
   public isInModerationView = false;
   public isInCircleView = false;
   public isMaintenance!: boolean;
 
-  constructor() {
-    this.menuItems = [
-      // { label: 'Create new Post', icon: 'pi pi-plus', routerLink: 'create' },
-      { label: 'Profile', icon: 'pi pi-user', routerLink: 'profile' },
-      //{ label: 'Questions', icon: 'pi pi-history', routerLink: 'questions' },
-    ];
-  }
+  constructor() {}
 
   async ngOnInit() {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
@@ -60,21 +60,30 @@ export class AppComponent implements OnInit {
 
     this.isMaintenance = await this.ses.getIsMaintenance();
     this.appIsAvailable = await this.ses.getAppIsAvailable();
-    await this.moderationStore.initStore();
-    const moderatedCircleIds = this.moderationStore.getModeratedCircleIds();
-    console.log('moderatedCircleIds', moderatedCircleIds);
 
-    this.menuItems = [
+    this.menuItems.set([
       // { label: 'Create new Post', icon: 'pi pi-plus', routerLink: 'create' },
       { label: 'Profile', icon: 'pi pi-user', routerLink: 'profile' },
-      {
-        label: 'Moderation',
-        icon: 'pi pi-user',
-        routerLink: 'moderation',
-        disabled: moderatedCircleIds.length > 0 ? false : true,
-      },
       //{ label: 'Questions', icon: 'pi pi-history', routerLink: 'questions' },
-    ];
+    ]);
+
+    let moderatedCircleIds;
+
+    if (this.isLoggedIn) {
+      await this.moderationStore.initStore();
+      moderatedCircleIds = this.moderationStore.getModeratedCircleIds();
+      this.menuItems.update((value) => {
+        return [
+          ...value,
+          {
+            label: 'Moderation',
+            icon: 'pi pi-user',
+            routerLink: 'moderation',
+            disabled: moderatedCircleIds.length > 0 ? false : true,
+          },
+        ];
+      });
+    }
 
     this.setCircleBox();
 

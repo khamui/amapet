@@ -4,7 +4,7 @@
     <span>helpa.ws</span>
   </button>
   <div class="p-toolbar-group-end">
-    @if (hasPermLevel) {
+    @if (isLoggedIn && hasPermLevel) {
       <p-button
         #globalSettingsButton
         styleClass="p-3"

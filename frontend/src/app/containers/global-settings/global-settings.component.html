@@ -1,5 +1,5 @@
 <h1 class="text-lg mt-4 mb-6">Platform settings</h1>
-@for (setting of settings;track setting.key) {
+@for (setting of settings();track setting.key) {
   <div
     class="flex w-full justify-around p-3"
     [ngClass]="{
@@ -25,12 +25,17 @@
     }
     @if (setting.inputType === 'binary') {
       <p-togglebutton
-        [(ngModel)]="setting.value"
+        [(ngModel)]="setting.value.isMaintenanceMode"
         [inputId]="setting.key"
-        onLabel="On"
-        offLabel="Off"
-        class="w-24"
+        onLabel="in maintenance"
+        offLabel="is live"
+        class="w-40"
         size="small"
+        (onChange)="handleBinarySettingChange({
+          event: $event,
+          settingId: setting._id,
+          settingKey: setting.key
+        })"
       />
     }
   </div>

@@ -1,11 +1,11 @@
-<p-menu [model]="items">
+<p-menu [model]="items()">
   <ng-template #item let-item>
     <a
       class="flex items-center p-menu-item-link justify-between"
       [routerLink]="item.routerLink"
     >
       <span class="ml-2">{{ item.label }}</span>
-      @if (context === 'circles' && isLoggedIn) {
+      @if (context() === 'circles' && isLoggedIn) {
         @if (item?.state?.isFollowed) {
           <p-button
             icon="pi pi-star-fill"

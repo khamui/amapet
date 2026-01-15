@@ -1,14 +1,17 @@
 export type Settings = {
-  _id: String;
+  _id: string;
   key: 'question_intentions' | 'maintenance';
   inputType: 'multiopts' | 'binary';
-  value: QuestionIntentionsValue[] | MaintenanceMode;
+  value: any;
+  //value: QuestionIntentionsValue[] | MaintenanceMode;
 };
 
+export type IntentionId = 'question' | 'discussion' | 'advice' | 'information';
+
 export type QuestionIntentionsValue = {
-  id: 'question' | 'discussion' | 'advice' | 'information';
-  label: String;
-  active: Boolean;
+  id: IntentionId;
+  label: string;
+  active: boolean;
 };
 
 export type MaintenanceMode = {

@@ -1,11 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { DisplayNamePipe } from 'src/app/pipes/display-name.pipe';
-import { ApiService } from 'src/app/services/api.service';
 import { SettingsService } from 'src/app/services/settings.service';
-import { MaintenanceMode, Settings } from 'src/app/typedefs/Settings.typedef';
+import { Settings } from 'src/app/typedefs/Settings.typedef';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
-import { ToggleButtonModule } from 'primeng/togglebutton';
+import {
+  ToggleButtonChangeEvent,
+  ToggleButtonModule,
+} from 'primeng/togglebutton';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -22,12 +30,28 @@ import { NgClass } from '@angular/common';
 })
 export class GlobalSettingsComponent implements OnInit {
   private ses = inject(SettingsService);
-  public settings!: Settings[];
+  public settings: WritableSignal<Settings[]> = signal<Settings[]>([]);
   public Array = Array;
 
   async ngOnInit() {
-    this.settings = await this.ses.getSettings();
+    this.settings.set(await this.ses.getSettings());
+    console.log('settings: ', this.settings());
   }
 
-  async handleSettingChange(key: string) {}
+  async handleBinarySettingChange({
+    event,
+    settingId,
+    settingKey,
+  }: {
+    event: ToggleButtonChangeEvent;
+    settingId: string;
+    settingKey: string;
+  }) {
+    console.log('toggle event', event);
+    console.log('key', settingKey);
+    console.log('id', settingId);
+    if (settingKey === 'maintenance') {
+      await this.ses.updateIsMaintenance(settingId, event.checked as boolean);
+    }
+  }
 }
