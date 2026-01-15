@@ -7,7 +7,14 @@ const light = {
   },
   accent: {
     success: '{emerald.200}',
+    danger: '{rose.200}',
     neutral: '{gray.100}',
+  },
+  intention: {
+    question: '{teal.200}',
+    advice: '{amber.200}',
+    discussion: '{stone.300}',
+    information: '{sky.200}',
   },
 };
 

@@ -12,18 +12,18 @@ button.btn__link {
   font-size: 0.75rem;
 
   &--question {
-    background-color: var(--intention-question-bg);
+    background-color: var(--p-intention-question);
   }
 
   &--advice {
-    background-color: var(--intention-advice-bg);
+    background-color: var(--p-intention-advice);
   }
 
   &--discussion {
-    background-color: var(--intention-discussion-bg);
+    background-color: var(--p-intention-discussion);
   }
 
   &--information {
-    background-color: var(--intention-information-bg);
+    background-color: var(--p-intention-information);
   }
 }

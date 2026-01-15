@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { ApiService } from 'src/app/services/api.service';
@@ -14,8 +15,8 @@ import { FollowResponse } from 'src/app/typedefs/FollowResponse.typedef';
   imports: [MenuModule, ButtonModule, RouterLink],
 })
 export class SideboxComponent implements OnInit {
-  @Input() items: any;
-  @Input() context!: string;
+  public items = input<MenuItem[]>();
+  public context = input<string>();
 
   public isLoggedIn = false;
 

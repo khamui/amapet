@@ -12,10 +12,13 @@
   </div>
   <div class="my-3">
     <p-selectbutton
+      [ngModel]="selectedIntention()"
+      (ngModelChange)="selectedIntention.set($event)"
       [options]="questionIntentions"
       formControlName="intentionSelect"
       optionLabel="label"
       optionValue="id"
+      [style]="toggleStyle()"
     />
   </div>
   <div class="w-full my-3">
