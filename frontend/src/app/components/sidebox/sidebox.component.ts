@@ -26,6 +26,7 @@ export class SideboxComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('menuitems', this.items());
     this.as.watchLoggedIn.subscribe((value: boolean) => {
       this.isLoggedIn = value;
     });

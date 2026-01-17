@@ -31,11 +31,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.timerSubscription$ = timer(0, INTERVAL_IN_MS)
-      .pipe(
-        switchMap(() => this.nos.getAll(`notifications`)),
-      )
+      .pipe(switchMap(() => this.nos.getAll(`notifications`)))
       .subscribe((notificationsResponse: unknown) => {
         this.notifications = notificationsResponse as Notification[];
+        console.log('not length', this.notifications.length);
         this.unreadItems = this.notifications.filter((n) => n.unread).length;
       });
   }
@@ -45,7 +44,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   }
 
   public removeTags = (formattedText: any) => {
-    return formattedText.replace(/<\/?p>/g, '');
+    const tagsFreeText = formattedText.replaceAll(/<\/?p>/g, '');
+    return tagsFreeText.replaceAll('&nbsp;', ' ');
   };
 
   public handleNotification = (notification: Notification) => {
@@ -62,7 +62,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
           .getAll('notifications')
           .subscribe((notificationsResponse: unknown) => {
             this.notifications = notificationsResponse as Notification[];
-            this.unreadItems = this.notifications.filter((n) => n.unread).length;
+            this.unreadItems = this.notifications.filter(
+              (n) => n.unread,
+            ).length;
           });
       });
     }
@@ -73,5 +75,5 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     // when the page is scrolled down, before the popover is opened
     scrollTo(0, 0);
     el.toggle(event);
-  }
+  };
 }
