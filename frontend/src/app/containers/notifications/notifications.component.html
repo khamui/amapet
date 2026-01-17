@@ -5,6 +5,7 @@
   [text]="true"
   [raised]="true"
   (click)="handleNotificationsToggle($event, notificationsPanel)"
+  [disabled]="notifications?.length === 0"
 >
   @if (unreadItems > 0) {
     <i
@@ -19,40 +20,38 @@
 </p-button>
 <p-popover #notificationsPanel [appendTo]="notificationsButton">
   @for (notification of notifications; track notification._id) {
-    @if (notification.unread) {
-      @if (notification.type === "upvote") {
-        <p-button
-          [text]="!notification.unread"
-          [severity]="notification.unread ? 'primary' : 'secondary'"
-          [raised]="notification.unread"
-          (click)="handleNotification(notification)"
-          class="flex flex-col my-2"
-        >
-          <div class="flex flex-col text-left">
-            <span class="font-bold"
-              >{{ notification.value }}
-              <i class="pi pi-thumbs-up"></i> upvotes!</span
-            >
-            <div class="mt-2">Users like your answer! Go there...</div>
+    @if (notification.type === "upvote") {
+      <p-button
+        [text]="!notification.unread"
+        [severity]="notification.unread ? 'primary' : 'secondary'"
+        [raised]="notification.unread"
+        (click)="handleNotification(notification)"
+        class="flex flex-col my-2"
+      >
+        <div class="flex flex-col text-left">
+          <span class="font-bold"
+            >{{ notification.value }}
+            <i class="pi pi-thumbs-up"></i> upvotes!</span
+          >
+          <div class="mt-2">Users like your answer! Go there...</div>
+        </div>
+      </p-button>
+    } @else {
+      <p-button
+        class="flex flex-col my-2 text-left"
+        [style]="{ justifyContent: 'flex-start' }"
+        [text]="!notification.unread"
+        [severity]="notification.unread ? 'primary' : 'secondary'"
+        [raised]="notification.unread"
+        (click)="handleNotification(notification)"
+      >
+        <div class="flex flex-col justify-start">
+          <span class="font-bold text-left"> New answer to your post! </span>
+          <div class="m-0 mt-2 text-left text-sm answertext__container">
+            "...{{ removeTags(notification.value) }}..."
           </div>
-        </p-button>
-      } @else {
-        <p-button
-          class="flex flex-col my-2 text-left"
-          [style]="{ justifyContent: 'flex-start' }"
-          [text]="!notification.unread"
-          [severity]="notification.unread ? 'primary' : 'secondary'"
-          [raised]="notification.unread"
-          (click)="handleNotification(notification)"
-        >
-          <div class="flex flex-col justify-start">
-            <span class="font-bold text-left"> New answer to your post! </span>
-            <div class="m-0 mt-2 text-left text-sm answertext__container">
-              "...{{ removeTags(notification.value) }}..."
-            </div>
-          </div>
-        </p-button>
-      }
+        </div>
+      </p-button>
     }
   }
 </p-popover>

@@ -41,13 +41,16 @@ export class CircleBoxComponent implements OnInit {
     this.as.watchLoggedIn.subscribe(async (value: boolean) => {
       this.isLoggedIn = value;
       if (value && this.circleMenuItems) {
-        const followedCircles = await this.as.getFollowedCircles() || [];
+        const followedCircles = (await this.as.getFollowedCircles()) || [];
         this.circleMenuItems = this.circleMenuItems.map((item) => ({
           ...item,
           state: {
             isFollowed: followedCircles.includes(item.label || ''),
           },
         })) as MenuItem[];
+        this.circleMenuItems = [...this.circleMenuItems].sort(
+          this.sortFavorites,
+        );
       }
     });
 
@@ -61,6 +64,7 @@ export class CircleBoxComponent implements OnInit {
           isFollowed: followedCircles.includes(circle.name),
         },
       })) as MenuItem[];
+      this.circleMenuItems = [...this.circleMenuItems].sort(this.sortFavorites);
     });
 
     this.circleNameInput
@@ -77,4 +81,11 @@ export class CircleBoxComponent implements OnInit {
       .circleExists(circleName)
       .subscribe(({ exists }) => (this.circleExists = exists));
   };
+
+  private sortFavorites(a: MenuItem, b: MenuItem) {
+    const aVal = a.state?.['isFollowed'] ? 0 : 1;
+    const bVal = b.state?.['isFollowed'] ? 0 : 1;
+
+    return aVal - bVal;
+  }
 }
