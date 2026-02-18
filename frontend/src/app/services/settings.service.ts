@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { MaintenanceMode, Settings } from '../typedefs/Settings.typedef';
+import {
+  MaintenanceMode,
+  QuestionIntentionsValue,
+  Settings,
+} from '../typedefs/Settings.typedef';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -44,6 +48,21 @@ export class SettingsService {
         value: {
           isMaintenanceMode: settingValue,
         },
+      },
+      true,
+    );
+    return result as any;
+  };
+
+  public updateIntentions = async (
+    settingId: string,
+    options: QuestionIntentionsValue[],
+  ) => {
+    const { result } = await this.api.update(
+      'settings',
+      {
+        id: settingId,
+        value: options,
       },
       true,
     );

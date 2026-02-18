@@ -16,6 +16,7 @@
                 name="{{opt.id}}"
                 value="{{opt.id}}"
                 [(ngModel)]="opt.active"
+                (onChange)="handleMultioptssettingChange($event, opt, setting._id)"
                 [binary]="true"
             />
             <label for="ingredient1" class="ml-2"> {{ opt.label }} </label>
