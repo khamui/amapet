@@ -7,8 +7,11 @@ import {
 } from '@angular/core';
 import { DisplayNamePipe } from 'src/app/pipes/display-name.pipe';
 import { SettingsService } from 'src/app/services/settings.service';
-import { Settings } from 'src/app/typedefs/Settings.typedef';
-import { CheckboxModule } from 'primeng/checkbox';
+import {
+  QuestionIntentionsValue,
+  Settings,
+} from 'src/app/typedefs/Settings.typedef';
+import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import {
   ToggleButtonChangeEvent,
@@ -36,6 +39,28 @@ export class GlobalSettingsComponent implements OnInit {
   async ngOnInit() {
     this.settings.set(await this.ses.getSettings());
     console.log('settings: ', this.settings());
+  }
+
+  async handleMultioptssettingChange(
+    event: CheckboxChangeEvent,
+    option: QuestionIntentionsValue,
+    settingId: any,
+  ) {
+    // get the current 'multiopts'-setting to get all options.
+    const setting = this.settings().find((s) => s._id === settingId);
+    const options = setting?.value as QuestionIntentionsValue[];
+
+    // FIXME: stupidly setting all options is bad! Better patching a single
+    // value!
+    const updatedOptions = options.map((o) => {
+      if (o.id === option.id) {
+        return option;
+      } else {
+        return o;
+      }
+    });
+
+    await this.ses.updateIntentions(settingId, updatedOptions);
   }
 
   async handleBinarySettingChange({
