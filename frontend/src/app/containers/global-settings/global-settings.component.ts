@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DisplayNamePipe } from 'src/app/pipes/display-name.pipe';
 import { SettingsService } from 'src/app/services/settings.service';
 import {
@@ -12,7 +6,7 @@ import {
   QuestionIntentionsValue,
   Settings,
 } from 'src/app/typedefs/Settings.typedef';
-import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
+import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import {
   ToggleButtonChangeEvent,
@@ -32,24 +26,15 @@ import { NgClass } from '@angular/common';
   templateUrl: './global-settings.component.html',
   styleUrl: './global-settings.component.scss',
 })
-export class GlobalSettingsComponent implements OnInit {
-  private ses = inject(SettingsService);
-  public settings: WritableSignal<Settings[]> = signal<Settings[]>([]);
-  public Array = Array;
-
-  async ngOnInit() {
-    this.settings.set(await this.ses.getSettings());
-    console.log('settings: ', this.settings());
-  }
+export class GlobalSettingsComponent {
+  public ses = inject(SettingsService);
 
   async handleMultioptssettingChange(
-    event: CheckboxChangeEvent,
     option: QuestionIntentionsValue,
     settingId: any,
   ) {
     // get the current 'multiopts'-setting to get all options.
-    const setting = this.settings().find((s) => s._id === settingId);
-    const options = setting?.value as QuestionIntentionsValue[];
+    const options = this.ses.intentions()?.value as QuestionIntentionsValue[];
 
     // FIXME: stupidly setting all options is bad! Better patching a single
     // value!
@@ -61,26 +46,31 @@ export class GlobalSettingsComponent implements OnInit {
       }
     });
 
-    await this.ses.updateSetting<QuestionIntentionsValue[]>(
-      settingId,
-      reqPayload,
+    this.ses.intentions.set(
+      (await this.ses.updateSetting<QuestionIntentionsValue[]>(
+        settingId,
+        reqPayload,
+      )) as Settings,
     );
   }
 
   async handleBinarySettingChange({
     event,
     settingId,
-    settingKey,
   }: {
     event: ToggleButtonChangeEvent;
-    settingId: string;
-    settingKey: string;
+    settingId: string | undefined;
   }) {
     const reqPayload = {
       isMaintenanceMode: event.checked as boolean,
     };
-    if (settingKey === 'maintenance') {
-      await this.ses.updateSetting<MaintenanceMode>(settingId, reqPayload);
+    if (settingId) {
+      this.ses.maintenance.set(
+        (await this.ses.updateSetting<MaintenanceMode>(
+          settingId,
+          reqPayload,
+        )) as Settings,
+      );
     }
   }
 }

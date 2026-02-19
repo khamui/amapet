@@ -1,9 +1,9 @@
-@if (appIsAvailable) {
+@if (ses.appIsAvailable()) {
   <p-toast></p-toast>
   <div class="mb-3 fixed w-full z-5">
     <ama-topbar></ama-topbar>
   </div>
-  @if (isMaintenance) {
+  @if (ses.isMaintenance()) {
     <div class="px-20 pb-2 position-relative pt-30">
       <p-message severity="info">The platform is currently in maintenance mode. This app is currently not running in Production environment.</p-message>
     </div>
@@ -11,7 +11,7 @@
   <div
     class="flex flex-row w-full"
     [ngClass]="{
-      'pt-30': !isMaintenance,
+      'pt-30': !ses.isMaintenance(),
     }"
   >
     <div class="w-2/8">

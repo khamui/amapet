@@ -40,17 +40,13 @@ import { filter } from 'rxjs';
 export class AppComponent implements OnInit {
   public router = inject(Router);
   private as = inject(AuthService);
-  private ses = inject(SettingsService);
+  public ses = inject(SettingsService);
   private moderationStore = inject(ModerationStore);
 
   public menuItems: WritableSignal<MenuItem[]> = signal<MenuItem[]>([]);
   public isLoggedIn = false;
-  public appIsAvailable!: boolean;
   public isInModerationView = false;
   public isInCircleView = false;
-  public isMaintenance!: boolean;
-
-  constructor() {}
 
   async ngOnInit() {
     this.as.watchLoggedIn.subscribe((value: boolean) => {
@@ -58,8 +54,7 @@ export class AppComponent implements OnInit {
     });
     this.as.subscribeLogin();
 
-    this.isMaintenance = await this.ses.getIsMaintenance();
-    this.appIsAvailable = await this.ses.getAppIsAvailable();
+    await this.ses.init();
 
     this.menuItems.set([
       // { label: 'Create new Post', icon: 'pi pi-plus', routerLink: 'create' },

@@ -9,11 +9,6 @@ import { SettingsService } from 'src/app/services/settings.service';
   standalone: true,
   imports: [GoogleSigninButtonModule],
 })
-export class SignInComponent implements OnInit {
-  public appIsAvailable!: boolean;
-  private ses = inject(SettingsService);
-
-  async ngOnInit() {
-    this.appIsAvailable = await this.ses.getAppIsAvailable();
-  }
+export class SignInComponent {
+  public ses = inject(SettingsService);
 }

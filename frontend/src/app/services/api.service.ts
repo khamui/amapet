@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+type AsyncResponse<T> =
+  | { isError: false; result: T }
+  | { isError: true; result: Error }; // Or a specific backend error type
+
 const API = environment.apiUrl;
 
 @Injectable({
@@ -39,16 +43,25 @@ export class ApiService<T> {
   };
 
   // read
-  read = async <T>(resource: string, withAuth = false) => {
+  read = async <T>(
+    resource: string,
+    withAuth = false,
+  ): Promise<AsyncResponse<T>> => {
     try {
-      const response = withAuth
-        ? await lastValueFrom(
-            this.http.get<T>(API + resource, this.getHeaders()),
-          )
-        : await lastValueFrom(this.http.get<T>(API + resource));
+      const url = API + resource;
+      const request$ = withAuth
+        ? this.http.get<T>(url, this.getHeaders())
+        : this.http.get<T>(url);
+
+      const response = await lastValueFrom(request$);
+
       return { isError: false, result: response };
     } catch (error) {
-      return { isError: true, result: error };
+      // Ensure the error is actually an Error object
+      return {
+        isError: true,
+        result: error instanceof Error ? error : new Error(String(error)),
+      };
     }
   };
 
