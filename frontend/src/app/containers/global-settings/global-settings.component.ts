@@ -8,6 +8,7 @@ import {
 import { DisplayNamePipe } from 'src/app/pipes/display-name.pipe';
 import { SettingsService } from 'src/app/services/settings.service';
 import {
+  MaintenanceMode,
   QuestionIntentionsValue,
   Settings,
 } from 'src/app/typedefs/Settings.typedef';
@@ -52,7 +53,7 @@ export class GlobalSettingsComponent implements OnInit {
 
     // FIXME: stupidly setting all options is bad! Better patching a single
     // value!
-    const updatedOptions = options.map((o) => {
+    const reqPayload: QuestionIntentionsValue[] = options.map((o) => {
       if (o.id === option.id) {
         return option;
       } else {
@@ -60,7 +61,10 @@ export class GlobalSettingsComponent implements OnInit {
       }
     });
 
-    await this.ses.updateIntentions(settingId, updatedOptions);
+    await this.ses.updateSetting<QuestionIntentionsValue[]>(
+      settingId,
+      reqPayload,
+    );
   }
 
   async handleBinarySettingChange({
@@ -72,11 +76,11 @@ export class GlobalSettingsComponent implements OnInit {
     settingId: string;
     settingKey: string;
   }) {
-    console.log('toggle event', event);
-    console.log('key', settingKey);
-    console.log('id', settingId);
+    const reqPayload = {
+      isMaintenanceMode: event.checked as boolean,
+    };
     if (settingKey === 'maintenance') {
-      await this.ses.updateIsMaintenance(settingId, event.checked as boolean);
+      await this.ses.updateSetting<MaintenanceMode>(settingId, reqPayload);
     }
   }
 }
