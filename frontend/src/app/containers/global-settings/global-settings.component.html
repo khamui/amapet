@@ -1,43 +1,40 @@
 <h1 class="text-lg mt-4 mb-6">Platform settings</h1>
-@for (setting of settings();track setting.key) {
+  @if (ses.intentions()) {
+    <div
+      class="flex w-full justify-around p-3"
+    >
+      <h2 class="text-md">{{ ses.intentions()?.key | displayName }}</h2>
+        <div class="flex flex-col self-start">
+          @for (opt of ses.intentions()?.value;track opt.id) {
+            <div class="flex items-center">
+              <p-checkbox
+                  inputId="{{opt.id}}"
+                  name="{{opt.id}}"
+                  value="{{opt.id}}"
+                  [(ngModel)]="opt.active"
+                  (onChange)="handleMultioptssettingChange(opt, ses.intentions()?._id)"
+                  [binary]="true"
+              />
+              <label for="{{opt.id}}" class="ml-2"> {{ opt.label }} </label>
+            </div>
+          }
+        </div>
+    </div>
+  }
   <div
-    class="flex w-full justify-around p-3"
-    [ngClass]="{
-      'items-center': setting.inputType !== 'multiopts'
-    }"
+    class="flex w-full justify-around p-3 items-center"
   >
-    <h2 class="text-md">{{ setting.key | displayName }}</h2>
-    @if (setting.inputType === 'multiopts' && Array.isArray(setting.value)) {
-      <div class="flex flex-col self-start">
-        @for (opt of setting.value;track opt.id) {
-          <div class="flex items-center">
-            <p-checkbox
-                inputId="{{opt.id}}"
-                name="{{opt.id}}"
-                value="{{opt.id}}"
-                [(ngModel)]="opt.active"
-                (onChange)="handleMultioptssettingChange($event, opt, setting._id)"
-                [binary]="true"
-            />
-            <label for="ingredient1" class="ml-2"> {{ opt.label }} </label>
-          </div>
-        }
-      </div>
-    }
-    @if (setting.inputType === 'binary') {
-      <p-togglebutton
-        [(ngModel)]="setting.value.isMaintenanceMode"
-        [inputId]="setting.key"
-        onLabel="in maintenance"
-        offLabel="is live"
-        class="w-40"
-        size="small"
-        (onChange)="handleBinarySettingChange({
-          event: $event,
-          settingId: setting._id,
-          settingKey: setting.key
-        })"
-      />
-    }
+    <h2 class="text-md">{{ ses.maintenance()?.key | displayName }}</h2>
+    <p-togglebutton
+      [ngModel]="ses.isMaintenance()"
+      [inputId]="ses.maintenance()?.key"
+      onLabel="in maintenance"
+      offLabel="is live"
+      class="w-40"
+      size="small"
+      (onChange)="handleBinarySettingChange({
+        event: $event,
+        settingId: ses.maintenance()?._id
+      })"
+    />
   </div>
-}

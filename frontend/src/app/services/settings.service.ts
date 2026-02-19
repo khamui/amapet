@@ -1,4 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { ApiService } from './api.service';
 import {
   MaintenanceMode,
@@ -13,28 +19,36 @@ import { environment } from 'src/environments/environment';
 export class SettingsService {
   private api = inject(ApiService<any>);
 
-  public getSettings = async () => {
-    const { result } = await this.api.read<Settings[]>('settings', true);
-    return result as Settings[];
-  };
+  // settings (each setting, one signal)
+  public readonly intentions: WritableSignal<Settings | undefined> =
+    signal(undefined);
+  public readonly maintenance: WritableSignal<Settings | undefined> =
+    signal(undefined);
 
-  private getSetting = async (key: string) => {
-    const result = await this.getSettings();
-    return (result as Settings[]).find(
-      (setting: Settings) => setting.key === key,
+  // computed dependants of 'maintenance'-setting
+  public readonly isMaintenance = computed(
+    () => this.maintenance()?.value.isMaintenanceMode,
+  );
+  public readonly appIsAvailable = computed(
+    () => !this.isMaintenance() || environment.current !== 'prod',
+  );
+
+  // globally initialize settings signal variables and use them in different
+  // components.
+  public init = async () => {
+    const { isError, result } = await this.api.read<Settings[]>(
+      'settings',
+      true,
     );
-  };
-
-  public getIsMaintenance = async () => {
-    const settingMaintenance = (await this.getSetting(
-      'maintenance',
-    )) as Settings;
-    return (settingMaintenance.value as MaintenanceMode).isMaintenanceMode;
-  };
-
-  public getAppIsAvailable = async () => {
-    const isMaintenance = await this.getIsMaintenance();
-    return !isMaintenance || environment.current !== 'prod';
+    if (!isError) {
+      for (const setting of result) {
+        if (setting.key === 'question_intentions') {
+          this.intentions.set(setting);
+        } else if (setting.key === 'maintenance') {
+          this.maintenance.set(setting);
+        }
+      }
+    }
   };
 
   public updateSetting = async <T>(settingId: string, reqPayload: T) => {

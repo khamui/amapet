@@ -4,6 +4,5 @@ import { SettingsService } from '../services/settings.service';
 
 export const appAvailableGuard: CanActivateFn = async (route, state) => {
   const ses = inject(SettingsService);
-  const appIsAvailable = await ses.getAppIsAvailable();
-  return appIsAvailable;
+  return ses.appIsAvailable();
 };
