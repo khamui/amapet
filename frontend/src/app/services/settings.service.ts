@@ -37,35 +37,15 @@ export class SettingsService {
     return !isMaintenance || environment.current !== 'prod';
   };
 
-  public updateIsMaintenance = async (
-    settingId: string,
-    settingValue: boolean,
-  ) => {
+  public updateSetting = async <T>(settingId: string, reqPayload: T) => {
     const { result } = await this.api.update(
       'settings',
       {
         id: settingId,
-        value: {
-          isMaintenanceMode: settingValue,
-        },
+        value: reqPayload,
       },
       true,
     );
-    return result as any;
-  };
-
-  public updateIntentions = async (
-    settingId: string,
-    options: QuestionIntentionsValue[],
-  ) => {
-    const { result } = await this.api.update(
-      'settings',
-      {
-        id: settingId,
-        value: options,
-      },
-      true,
-    );
-    return result as any;
+    return result;
   };
 }
