@@ -4,7 +4,7 @@
       <span class="text-xs text-bluegray-300">
         Posted by {{ question.ownerName }}
       </span>
-      <span class="text-xs text-bluegray-500 mx-1 font-semibold">
+      <span class="text-xs text-bluegray-500 mx-1">
         {{ question.created_at | dateAgo }}
       </span>
       @if (isOwner) {
@@ -38,7 +38,7 @@
       <p-divider layout="vertical"></p-divider>
       <div class="w-full">
         <div class="ml-1">
-          <h4 class="m-0">{{ question.title }}</h4>
+          <h4 class="m-0 font-bold">{{ question.title }}</h4>
           <div
             class="intention-chip my-2"
             [ngClass]="
@@ -55,7 +55,7 @@
           >{{ question.intentionId || 'question' }}</div>
           <p
             [innerHtml]="question.body"
-            class="text-left text-sm font-bold my-10"
+            class="text-left text-sm font-semibold my-10"
           ></p>
         </div>
         <div class="text-sm my-5">
