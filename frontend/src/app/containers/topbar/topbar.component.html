@@ -1,8 +1,18 @@
 <p-toolbar>
-  <button (click)="handleNavigateHome()" class="p-toolbar-group-start cursor-pointer">
+  <button (click)="handleNavigateHome()" class="p-toolbar-group-start cursor-pointer lg:block hidden">
     <img class="image" src="../../../assets/image.png" />
     <span>helpa.ws</span>
   </button>
+  <div class="block lg:hidden">
+    <p-button
+      #burgerMenu
+      styleClass="p-3"
+      [text]="true"
+      [raised]="true"
+    >
+      <i class="pi pi-list"></i>
+    </p-button>
+  </div>
   <div class="p-toolbar-group-end">
     @if (isLoggedIn && hasPermLevel) {
       <p-button

@@ -14,7 +14,12 @@
       'pt-30': !ses.isMaintenance(),
     }"
   >
-    <div class="w-2/8">
+    <div class="max-w-2/8 lg:block hidden">
+      @if (isLoggedIn) {
+        <div class="p-3">
+        <ama-sidebox [items]="menuItems()"></ama-sidebox>
+        </div>
+      }
       <div class="p-3">
         @if (isInModerationView) {
           <ama-circle-box-moderation></ama-circle-box-moderation>
@@ -24,17 +29,12 @@
         }
       </div>
     </div>
-    <div class="w-4/8">
-      <div class="p-3">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-    <div class="w-2/8">
-      @if (isLoggedIn) {
-        <div class="p-3">
-        <ama-sidebox [items]="menuItems()"></ama-sidebox>
+    <div class="lg:w-6/8 w-full">
+      <div class="p-3 w-full flex justify-center">
+        <div class="w-[60rem] ">
+          <router-outlet></router-outlet>
         </div>
-      }
+      </div>
     </div>
   </div>
 } @else {
