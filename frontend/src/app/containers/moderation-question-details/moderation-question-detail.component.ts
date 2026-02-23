@@ -86,4 +86,9 @@ export class ModerationQuestionDetailComponent implements OnInit {
   public handleToggleCommenting(event: ToggleSwitchChangeEvent) {
     this.questionClosed.set(event.checked);
   }
+
+  public goBack() {
+    const circleName = this.circle.name.replace(/^c\//, '');
+    this.ro.navigate(['moderate/c', circleName]);
+  }
 }

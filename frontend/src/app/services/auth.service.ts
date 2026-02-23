@@ -2,7 +2,7 @@ import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Token } from '../typedefs/Token.typedef';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { jwtDecode as decode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User } from '../typedefs/User.typedef';
@@ -33,10 +33,11 @@ export class AuthService {
    * triggered or not.
    *
    ***/
-  public subscribeLogin = () => {
+  public subscribeLogin = async () => {
     const storedToken = localStorage.getItem(TOKEN_NAME);
 
     if (!storedToken) {
+      await firstValueFrom(this.sas.initState);
       this.sas.authState.subscribe(async (user: SocialUser) => {
         try {
           const token = user && (await this.requestToken(user));

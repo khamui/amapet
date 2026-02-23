@@ -1,4 +1,12 @@
 @if (question) {
+  <div class="mb-3">
+    <p-button 
+      icon="pi pi-arrow-left" 
+      label="Back to Questions" 
+      [text]="true" 
+      (onClick)="goBack()"
+    ></p-button>
+  </div>
   <h3 class="mb-3">Moderate Question: {{ question.title }}</h3>
   <div class="override__p-panel">
     <p-panel>

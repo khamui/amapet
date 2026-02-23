@@ -15,11 +15,6 @@
     }"
   >
     <div class="max-w-2/8 lg:block hidden">
-      @if (isLoggedIn) {
-        <div class="p-3">
-        <ama-sidebox [items]="menuItems()"></ama-sidebox>
-        </div>
-      }
       <div class="p-3">
         @if (isInModerationView) {
           <ama-circle-box-moderation></ama-circle-box-moderation>
