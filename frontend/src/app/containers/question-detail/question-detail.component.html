@@ -1,4 +1,13 @@
 @if (question) {
+  <div class="mb-3">
+    <p-button 
+      icon="pi pi-arrow-left" 
+      label="Back to Circle" 
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="goBack()"
+    ></p-button>
+  </div>
   <p-panel>
     <ng-template pTemplate="header">
       <span class="text-xs text-bluegray-300">

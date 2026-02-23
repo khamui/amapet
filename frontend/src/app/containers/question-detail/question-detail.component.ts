@@ -16,6 +16,7 @@ import { PanelModule } from 'primeng/panel';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { NgClass } from '@angular/common';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-question-detail',
@@ -34,6 +35,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
     DateAgoPipe,
     VoteComponent,
     ProgressBarModule,
+    ButtonModule,
   ],
 })
 export class QuestionDetailComponent implements OnInit {
@@ -147,4 +149,9 @@ export class QuestionDetailComponent implements OnInit {
   public handleDownvoteQuestion = () => {
     this.cs.updateQuestionDownvote(this.circle, this.question);
   };
+
+  public goBack() {
+    const circleName = this.circle.name.replace(/^c\//, '');
+    this.ro.navigate(['c', circleName]);
+  }
 }

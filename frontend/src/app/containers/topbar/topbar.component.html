@@ -13,7 +13,7 @@
       <i class="pi pi-list"></i>
     </p-button>
   </div>
-  <div class="p-toolbar-group-end">
+  <div class="p-toolbar-group-end gap-2">
     @if (isLoggedIn && hasPermLevel) {
       <p-button
         #globalSettingsButton
@@ -28,6 +28,16 @@
     }
     @if (isLoggedIn) {
       <ama-notifications></ama-notifications>
+      <p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>
+      <p-button
+        styleClass="mr-2 p-3"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        (click)="menu.toggle($event)"
+      >
+        <i class="pi pi-user"></i>
+      </p-button>
       <p-button
         label="Logout"
         icon="pi pi-sign-out"
