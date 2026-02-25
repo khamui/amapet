@@ -16,10 +16,10 @@
   >
     <div class="max-w-2/8 lg:block hidden">
       <div class="p-3">
-        @if (isInModerationView) {
+        @if (isInModerationView()) {
           <ama-circle-box-moderation></ama-circle-box-moderation>
         }
-        @if (isInCircleView && !isInModerationView) {
+        @if (isInCircleView() && !isInModerationView()) {
           <ama-circle-box></ama-circle-box>
         }
       </div>

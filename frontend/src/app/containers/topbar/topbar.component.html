@@ -14,7 +14,7 @@
     </p-button>
   </div>
   <div class="p-toolbar-group-end gap-2">
-    @if (isLoggedIn && hasPermLevel) {
+    @if (isLoggedIn() && hasPermLevel()) {
       <p-button
         #globalSettingsButton
         styleClass="p-3"
@@ -26,9 +26,9 @@
         <i class="pi pi-cog"></i>
       </p-button>
     }
-    @if (isLoggedIn) {
+    @if (isLoggedIn()) {
       <ama-notifications></ama-notifications>
-      <p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>
+      <p-menu #menu [model]="userMenuItems()" [popup]="true"></p-menu>
       <p-button
         styleClass="mr-2 p-3"
         [rounded]="true"
@@ -53,8 +53,10 @@
         class="mr-2 primary-50"
         styleClass="p-button-warning"
         size="small"
-        (onClick)="router.navigate(['signin'])"
+        (onClick)="handleOpenLoginDialog()"
       ></p-button>
     }
   </div>
 </p-toolbar>
+
+<ama-social-login-dialog [(visible)]="showLoginDialog"></ama-social-login-dialog>

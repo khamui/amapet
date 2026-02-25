@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { DividerModule } from 'primeng/divider';
@@ -33,26 +33,24 @@ import { Router } from '@angular/router';
   ],
 })
 export class AnswersComponent {
-  @Input() answers!: Answer[] | undefined;
-  @Input() questionId!: string;
-  @Input() circleId!: string;
+  private as = inject(AuthService);
+  private ans = inject(AnswerService);
+  private cos = inject(ConfirmationService);
+  public router = inject(Router);
+
+  public answers = input<Answer[] | undefined>();
+  public questionId = input.required<string>();
+  public circleId = input.required<string>();
 
   public loading = false;
-  public isLoggedIn = false;
   public currentUserId!: string;
   public answerInEditing!: Answer | undefined;
   public allExpanded = true;
 
-  constructor(
-    private as: AuthService,
-    private ans: AnswerService,
-    private cos: ConfirmationService,
-    public router: Router
-  ) {
+  public isLoggedIn = computed(() => this.as.isLoggedIn());
+
+  constructor() {
     this.currentUserId = this.as.getUserId();
-    this.as.watchLoggedIn.subscribe((value: boolean) => {
-      this.isLoggedIn = value;
-    });
   }
 
   public submitAnswer = async ({
@@ -67,7 +65,7 @@ export class AnswersComponent {
     this.loading = true;
     editorButtonEl.checked = false;
     const answerText = text;
-    const redirectId = await this.ans.getRedirectId(this.questionId, answer)
+    const redirectId = await this.ans.getRedirectId(this.questionId(), answer)
 
     if (answerText !== '') {
       this.ans.createAnswer({
@@ -75,8 +73,8 @@ export class AnswersComponent {
         parentType: 'answer',
         answerText: answerText as string,
         redirectId,
-        questionId: this.questionId,
-        circleId: this.circleId,
+        questionId: this.questionId(),
+        circleId: this.circleId(),
       });
     }
     this.loading = false;
@@ -84,11 +82,11 @@ export class AnswersComponent {
 
   /* vote methods */
   public handleUpvoteAnswer = (answer: Answer) => {
-    this.ans.updateAnswerUpvote(answer, this.questionId, this.circleId);
+    this.ans.updateAnswerUpvote(answer, this.questionId(), this.circleId());
   };
 
   public handleDownvoteAnswer = (answer: Answer) => {
-    this.ans.updateAnswerDownvote(answer, this.questionId);
+    this.ans.updateAnswerDownvote(answer, this.questionId());
   };
 
   /* owner methods */
@@ -112,19 +110,8 @@ export class AnswersComponent {
       });
 
       updated.subscribe((newAnswer: Answer) => {
-        if (this.answers) {
-          this.answers = this.answers.map((a: Answer) => {
-            if (a._id === newAnswer._id) {
-              return {
-                ...a,
-                answerText: newAnswer.answerText,
-                modded_at: newAnswer.modded_at,
-              };
-            } else {
-              return a;
-            }
-          });
-        }
+        // Note: The parent component manages the answers array via the AnswerService
+        // The update will be reflected through the service's observable
         this.closeAnswerForm();
       });
     }
@@ -136,7 +123,7 @@ export class AnswersComponent {
   };
 
   handleDelete = async (answer: Answer) => {
-    const redirectId = await this.ans.getRedirectId(this.questionId, answer)
+    const redirectId = await this.ans.getRedirectId(this.questionId(), answer)
     this.cos.confirm({
       message: 'Are you sure that you want to delete this answer?',
       header: 'Delete answer?',

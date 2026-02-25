@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SignInComponent } from './containers/sign-in/sign-in.component';
 import { ProfileComponent } from './containers/profile/profile.component';
 import { ExploreComponent } from './containers/explore/explore.component';
 import { CircleComponent } from './containers/circle/circle.component';
@@ -38,11 +37,6 @@ const routes: Routes = [
   {
     path: 'c/:name/questions/:qid',
     component: QuestionDetailComponent,
-    canActivate: [appAvailableGuard],
-  },
-  {
-    path: 'signin',
-    component: SignInComponent,
     canActivate: [appAvailableGuard],
   },
   {

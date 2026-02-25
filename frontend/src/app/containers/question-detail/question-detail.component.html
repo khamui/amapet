@@ -71,7 +71,7 @@
           <i class="pi pi-comments"></i>
           <span class="mx-2">{{ ans?.answers?.length || 0 }} answers</span>
         </div>
-        @if (isLoggedIn) {
+        @if (isLoggedIn()) {
           <div class="w-full mt-5 mb-3">
             <ama-texteditor
               (submit)="submitAnswer($event)"
