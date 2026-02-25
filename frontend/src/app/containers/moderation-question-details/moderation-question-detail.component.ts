@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { AnswerService } from 'src/app/services/answer.service';
 import { CircleService } from 'src/app/services/circle.service';
@@ -35,29 +35,26 @@ import {
   styleUrl: './moderation-question-detail.component.scss',
 })
 export class ModerationQuestionDetailComponent implements OnInit {
+  private ar = inject(ActivatedRoute);
+  private cs = inject(CircleService);
+  private ro = inject(Router);
+  private as = inject(AuthService);
+  public ans = inject(AnswerService);
+
   circle!: Circle;
   currentUserId!: string;
   public question!: Question;
   public loading = false;
   public answers: Answer[] = [];
-  public isLoggedIn = false;
   public questionClosed = signal(false);
 
-  constructor(
-    private ar: ActivatedRoute,
-    private cs: CircleService,
-    private ro: Router,
-    private as: AuthService,
-    public ans: AnswerService,
-  ) {
+  public isLoggedIn = computed(() => this.as.isLoggedIn());
+
+  constructor() {
     this.currentUserId = this.as.getUserId();
   }
 
   ngOnInit(): void {
-    this.as.watchLoggedIn.subscribe((value: boolean) => {
-      this.isLoggedIn = value;
-    });
-
     /* observes params */
     /* get circle id by circle name */
     /* fetch get question */

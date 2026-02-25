@@ -1,7 +1,9 @@
 import {
   Component,
-  OnInit,
+  computed,
   inject,
+  OnInit,
+  signal,
 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
@@ -36,14 +38,13 @@ export class AppComponent implements OnInit {
   private as = inject(AuthService);
   public ses = inject(SettingsService);
 
-  public isLoggedIn = false;
-  public isInModerationView = false;
-  public isInCircleView = false;
+  // Computed signal that directly references auth service's isLoggedIn
+  public isLoggedIn = computed(() => this.as.isLoggedIn());
+
+  public isInModerationView = signal(false);
+  public isInCircleView = signal(false);
 
   async ngOnInit() {
-    this.as.watchLoggedIn.subscribe((value: boolean) => {
-      this.isLoggedIn = value;
-    });
     this.as.subscribeLogin();
 
     await this.ses.init();
@@ -53,7 +54,7 @@ export class AppComponent implements OnInit {
     // listen to url changes
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(this.setCircleBox);
+      .subscribe(() => this.setCircleBox());
   }
 
   private setCircleBox = () => {
@@ -61,11 +62,11 @@ export class AppComponent implements OnInit {
       this.router.url.startsWith('/moderation') ||
       this.router.url.startsWith('/moderate')
     ) {
-      this.isInCircleView = false;
-      this.isInModerationView = true;
+      this.isInCircleView.set(false);
+      this.isInModerationView.set(true);
     } else {
-      this.isInModerationView = false;
-      this.isInCircleView = true;
+      this.isInModerationView.set(false);
+      this.isInCircleView.set(true);
     }
   };
 }

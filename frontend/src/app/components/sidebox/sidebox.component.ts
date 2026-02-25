@@ -1,4 +1,4 @@
-import { Component, input, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -14,23 +14,14 @@ import { FollowResponse } from 'src/app/typedefs/FollowResponse.typedef';
   standalone: true,
   imports: [MenuModule, ButtonModule, RouterLink],
 })
-export class SideboxComponent implements OnInit {
+export class SideboxComponent {
+  private api = inject(ApiService<any>);
+  private as = inject(AuthService);
+
   public items = input<MenuItem[]>();
   public context = input<string>();
 
-  public isLoggedIn = false;
-
-  constructor(
-    private api: ApiService<any>,
-    private as: AuthService,
-  ) {}
-
-  ngOnInit(): void {
-    console.log('menuitems', this.items());
-    this.as.watchLoggedIn.subscribe((value: boolean) => {
-      this.isLoggedIn = value;
-    });
-  }
+  public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   public async handleFollowCircle(event: MouseEvent, item: any) {
     event.stopPropagation();

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
@@ -18,21 +18,16 @@ import { InputTextModule } from 'primeng/inputtext';
     ],
 })
 export class CircleComponent implements OnInit {
-  circle!: Circle;
-  isLoggedIn = false;
+  public router = inject(Router);
+  private cs = inject(CircleService);
+  private ar = inject(ActivatedRoute);
+  public as = inject(AuthService);
 
-  constructor(
-    public router: Router,
-    private cs: CircleService,
-    private ar: ActivatedRoute,
-    public as: AuthService
-  ) {}
+  circle!: Circle;
+
+  public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   ngOnInit(): void {
-    this.as.watchLoggedIn.subscribe((value: boolean) => {
-      this.isLoggedIn = value;
-    })
-
     /* refetch circles after arriving c/:id */
     const params$ = this.ar.paramMap;
     params$.subscribe(async (paramMap: any) => {

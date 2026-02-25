@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
@@ -7,30 +7,34 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { NotificationsComponent } from '../notifications/notifications.component';
 import { MenuModule } from 'primeng/menu';
 import { ModerationStore } from 'src/app/stores/moderation.store';
+import { SocialLoginDialogComponent } from 'src/app/components/social-login-dialog/social-login-dialog.component';
 
 @Component({
   selector: 'ama-topbar',
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
   standalone: true,
-  imports: [ToolbarModule, ButtonModule, NotificationsComponent, MenuModule],
+  imports: [ToolbarModule, ButtonModule, NotificationsComponent, MenuModule, SocialLoginDialogComponent],
 })
-export class TopbarComponent implements OnInit {
+export class TopbarComponent {
   public router = inject(Router);
   public as = inject(AuthService);
   private ms = inject(MessageService);
   private moderationStore = inject(ModerationStore);
 
-  public isLoggedIn = false;
-  public hasPermLevel = false;
+  public showLoginDialog = signal(false);
+  public hasPermLevel = signal(false);
+  public userMenuItems = signal<MenuItem[]>([]);
 
-  public userMenuItems: MenuItem[] = [];
+  // Computed signal that directly references auth service's isLoggedIn
+  public isLoggedIn = computed(() => this.as.isLoggedIn());
 
-  ngOnInit(): void {
-    this.as.watchLoggedIn.subscribe(async (value: boolean) => {
-      this.isLoggedIn = value;
-      if (value) {
-        this.hasPermLevel = this.as.getPermLevel();
+  constructor() {
+    // React to login state changes
+    effect(async () => {
+      const loggedIn = this.as.isLoggedIn();
+      if (loggedIn) {
+        this.hasPermLevel.set(this.as.getPermLevel());
         this.ms.add({
           severity: 'success',
           summary: 'Logged in!',
@@ -44,7 +48,7 @@ export class TopbarComponent implements OnInit {
   }
 
   private createUserMenu() {
-    this.userMenuItems = [
+    const items: MenuItem[] = [
       {
         label: 'Profile',
         icon: 'pi pi-user',
@@ -55,7 +59,7 @@ export class TopbarComponent implements OnInit {
     ];
 
     if (this.moderationStore.getModeratedCircleIds().length > 0) {
-      this.userMenuItems.push({
+      items.push({
         label: 'Moderation',
         icon: 'pi pi-shield',
         command: () => {
@@ -63,6 +67,8 @@ export class TopbarComponent implements OnInit {
         },
       });
     }
+
+    this.userMenuItems.set(items);
   }
 
   public handleNavigateHome() {
@@ -76,5 +82,9 @@ export class TopbarComponent implements OnInit {
       summary: 'Logged out!',
       detail: 'You have been successfully logged out.',
     });
+  }
+
+  public handleOpenLoginDialog() {
+    this.showLoginDialog.set(true);
   }
 }

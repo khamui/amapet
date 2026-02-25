@@ -1,5 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+  untracked,
+} from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { MenuItem, SharedModule } from 'primeng/api';
 import { Observable, Subject, debounceTime } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -24,47 +32,51 @@ import { PopoverModule } from 'primeng/popover';
   ],
 })
 export class CircleBoxComponent implements OnInit {
+  public cs = inject(CircleService);
+  private router = inject(Router);
+  private as = inject(AuthService);
+
   circles$!: Observable<Circle[]>;
-  circleMenuItems: MenuItem[] = [];
+  circleMenuItems = signal<MenuItem[]>([]);
   circleNameInput = new Subject<string>();
   circleExists = false;
 
-  isLoggedIn = false;
+  public isLoggedIn = computed(() => this.as.isLoggedIn());
 
-  constructor(
-    public cs: CircleService,
-    private router: Router,
-    private as: AuthService,
-  ) {}
-
-  ngOnInit(): void {
-    this.as.watchLoggedIn.subscribe(async (value: boolean) => {
-      this.isLoggedIn = value;
-      if (value && this.circleMenuItems) {
-        const followedCircles = (await this.as.getFollowedCircles()) || [];
-        this.circleMenuItems = this.circleMenuItems.map((item) => ({
-          ...item,
-          state: {
-            isFollowed: followedCircles.includes(item.label || ''),
-          },
-        })) as MenuItem[];
-        this.circleMenuItems = [...this.circleMenuItems].sort(
-          this.sortFavorites,
-        );
+  constructor() {
+    // React to login state changes
+    effect(async () => {
+      const loggedIn = this.as.isLoggedIn();
+      if (loggedIn) {
+        // Use untracked to read circleMenuItems without creating a dependency
+        // This prevents infinite loop: effect reads signal -> writes signal -> triggers effect
+        const items = untracked(() => this.circleMenuItems());
+        if (items.length > 0) {
+          const followedCircles = (await this.as.getFollowedCircles()) || [];
+          const updatedItems = items.map((item) => ({
+            ...item,
+            state: {
+              isFollowed: followedCircles.includes(item.label || ''),
+            },
+          })) as MenuItem[];
+          this.circleMenuItems.set([...updatedItems].sort(this.sortFavorites));
+        }
       }
     });
+  }
 
+  ngOnInit(): void {
     this.cs.circles$.subscribe(async (circles: Circle[]) => {
       const followedCircles =
-        (this.isLoggedIn && (await this.as.getFollowedCircles())) || [];
-      this.circleMenuItems = circles.map((circle: Circle) => ({
+        (this.isLoggedIn() && (await this.as.getFollowedCircles())) || [];
+      const items = circles.map((circle: Circle) => ({
         label: circle.name,
         command: () => this.router.navigate([circle.name]),
         state: {
           isFollowed: followedCircles.includes(circle.name),
         },
       })) as MenuItem[];
-      this.circleMenuItems = [...this.circleMenuItems].sort(this.sortFavorites);
+      this.circleMenuItems.set([...items].sort(this.sortFavorites));
     });
 
     this.circleNameInput

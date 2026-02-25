@@ -1,8 +1,8 @@
 import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Token } from '../typedefs/Token.typedef';
-import { Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { jwtDecode as decode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User } from '../typedefs/User.typedef';
@@ -15,15 +15,13 @@ const TOKEN_NAME = 'amapet_token';
   providedIn: 'root',
 })
 export class AuthService {
-  public watchLoggedIn = new BehaviorSubject(false);
-  public watchUser = new BehaviorSubject(undefined);
+  private sas = inject(SocialAuthService);
+  private api = inject(ApiService<Token>);
+  private router = inject(Router);
+  private ms = inject(MessageService);
 
-  constructor(
-    private sas: SocialAuthService,
-    private api: ApiService<Token>,
-    private router: Router,
-    private ms: MessageService,
-  ) {}
+  public isLoggedIn = signal(false);
+  public user = signal<User | undefined>(undefined);
 
   /***
    *
@@ -36,36 +34,35 @@ export class AuthService {
   public subscribeLogin = async () => {
     const storedToken = localStorage.getItem(TOKEN_NAME);
 
-    if (!storedToken) {
-      await firstValueFrom(this.sas.initState);
-      this.sas.authState.subscribe(async (user: SocialUser) => {
-        try {
-          const token = user && (await this.requestToken(user));
-          if (token && !token.isError) {
-            this.setToken((token.result as Token).token);
-            this.watchLoggedIn.next(true);
-            this.router.navigate(['/'], { replaceUrl: true });
-          }
-        } catch (error: any) {
-          if (error.name !== 'AbortError') {
-            this.ms.add({
-              severity: 'error',
-              summary: 'Login failed!',
-              detail: 'An error occurred during login. Please try again.',
-            });
-          }
+    // Always set up auth state subscription to handle login attempts
+    // This ensures login works even after logout without page refresh
+    await firstValueFrom(this.sas.initState);
+    this.sas.authState.subscribe(async (user: SocialUser) => {
+      if (!user) return;
+
+      try {
+        const token = await this.requestToken(user);
+        if (token && !token.isError) {
+          this.setToken((token.result as Token).token);
+          this.isLoggedIn.set(true);
+          this.router.navigate(['/'], { replaceUrl: true });
         }
-      });
-    } else {
+      } catch (error: any) {
+        this.handleLoginError(error);
+      }
+    });
+
+    // If token exists, validate it
+    if (storedToken) {
       const payload = decode(storedToken);
       this.setLoggedInWithExpiration((payload as any).exp);
-      console.log('Still valid token. Expiry date to be checked');
     }
   };
 
   public logout = async () => {
     localStorage.removeItem(TOKEN_NAME);
-    this.watchLoggedIn.next(false);
+    this.isLoggedIn.set(false);
+    this.user.set(undefined);
     this.router.navigate(['/'], { replaceUrl: true });
     await this.sas.signOut();
   };
@@ -74,34 +71,82 @@ export class AuthService {
     const now = Math.floor(Date.now() / 1000);
     const diff = exp - now;
     if (diff < 0) {
-      this.watchLoggedIn.next(false);
+      this.isLoggedIn.set(false);
+      this.user.set(undefined);
       localStorage.removeItem(TOKEN_NAME);
+      this.ms.add({
+        severity: 'warn',
+        summary: 'Session Expired',
+        detail: 'Your session has expired. Please log in again.',
+      });
     } else {
-      this.watchLoggedIn.next(true);
+      this.isLoggedIn.set(true);
     }
   };
 
-  /***
+  private handleLoginError = (error: any) => {
+    // Silent fail for user-initiated aborts (e.g., closing popup)
+    if (error.name === 'AbortError') {
+      return;
+    }
 
-  *
-  * private requestToken()
-  * This method makes a call to amapet's backend to receive a jwt token
-  * which can be used for further authorizations.
-  *
-  ***/
-  private requestToken = async (user: SocialUser) => {
-    const { idToken: token } = user;
-    if (!token) {
+    // Network or server errors
+    if (error.status === 0 || error.status >= 500) {
       this.ms.add({
         severity: 'error',
-        summary: 'Login failed!',
-        detail: 'No token received from Google.',
+        summary: 'Connection Error',
+        detail: 'Unable to connect to authentication server. Please check your internet connection and try again.',
       });
       return;
     }
-    const authToken = await this.api.create('google-signin', {
-      token,
+
+    // Token validation errors (4xx errors)
+    if (error.status >= 400 && error.status < 500) {
+      this.ms.add({
+        severity: 'error',
+        summary: 'Authentication Failed',
+        detail: 'Google authentication failed. Please try signing in again.',
+      });
+      return;
+    }
+
+    // Generic errors
+    this.ms.add({
+      severity: 'error',
+      summary: 'Login Failed',
+      detail: error.message || 'An unexpected error occurred during login. Please try again.',
     });
+  };
+
+  /***
+   *
+   * private requestToken()
+   * This method makes a call to amapet's backend to receive a jwt token
+   * which can be used for further authorizations.
+   *
+   ***/
+  private requestToken = async (user: SocialUser) => {
+    const { idToken: token } = user;
+
+    if (!token) {
+      const error = new Error('No authentication token received from Google');
+      this.ms.add({
+        severity: 'error',
+        summary: 'Authentication Error',
+        detail: 'No authentication token received from Google. Please try again.',
+      });
+      throw error;
+    }
+
+    const authToken = await this.api.create('google-signin', { token });
+
+    if (authToken.isError) {
+      const error = new Error(
+        (authToken as any).error || 'Backend authentication failed',
+      );
+      throw error;
+    }
+
     return authToken;
   };
 

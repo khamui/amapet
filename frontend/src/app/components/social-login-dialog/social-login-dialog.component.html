@@ -1,0 +1,38 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  header="Sign In"
+  [style]="{ width: '450px' }"
+  (onHide)="closeDialog()"
+>
+  <div class="dialog-content">
+    <p class="dialog-text">
+      Sign in with your preferred social account to continue.
+    </p>
+    
+    <div class="social-buttons">
+      @if (ses.appIsAvailable()) {
+        <div class="social-button-wrapper">
+          <asl-google-signin-button
+            type="standard"
+            size="large"
+          ></asl-google-signin-button>
+        </div>
+        
+        <!-- Placeholder for Apple login (coming soon) -->
+        <div class="social-button-placeholder">
+          <span class="placeholder-text">Apple Sign-In - Coming Soon</span>
+        </div>
+        
+        <!-- Placeholder for Microsoft login (coming soon) -->
+        <div class="social-button-placeholder">
+          <span class="placeholder-text">Microsoft Sign-In - Coming Soon</span>
+        </div>
+      }
+    </div>
+  </div>
+</p-dialog>

@@ -1,6 +1,6 @@
 @if (circle) {
   <h3 class="font-weight-300 text-xl mb-5">{{ circle.name }}</h3>
-  @if (isLoggedIn) {
+  @if (isLoggedIn()) {
     <div class="w-full">
       <input
         class="w-full"
