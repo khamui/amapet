@@ -1,0 +1,34 @@
+import express from 'express';
+import cors from 'cors';
+
+// import controllers
+import { controllerSettings } from '../controllers/controller.settings.js';
+
+// import db functions
+import { corsOptions } from '../dbaccess.js';
+
+// import middlewares
+import { middlewareAuth } from '../middlewares/middleware.auth.js';
+
+const router = express.Router();
+
+/*
+ * GET settings value by settings key.
+ */
+router.get('/settings/:key', cors(corsOptions), [controllerSettings.readValuesByKey]);
+
+/*
+ * GET all settings.
+ */
+router.get('/settings', cors(corsOptions), [controllerSettings.readSettings]);
+
+/*
+ * PUT one setting.
+ * Authentication required.
+ */
+router.put('/settings', cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  controllerSettings.updateSetting,
+]);
+
+export default router;
