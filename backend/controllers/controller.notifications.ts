@@ -1,0 +1,31 @@
+import { Request, Response } from 'express';
+import { retrieveModelLimited, updateModel } from '../dbaccess.js';
+import { Notification } from '../db/models/notification.js';
+
+const LIMIT = 100;
+
+export const controllerNotifications = {
+  readAll: async (req: Request, res: Response): Promise<void> => {
+    const userId = req.userPayload?._id;
+    try {
+      const userNotifications = await retrieveModelLimited(Notification, LIMIT, {
+        userId,
+      });
+      res.status(200).json(userNotifications);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  },
+  markAsRead: async (req: Request, res: Response): Promise<void> => {
+    const { id: notificationId } = req.params;
+    const filter = { _id: notificationId };
+    const updateExpr = { unread: false };
+
+    try {
+      const updated = await updateModel(Notification, filter, updateExpr);
+      res.status(200).json(updated);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  },
+};

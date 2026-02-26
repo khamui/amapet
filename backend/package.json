@@ -4,9 +4,14 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "start": "node server.js",
-        "start:dev": "nodemon server.js",
-        "clean": "rm -rf node_modules",
+        "start": "node dist/server.js",
+        "start:dev": "tsx watch server.ts",
+        "start:dev:js": "nodemon server.js",
+        "build": "tsc",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "clean": "rm -rf node_modules dist",
         "cstart": "npm run clean && npm cache clean --force && npm i && npm start"
     },
     "dependencies": {
@@ -20,6 +25,19 @@
         "mongoose": "8.9.3"
     },
     "devDependencies": {
-        "nodemon": "^3.0.2"
+        "@eslint/js": "^10.0.1",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.6",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/node": "^25.3.1",
+        "eslint": "^10.0.2",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.5",
+        "globals": "^17.3.0",
+        "nodemon": "^3.0.2",
+        "prettier": "^3.8.1",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.56.1"
     }
 }
