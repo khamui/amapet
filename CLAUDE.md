@@ -1,24 +1,24 @@
-# Amapet - Development Context
+Amapet | Dev Context Core Concept
 
-## What This Project Does
+Q&A Platform: Users create Circles (topics) to post questions & answers.
 
-This is a Question and Answer platform. Users can create circles (specific
-topics) and within asking questions and answering them.
+Tech Stack
 
-## Tech Stack & Version
+- Frontend: Angular 20+, PrimeNG 20+, Tailwind CSS 4+
+- Backend: Node.js, Express, Mongoose, MongoDB (REST API)
+- Structure: /frontend/src/app | /backend
 
-- Frontend: Angular 20+, PrimeNG 20+ components and tailwindcss 4+
-- Backend: Node.js with Express
-- Database: MongoDB
-- Styling: Tailwind CSS 4+
+Frontend Rules
 
-## File Structure
+- Logic: Use Signals over RxJS where possible.
+- Styling: Strict Tailwind utility classes; no custom CSS.
+- UI: Use PrimeNG components; align with Design Tokens (theming).
+- Standards: Standalone components, functional interceptors, inject(), input(),
+  output() pattern.
 
-- /frontend/src/app
-- /backend
+Backend Rules
 
-## Frontend only code of conduct
-
-Apply modern Angular 20+ coding where possible. Rather using signals, not rxjs.
-Use tailwind utilities classes over custom css classes. Align to primeng theming
-with design tokens.
+- Architecture: Controller-Service-Repository pattern.
+- API: RESTful naming, JSON payloads, standard HTTP status codes.
+- Validation: Use Joi for request body schema validation.
+- Middleware: Centralized error handling and JWT-based Auth.

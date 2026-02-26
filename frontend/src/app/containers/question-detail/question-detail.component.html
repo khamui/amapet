@@ -35,7 +35,7 @@
         </span>
       }
     </ng-template>
-    <div class="flex jufstify-content-start">
+    <div class="flex justify-content-start">
       <div class="text-sm mr-1">
         <ama-vote
           [upvotes]="question?.upvotes || []"
@@ -45,7 +45,7 @@
         ></ama-vote>
       </div>
       <p-divider layout="vertical"></p-divider>
-      <div class="w-full">
+      <div class="w-full min-w-0">
         <div class="ml-1">
           <h4 class="m-0 font-bold">{{ question.title }}</h4>
           <div
@@ -64,7 +64,7 @@
           >{{ question.intentionId || 'question' }}</div>
           <p
             [innerHtml]="question.body"
-            class="text-left text-sm font-semibold my-10"
+            class="text-left text-sm font-semibold my-10 break-words"
           ></p>
         </div>
         <div class="text-sm my-5">
