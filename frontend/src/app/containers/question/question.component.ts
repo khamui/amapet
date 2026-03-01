@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SharedModule } from 'primeng/api';
+import { take } from 'rxjs';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
@@ -77,15 +78,19 @@ export class QuestionComponent implements OnInit {
     });
   };
 
-  public handleUpvoteQuestion = (event: Event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    this.cs.updateQuestionUpvote(this.circle, this.question);
+  public handleUpvoteQuestion = () => {
+    this.cs.updateQuestionUpvote(this.circle, this.question)
+      .pipe(take(1))
+      .subscribe((updatedQuestion: Question) => {
+        this.question = updatedQuestion;
+      });
   };
 
-  public handleDownvoteQuestion = (event: Event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    this.cs.updateQuestionDownvote(this.circle, this.question);
+  public handleDownvoteQuestion = () => {
+    this.cs.updateQuestionDownvote(this.circle, this.question)
+      .pipe(take(1))
+      .subscribe((updatedQuestion: Question) => {
+        this.question = updatedQuestion;
+      });
   };
 }

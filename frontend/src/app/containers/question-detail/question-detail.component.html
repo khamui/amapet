@@ -69,7 +69,7 @@
         </div>
         <div class="text-sm my-5">
           <i class="pi pi-comments"></i>
-          <span class="mx-2">{{ ans?.answers?.length || 0 }} answers</span>
+          <span class="mx-2">{{ ans.answers().length || 0 }} answers</span>
         </div>
         @if (isLoggedIn()) {
           <div class="w-full mt-5 mb-3">
@@ -82,7 +82,7 @@
       </div>
     </div>
     <div class="my-5">
-      @if (ans.loadingList) {
+      @if (ans.loadingList()) {
         <p-progressBar
           mode="indeterminate"
           [style]="{ height: '6px' }"
@@ -91,7 +91,7 @@
         <ama-answers
           [questionId]="question._id || ''"
           [circleId]="circle._id || ''"
-          [answers]="ans.answers"
+          [answers]="ans.answers()"
         ></ama-answers>
       }
     </div>

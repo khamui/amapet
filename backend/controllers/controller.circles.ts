@@ -167,7 +167,10 @@ export const controllerCircles = {
 
     try {
       const updated = await updateModel(Circle, filter, updateExpr);
-      res.status(200).json(updated);
+      const updatedQuestion = updated?.questions.find(
+        (q: IQuestion) => q._id?.toString() === questionId
+      );
+      res.status(200).json(updatedQuestion);
     } catch (error) {
       res.status(500).send(error instanceof Error ? error.message : 'Unknown error');
     }
