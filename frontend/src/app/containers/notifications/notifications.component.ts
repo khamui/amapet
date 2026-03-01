@@ -43,8 +43,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.timerSubscription$ && this.timerSubscription$.unsubscribe();
   }
 
-  public removeTags = (formattedText: any) => {
-    const tagsFreeText = formattedText.replaceAll(/<\/?p>/g, '');
+  public removeTags = (formattedText: unknown) => {
+    let text = '';
+    if (typeof formattedText === 'string') {
+      text = formattedText;
+    } else if (typeof formattedText === 'object' && formattedText !== null) {
+      const obj = formattedText as Record<string, unknown>;
+      text = String(obj['text'] ?? obj['content'] ?? obj['body'] ?? '');
+    }
+    const tagsFreeText = text.replaceAll(/<[^>]*>/g, '');
     return tagsFreeText.replaceAll('&nbsp;', ' ');
   };
 
