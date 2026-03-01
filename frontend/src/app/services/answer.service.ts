@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { take } from 'rxjs';
 import { ApiService } from './api.service';
 import { Answer } from '../typedefs/Answer.typedef';
 import { AuthService } from './auth.service';
@@ -7,8 +8,8 @@ import { MessageService } from 'primeng/api';
   providedIn: 'root',
 })
 export class AnswerService {
-  public answers!: Answer[];
-  public loadingList = false;
+  public answers = signal<Answer[]>([]);
+  public loadingList = signal(false);
 
   constructor(
     private api: ApiService<Answer>,
@@ -17,12 +18,12 @@ export class AnswerService {
   ) {}
 
   public readAnswers = (byQuestionId: string) => {
-    this.loadingList = true;
+    this.loadingList.set(true);
     this.api
       .readAsObservable$<Answer[]>(`answers/${byQuestionId}`)
       .subscribe((answers: Answer[]) => {
-        this.answers = answers;
-        this.loadingList = false;
+        this.answers.set(answers);
+        this.loadingList.set(false);
       });
   };
 
@@ -31,10 +32,10 @@ export class AnswerService {
   };
 
   private readAllAnswers = async (byQuestionId: string) => {
-    this.loadingList = true;
+    this.loadingList.set(true);
     const allAnswersResponse = await this.api.read(`answers/${byQuestionId}`);
     const { isError, result } = allAnswersResponse;
-    this.loadingList = false;
+    this.loadingList.set(false);
     return result;
   };
 
@@ -196,7 +197,7 @@ export class AnswerService {
       },
     );
 
-    updated$.subscribe(() => {
+    updated$.pipe(take(1)).subscribe(() => {
       this.readAnswers(questionId);
     });
   };
@@ -206,7 +207,7 @@ export class AnswerService {
       `answers/${answer._id}/downvote`,
     );
 
-    updated$.subscribe(() => {
+    updated$.pipe(take(1)).subscribe(() => {
       this.readAnswers(qid);
     });
   };

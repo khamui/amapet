@@ -1,11 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-} from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -16,22 +10,35 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './vote.component.html',
   styleUrl: './vote.component.scss',
 })
-export class VoteComponent implements OnChanges {
-  @Input() upvotes: string[] = [];
-  @Input() downvotes: string[] = [];
-  @Output() upvoteSubmit = new EventEmitter();
-  @Output() downvoteSubmit = new EventEmitter();
+export class VoteComponent {
+  private as = inject(AuthService);
 
-  currentUserId!: string;
-  isUpvoted!: boolean;
-  isDownvoted!: boolean;
+  upvotes = input<string[]>([]);
+  downvotes = input<string[]>([]);
+  upvoteSubmit = output();
+  downvoteSubmit = output();
 
-  constructor(private as: AuthService) {
-    this.currentUserId = this.as.getUserId();
+  currentUserId = this.as.getUserId();
+  isUpvoted = computed(() => this.upvotes().includes(this.currentUserId));
+  isDownvoted = computed(() => this.downvotes().includes(this.currentUserId));
+
+  private voting = false;
+
+  handleUpvote(event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+    if (this.voting || this.isUpvoted()) return;
+    this.voting = true;
+    this.upvoteSubmit.emit();
+    setTimeout(() => this.voting = false, 1000);
   }
 
-  ngOnChanges(): void {
-    this.isUpvoted = this.upvotes.includes(this.currentUserId);
-    this.isDownvoted = this.downvotes.includes(this.currentUserId);
+  handleDownvote(event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+    if (this.voting || this.isDownvoted()) return;
+    this.voting = true;
+    this.downvoteSubmit.emit();
+    setTimeout(() => this.voting = false, 1000);
   }
 }

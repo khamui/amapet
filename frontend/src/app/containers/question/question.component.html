@@ -33,8 +33,8 @@
         <ama-vote
           [upvotes]="question?.upvotes || []"
           [downvotes]="question?.downvotes || []"
-          (upvoteSubmit)="handleUpvoteQuestion($event)"
-          (downvoteSubmit)="handleDownvoteQuestion($event)"
+          (upvoteSubmit)="handleUpvoteQuestion()"
+          (downvoteSubmit)="handleDownvoteQuestion()"
         ></ama-vote>
       </div>
       <p-divider layout="vertical"></p-divider>

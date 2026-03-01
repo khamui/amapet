@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { Component, computed, inject, OnInit } from '@angular/core';
+import { take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { AnswerService } from 'src/app/services/answer.service';
 import { CircleService } from 'src/app/services/circle.service';
@@ -140,11 +141,19 @@ export class QuestionDetailComponent implements OnInit {
   };
 
   public handleUpvoteQuestion = () => {
-    this.cs.updateQuestionUpvote(this.circle, this.question);
+    this.cs.updateQuestionUpvote(this.circle, this.question)
+      .pipe(take(1))
+      .subscribe((updatedQuestion: Question) => {
+        this.question = updatedQuestion;
+      });
   };
 
   public handleDownvoteQuestion = () => {
-    this.cs.updateQuestionDownvote(this.circle, this.question);
+    this.cs.updateQuestionDownvote(this.circle, this.question)
+      .pipe(take(1))
+      .subscribe((updatedQuestion: Question) => {
+        this.question = updatedQuestion;
+      });
   };
 
   public goBack() {

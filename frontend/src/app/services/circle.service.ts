@@ -195,23 +195,15 @@ export class CircleService {
   };
 
   public updateQuestionUpvote = (circle: Circle, question: Question) => {
-    const updated$ = this.api.updateAsObservable$<Circle>(
+    return this.api.updateAsObservable$<Question>(
       `circles/${circle._id}/questions/${question._id}/upvote`,
     );
-
-    updated$.subscribe(() => {
-      this.readCircles();
-    });
   };
 
   public updateQuestionDownvote = (circle: Circle, question: Question) => {
-    const updated$ = this.api.updateAsObservable$<Circle>(
+    return this.api.updateAsObservable$<Question>(
       `circles/${circle._id}/questions/${question._id}/downvote`,
     );
-
-    updated$.subscribe(() => {
-      this.readCircles();
-    });
   };
   /* ########### QUESTIONS ############ */
 

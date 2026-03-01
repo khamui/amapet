@@ -1,24 +1,24 @@
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center" (click)="$event.stopPropagation()">
   <p-button
     styleClass="my-1 vote__button"
     icon="pi pi-chevron-up"
-    [severity]="isUpvoted ? 'success' : 'secondary'"
+    [severity]="isUpvoted() ? 'success' : 'secondary'"
     [text]="true"
-    [disabled]="isUpvoted"
-    (click)="upvoteSubmit.emit($event)"
+    [disabled]="isUpvoted()"
+    (onClick)="handleUpvote($event)"
   ></p-button>
   <div
     class="font-bold"
-    [ngClass]="isUpvoted ? 'text-success' : isDownvoted ? 'text-danger' : ''"
+    [ngClass]="isUpvoted() ? 'text-success' : isDownvoted() ? 'text-danger' : ''"
   >
-    {{ upvotes.length - downvotes.length }}
+    {{ upvotes().length - downvotes().length }}
   </div>
   <p-button
     styleClass="my-1 vote__button"
     icon="pi pi-chevron-down"
-    [severity]="isDownvoted ? 'danger' : 'secondary'"
+    [severity]="isDownvoted() ? 'danger' : 'secondary'"
     [text]="true"
-    [disabled]="isDownvoted"
-    (click)="downvoteSubmit.emit($event)"
+    [disabled]="isDownvoted()"
+    (onClick)="handleDownvote($event)"
   ></p-button>
 </div>
