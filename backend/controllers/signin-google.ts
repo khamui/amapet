@@ -1,20 +1,12 @@
 import { Request, Response } from 'express';
 import { OAuth2Client, LoginTicket } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
-import { User } from '../db/models/user.js';
-import { generateModel, retrieveOneModelByQuery } from '../dbaccess.js';
-import { GOOGLE_CLIENT_ID, GOOGLE_JWT_SECRET } from '../server.js';
-import type { IUserDocument } from '../db/models/user.js';
+import { GOOGLE_CLIENT_ID, JWT_SECRET } from '../server.js';
+import { findOrCreateUser, SocialUserPayload } from '../services/user.service.js';
 
 const EXP_IN_S = 604800; // 7 days expiration time
 
 const client = new OAuth2Client();
-
-interface GooglePayload {
-  email?: string;
-  firstname?: string;
-  lastname?: string;
-}
 
 export const signin = (req: Request, res: Response): void => {
   async function verify(): Promise<string> {
@@ -22,10 +14,10 @@ export const signin = (req: Request, res: Response): void => {
       idToken: req.body.token,
       audience: GOOGLE_CLIENT_ID,
     });
-    const originalPayload = getPayload(ticket);
-    const userPayload = await getUserOrCreateUser(originalPayload);
+    const userPayload = extractPayload(ticket);
+    const user = await findOrCreateUser(userPayload, 'google');
 
-    const token = jwt.sign(userPayload.toJSON(), GOOGLE_JWT_SECRET || '', {
+    const token = jwt.sign(user.toJSON(), JWT_SECRET || '', {
       expiresIn: EXP_IN_S,
     });
     return token;
@@ -36,26 +28,7 @@ export const signin = (req: Request, res: Response): void => {
     .catch(console.error);
 };
 
-const getUserOrCreateUser = async (originalPayload: GooglePayload): Promise<IUserDocument> => {
-  let result = await retrieveOneModelByQuery(User, {
-    email: originalPayload.email,
-  });
-  console.log('getUserOrCreateUser result:', result);
-  if (!result) {
-    const newUser = {
-      ...originalPayload,
-      followedCircles: [],
-      followedQuestions: [],
-      moderatedCircleIds: [],
-      respectPoints: 0,
-    };
-    result = await generateModel(User, newUser);
-  }
-  console.log('result', result);
-  return result as IUserDocument;
-};
-
-const getPayload = (ticket: LoginTicket): GooglePayload => {
+const extractPayload = (ticket: LoginTicket): SocialUserPayload => {
   const payload = ticket.getPayload();
   return {
     email: payload?.email,

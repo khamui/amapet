@@ -1,10 +1,13 @@
 import { Types, Document } from 'mongoose';
 
 // ============ User ============
+export type AuthProvider = 'google' | 'microsoft';
+
 export interface IUser {
   firstname?: string;
   lastname?: string;
   email?: string;
+  authProvider?: AuthProvider;
   followedCircles: string[];
   followedQuestions: string[];
   respectPoints?: number;

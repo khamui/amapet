@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import {
   GoogleLoginProvider,
+  MicrosoftLoginProvider,
   SOCIAL_AUTH_CONFIG,
   SocialAuthServiceConfig,
   SocialLoginModule,
@@ -38,10 +39,16 @@ bootstrapApplication(AppComponent, {
               { onTapEnabled: false },
             ),
           },
-          // {
-          //   id: FacebookLoginProvider.PROVIDER_ID,
-          //   provider: new FacebookLoginProvider('clientId'),
-          // },
+          {
+            id: MicrosoftLoginProvider.PROVIDER_ID,
+            provider: new MicrosoftLoginProvider(
+              'c35f1a94-54c1-4382-8458-851e9f9b8c30', // TODO: Add Microsoft Client ID from Azure
+              {
+                redirect_uri: 'http://localhost:4200',
+                logout_redirect_uri: 'http://localhost:4200',
+              },
+            ),
+          },
         ],
         onError: (err) => {
           console.error(err);
