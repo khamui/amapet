@@ -9,8 +9,9 @@
       styleClass="p-3"
       [text]="true"
       [raised]="true"
+      (onClick)="handleToggleMobileDrawer()"
     >
-      <i class="pi pi-list"></i>
+      <i [class]="burgerIcon()"></i>
     </p-button>
   </div>
   <div class="p-toolbar-group-end gap-2">

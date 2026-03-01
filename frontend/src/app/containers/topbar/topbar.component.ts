@@ -8,6 +8,7 @@ import { NotificationsComponent } from '../notifications/notifications.component
 import { MenuModule } from 'primeng/menu';
 import { ModerationStore } from 'src/app/stores/moderation.store';
 import { SocialLoginDialogComponent } from 'src/app/components/social-login-dialog/social-login-dialog.component';
+import { UiStateService } from 'src/app/services/ui-state.service';
 
 @Component({
   selector: 'ama-topbar',
@@ -21,6 +22,7 @@ export class TopbarComponent {
   public as = inject(AuthService);
   private ms = inject(MessageService);
   private moderationStore = inject(ModerationStore);
+  public uiState = inject(UiStateService);
 
   public showLoginDialog = signal(false);
   public hasPermLevel = signal(false);
@@ -28,6 +30,11 @@ export class TopbarComponent {
 
   // Computed signal that directly references auth service's isLoggedIn
   public isLoggedIn = computed(() => this.as.isLoggedIn());
+
+  // Burger menu icon toggles based on drawer state
+  public burgerIcon = computed(() =>
+    this.uiState.mobileDrawerOpen() ? 'pi pi-times' : 'pi pi-list'
+  );
 
   constructor() {
     // React to login state changes
@@ -86,5 +93,9 @@ export class TopbarComponent {
 
   public handleOpenLoginDialog() {
     this.showLoginDialog.set(true);
+  }
+
+  public handleToggleMobileDrawer() {
+    this.uiState.toggleMobileDrawer();
   }
 }
