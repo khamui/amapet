@@ -1,4 +1,8 @@
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import {
+  SocialAuthService,
+  SocialUser,
+  MicrosoftLoginProvider,
+} from '@abacritt/angularx-social-login';
 import { Token } from '../typedefs/Token.typedef';
 import { inject, Injectable, signal } from '@angular/core';
 import { ApiService } from './api.service';
@@ -105,7 +109,7 @@ export class AuthService {
       this.ms.add({
         severity: 'error',
         summary: 'Authentication Failed',
-        detail: 'Google authentication failed. Please try signing in again.',
+        detail: 'Authentication failed. Please try signing in again.',
       });
       return;
     }
@@ -126,19 +130,25 @@ export class AuthService {
    *
    ***/
   private requestToken = async (user: SocialUser) => {
-    const { idToken: token } = user;
+    const { idToken: token, provider } = user;
 
     if (!token) {
-      const error = new Error('No authentication token received from Google');
+      const error = new Error('No authentication token received');
       this.ms.add({
         severity: 'error',
         summary: 'Authentication Error',
-        detail: 'No authentication token received from Google. Please try again.',
+        detail: 'No authentication token received. Please try again.',
       });
       throw error;
     }
 
-    const authToken = await this.api.create('google-signin', { token });
+    // Route to correct backend endpoint based on provider
+    const endpoint =
+      provider === MicrosoftLoginProvider.PROVIDER_ID
+        ? 'microsoft-signin'
+        : 'google-signin';
+
+    const authToken = await this.api.create(endpoint, { token });
 
     if (authToken.isError) {
       const error = new Error(

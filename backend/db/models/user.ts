@@ -5,6 +5,7 @@ const userSchema = new Schema<IUserDocument>({
   firstname: String,
   lastname: String,
   email: String,
+  authProvider: { type: String, enum: ['google', 'microsoft'], default: 'google' },
   followedCircles: { type: [String], default: [] },
   followedQuestions: { type: [String], default: [] },
   respectPoints: Number,

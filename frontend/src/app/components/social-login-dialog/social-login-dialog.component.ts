@@ -1,6 +1,10 @@
 import { Component, effect, inject, model } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
-import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import {
+  GoogleSigninButtonModule,
+  SocialAuthService,
+  MicrosoftLoginProvider,
+} from '@abacritt/angularx-social-login';
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -14,6 +18,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 export class SocialLoginDialogComponent {
   public as = inject(AuthService);
   public ses = inject(SettingsService);
+  private sas = inject(SocialAuthService);
 
   public visible = model(false);
 
@@ -24,6 +29,10 @@ export class SocialLoginDialogComponent {
         this.closeDialog();
       }
     });
+  }
+
+  signInWithMicrosoft() {
+    this.sas.signIn(MicrosoftLoginProvider.PROVIDER_ID);
   }
 
   closeDialog() {

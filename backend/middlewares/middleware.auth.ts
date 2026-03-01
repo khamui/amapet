@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { GOOGLE_JWT_SECRET } from '../server.js';
+import { JWT_SECRET } from '../server.js';
 import type { UserPayload } from '../types/express.js';
 
 export const middlewareAuth = {
@@ -15,7 +15,7 @@ export const middlewareAuth = {
 
     if (token) {
       try {
-        jwt.verify(token, GOOGLE_JWT_SECRET || '');
+        jwt.verify(token, JWT_SECRET || '');
         next();
       } catch (error) {
         res.status(401).send(error);
@@ -34,7 +34,7 @@ export const middlewareAuth = {
     const token = authHeader.split(' ')[1];
     if (token) {
       try {
-        const decoded = jwt.verify(token, GOOGLE_JWT_SECRET || '') as UserPayload;
+        const decoded = jwt.verify(token, JWT_SECRET || '') as UserPayload;
         req.userPayload = decoded;
         next();
       } catch (error) {
