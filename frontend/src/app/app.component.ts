@@ -9,10 +9,12 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageModule } from 'primeng/message';
+import { DrawerModule } from 'primeng/drawer';
 import { CircleBoxComponent } from './containers/circle-box/circle-box.component';
 import { TopbarComponent } from './containers/topbar/topbar.component';
 import { SoonAvailableComponent } from './containers/soon-available/soon-available.component';
 import { SettingsService } from './services/settings.service';
+import { UiStateService } from './services/ui-state.service';
 import { NgClass } from '@angular/common';
 import { CircleBoxModerationComponent } from './containers/circle-box-moderation/circle-box-moderation.component';
 import { filter } from 'rxjs';
@@ -25,6 +27,7 @@ import { filter } from 'rxjs';
   imports: [
     RouterOutlet,
     ToastModule,
+    DrawerModule,
     CircleBoxComponent,
     CircleBoxModerationComponent,
     TopbarComponent,
@@ -37,6 +40,7 @@ export class AppComponent implements OnInit {
   public router = inject(Router);
   private as = inject(AuthService);
   public ses = inject(SettingsService);
+  public uiState = inject(UiStateService);
 
   // Computed signal that directly references auth service's isLoggedIn
   public isLoggedIn = computed(() => this.as.isLoggedIn());
@@ -54,7 +58,10 @@ export class AppComponent implements OnInit {
     // listen to url changes
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => this.setCircleBox());
+      .subscribe(() => {
+        this.setCircleBox();
+        this.uiState.closeMobileDrawer();
+      });
   }
 
   private setCircleBox = () => {
