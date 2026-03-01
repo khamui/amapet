@@ -2,8 +2,10 @@ import { importProvidersFrom } from '@angular/core';
 import { AppComponent } from './app/app.component';
 import {
   withInterceptorsFromDi,
+  withInterceptors,
   provideHttpClient,
 } from '@angular/common/http';
+import { backendStatusInterceptor } from './app/interceptors/backend-status.interceptor';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import {
@@ -62,6 +64,9 @@ bootstrapApplication(AppComponent, {
         options: DefaultOptions,
       },
     }),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+      withInterceptors([backendStatusInterceptor]),
+    ),
   ],
 }).catch((err) => console.error(err));
