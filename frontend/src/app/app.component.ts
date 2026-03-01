@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
 
   public isInModerationView = signal(false);
   public isInCircleView = signal(false);
+  public isFullScreenRoute = signal(false);
 
   async ngOnInit() {
     this.as.subscribeLogin();
@@ -65,10 +66,21 @@ export class AppComponent implements OnInit {
   }
 
   private setCircleBox = () => {
-    if (
-      this.router.url.startsWith('/moderation') ||
-      this.router.url.startsWith('/moderate')
-    ) {
+    const url = this.router.url;
+    const knownRoutes = [
+      '/explore',
+      '/c/',
+      '/profile',
+      '/moderation',
+      '/moderate/',
+      '/global-settings',
+    ];
+    const isKnownRoute = knownRoutes.some(
+      (route) => url === route || url.startsWith(route)
+    );
+    this.isFullScreenRoute.set(!isKnownRoute);
+
+    if (url.startsWith('/moderation') || url.startsWith('/moderate')) {
       this.isInCircleView.set(false);
       this.isInModerationView.set(true);
     } else {

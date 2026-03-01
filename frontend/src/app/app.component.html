@@ -1,43 +1,25 @@
 @if (ses.appIsAvailable()) {
-  <p-toast></p-toast>
-  <div class="mb-3 fixed w-full z-5">
-    <ama-topbar></ama-topbar>
-  </div>
+  @if (isFullScreenRoute()) {
+    <router-outlet></router-outlet>
+  } @else {
+    <p-toast></p-toast>
+    <div class="mb-3 fixed w-full z-5">
+      <ama-topbar></ama-topbar>
+    </div>
 
-  <!-- Mobile Drawer -->
-  <p-drawer
-    [(visible)]="uiState.mobileDrawerOpen"
-    [modal]="true"
-    position="left"
-    styleClass="w-72"
-  >
-    <ng-template pTemplate="header">
-      <div class="flex items-center gap-2">
-        <img class="h-6" src="../assets/image.png" />
-        <span class="font-semibold">helpa.ws</span>
-      </div>
-    </ng-template>
-    <div class="p-3">
-      @if (isInModerationView()) {
-        <ama-circle-box-moderation></ama-circle-box-moderation>
-      }
-      @if (isInCircleView() && !isInModerationView()) {
-        <ama-circle-box></ama-circle-box>
-      }
-    </div>
-  </p-drawer>
-  @if (ses.isMaintenance()) {
-    <div class="px-20 pb-2 position-relative pt-30">
-      <p-message severity="info">The platform is currently in maintenance mode. This app is currently not running in Production environment.</p-message>
-    </div>
-  }
-  <div
-    class="flex flex-row w-full"
-    [ngClass]="{
-      'pt-30': !ses.isMaintenance(),
-    }"
-  >
-    <div class="max-w-2/8 lg:block hidden">
+    <!-- Mobile Drawer -->
+    <p-drawer
+      [(visible)]="uiState.mobileDrawerOpen"
+      [modal]="true"
+      position="left"
+      styleClass="w-72"
+    >
+      <ng-template pTemplate="header">
+        <div class="flex items-center gap-2">
+          <img class="h-6" src="../assets/image.png" />
+          <span class="font-semibold">helpa.ws</span>
+        </div>
+      </ng-template>
       <div class="p-3">
         @if (isInModerationView()) {
           <ama-circle-box-moderation></ama-circle-box-moderation>
@@ -46,15 +28,37 @@
           <ama-circle-box></ama-circle-box>
         }
       </div>
-    </div>
-    <div class="lg:w-6/8 w-full">
-      <div class="p-3 w-full flex justify-center">
-        <div class="max-w-[60rem] w-full">
-          <router-outlet></router-outlet>
+    </p-drawer>
+    @if (ses.isMaintenance()) {
+      <div class="px-20 pb-2 position-relative pt-30">
+        <p-message severity="info">The platform is currently in maintenance mode. This app is currently not running in Production environment.</p-message>
+      </div>
+    }
+    <div
+      class="flex flex-row w-full"
+      [ngClass]="{
+        'pt-30': !ses.isMaintenance(),
+      }"
+    >
+      <div class="max-w-2/8 lg:block hidden">
+        <div class="p-3">
+          @if (isInModerationView()) {
+            <ama-circle-box-moderation></ama-circle-box-moderation>
+          }
+          @if (isInCircleView() && !isInModerationView()) {
+            <ama-circle-box></ama-circle-box>
+          }
+        </div>
+      </div>
+      <div class="lg:w-6/8 w-full">
+        <div class="p-3 w-full flex justify-center">
+          <div class="max-w-[60rem] w-full">
+            <router-outlet></router-outlet>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 } @else {
   <ama-soon-available></ama-soon-available>
 }
