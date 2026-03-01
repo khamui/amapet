@@ -33,7 +33,7 @@ else
   tmux send-keys -t $SESSION:db.1 "mongodb-compass 'mongodb://hpdev:engage4kha@localhost:27017'" C-m
 
   # Pane 0 (top): Backend
-  tmux send-keys -t $SESSION:app.0 "cd backend && npm run clean && npm i && npm start" C-m
+  tmux send-keys -t $SESSION:app.0 "cd backend && npm run clean && npm i && npm run start:dev" C-m
 
   # Pane 1 (bottom): Frontend
   tmux send-keys -t $SESSION:app.1 "cd frontend && npm run clean && npm i && npm start" C-m

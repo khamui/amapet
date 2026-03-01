@@ -10,6 +10,7 @@ import { ModerationComponent } from './containers/moderation/moderation.componen
 import { ModerationQuestionsComponent } from './containers/moderation-questions/moderation-questions.component';
 import { ModerationQuestionDetailComponent } from './containers/moderation-question-details/moderation-question-detail.component';
 import { GlobalSettingsComponent } from './containers/global-settings/global-settings.component';
+import { NotFoundComponent } from './containers/not-found/not-found.component';
 import { permLevelGuard } from './guards/perm-level.guard';
 import { appAvailableGuard } from './guards/app-available.guard';
 
@@ -62,6 +63,7 @@ const routes: Routes = [
     canActivate: [permLevelGuard, appAvailableGuard],
   },
   { path: '', redirectTo: 'explore', pathMatch: 'full' },
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
