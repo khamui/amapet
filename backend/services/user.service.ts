@@ -3,14 +3,14 @@ import { generateModel, retrieveOneModelByQuery } from '../dbaccess.js';
 import type { IUserDocument } from '../db/models/user.js';
 import type { AuthProvider } from '../types/models.js';
 
-export interface SocialUserPayload {
+export interface ISocialUserPayload {
   email?: string;
   firstname?: string;
   lastname?: string;
 }
 
 export const findOrCreateUser = async (
-  payload: SocialUserPayload,
+  payload: ISocialUserPayload,
   provider: AuthProvider
 ): Promise<IUserDocument> => {
   let result = await retrieveOneModelByQuery(User, {

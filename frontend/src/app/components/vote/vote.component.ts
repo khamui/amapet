@@ -22,23 +22,17 @@ export class VoteComponent {
   isUpvoted = computed(() => this.upvotes().includes(this.currentUserId));
   isDownvoted = computed(() => this.downvotes().includes(this.currentUserId));
 
-  private voting = false;
-
   handleUpvote(event: Event) {
     event.stopPropagation();
     event.preventDefault();
-    if (this.voting || this.isUpvoted()) return;
-    this.voting = true;
+    if (this.isUpvoted()) return;
     this.upvoteSubmit.emit();
-    setTimeout(() => this.voting = false, 1000);
   }
 
   handleDownvote(event: Event) {
     event.stopPropagation();
     event.preventDefault();
-    if (this.voting || this.isDownvoted()) return;
-    this.voting = true;
+    if (this.isDownvoted()) return;
     this.downvoteSubmit.emit();
-    setTimeout(() => this.voting = false, 1000);
   }
 }

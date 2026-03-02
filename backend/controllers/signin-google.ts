@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { OAuth2Client, LoginTicket } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import { GOOGLE_CLIENT_ID, JWT_SECRET } from '../server.js';
-import { findOrCreateUser, SocialUserPayload } from '../services/user.service.js';
+import { findOrCreateUser, ISocialUserPayload } from '../services/user.service.js';
 
 const EXP_IN_S = 604800; // 7 days expiration time
 
@@ -28,7 +28,7 @@ export const signin = (req: Request, res: Response): void => {
     .catch(console.error);
 };
 
-const extractPayload = (ticket: LoginTicket): SocialUserPayload => {
+const extractPayload = (ticket: LoginTicket): ISocialUserPayload => {
   const payload = ticket.getPayload();
   return {
     email: payload?.email,

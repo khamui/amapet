@@ -1,4 +1,4 @@
-<div class="flex flex-col items-center" (click)="$event.stopPropagation()">
+<div class="flex flex-col items-center">
   <p-button
     styleClass="my-1 vote__button"
     icon="pi pi-chevron-up"
@@ -9,7 +9,7 @@
   ></p-button>
   <div
     class="font-bold"
-    [ngClass]="isUpvoted() ? 'text-success' : isDownvoted() ? 'text-danger' : ''"
+    [ngClass]="{ 'text-success': isUpvoted(), 'text-danger': isDownvoted() }"
   >
     {{ upvotes().length - downvotes().length }}
   </div>

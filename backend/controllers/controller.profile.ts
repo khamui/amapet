@@ -5,7 +5,7 @@ import { retrieveModelById, retrieveModel } from '../dbaccess.js';
 import type { IUserDocument } from '../db/models/user.js';
 import type { ICircleDocument } from '../db/models/circle.js';
 
-interface UserProfile {
+interface IUserProfile {
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -29,7 +29,7 @@ export const controllerProfile = {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      const userProfile: UserProfile = {
+      const userProfile: IUserProfile = {
         firstName: dbUser.firstname,
         lastName: dbUser.lastname,
         email: dbUser.email,

@@ -12,7 +12,7 @@ const client = jwksClient({
   rateLimit: true,
 });
 
-interface MicrosoftTokenPayload {
+interface IMicrosoftTokenPayload {
   email?: string;
   preferred_username?: string;
   name?: string;
@@ -22,24 +22,14 @@ interface MicrosoftTokenPayload {
   iss?: string;
 }
 
-const getSigningKey = (header: jwt.JwtHeader): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    client.getSigningKey(header.kid, (err, key) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      const signingKey = key?.getPublicKey();
-      if (signingKey) {
-        resolve(signingKey);
-      } else {
-        reject(new Error('Unable to get signing key'));
-      }
-    });
-  });
+const getSigningKey = async (header: jwt.JwtHeader): Promise<string> => {
+  const key = await client.getSigningKey(header.kid);
+  const signingKey = key?.getPublicKey();
+  if (!signingKey) throw new Error('Unable to get signing key');
+  return signingKey;
 };
 
-const verifyMicrosoftToken = async (token: string): Promise<MicrosoftTokenPayload> => {
+const verifyMicrosoftToken = async (token: string): Promise<IMicrosoftTokenPayload> => {
   const decodedHeader = jwt.decode(token, { complete: true });
   if (!decodedHeader || !decodedHeader.header) {
     throw new Error('Invalid token format');
@@ -47,29 +37,18 @@ const verifyMicrosoftToken = async (token: string): Promise<MicrosoftTokenPayloa
 
   const signingKey = await getSigningKey(decodedHeader.header);
 
-  return new Promise((resolve, reject) => {
-    jwt.verify(
-      token,
-      signingKey,
-      { audience: MICROSOFT_CLIENT_ID },
-      (err: jwt.VerifyErrors | null, decoded: unknown) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        const payload = decoded as MicrosoftTokenPayload;
-        // Validate issuer starts with Microsoft login URL
-        if (!payload.iss?.startsWith('https://login.microsoftonline.com/')) {
-          reject(new Error('Invalid token issuer'));
-          return;
-        }
-        resolve(payload);
-      }
-    );
-  });
+  const payload = jwt.verify(token, signingKey, {
+    audience: MICROSOFT_CLIENT_ID,
+  }) as IMicrosoftTokenPayload;
+
+  if (!payload.iss?.startsWith('https://login.microsoftonline.com/')) {
+    throw new Error('Invalid token issuer');
+  }
+
+  return payload;
 };
 
-const extractUserPayload = (msPayload: MicrosoftTokenPayload): SocialUserPayload => {
+const extractUserPayload = (msPayload: IMicrosoftTokenPayload): SocialUserPayload => {
   return {
     email: msPayload.email || msPayload.preferred_username,
     firstname: msPayload.given_name || msPayload.name?.split(' ')[0],

@@ -19,6 +19,7 @@ import { providePrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { StandardTheme } from './assets/themes/standard/standard-theme';
+import { environment } from './environments/environment.development';
 
 const DefaultOptions = {
   darkModeSelector: '.darkmode',
@@ -46,8 +47,8 @@ bootstrapApplication(AppComponent, {
             provider: new MicrosoftLoginProvider(
               'c35f1a94-54c1-4382-8458-851e9f9b8c30', // TODO: Add Microsoft Client ID from Azure
               {
-                redirect_uri: 'http://localhost:4200',
-                logout_redirect_uri: 'http://localhost:4200',
+                redirect_uri: environment.uiUrl,
+                logout_redirect_uri: environment.uiUrl,
               },
             ),
           },
