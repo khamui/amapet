@@ -4,7 +4,7 @@ import { Answer } from '../db/models/answer.js';
 import mongoose from 'mongoose';
 import type { IAnswerDocument } from '../db/models/answer.js';
 
-interface AnswerWithChildren {
+interface IAnswerWithChildren {
   _id: unknown;
   parentId?: string;
   parentType?: string;
@@ -16,16 +16,16 @@ interface AnswerWithChildren {
   upvotes: string[];
   downvotes: string[];
   deleted?: boolean;
-  children: AnswerWithChildren[];
+  children: IAnswerWithChildren[];
 }
 
 const makeAnswersTree = async (
   answersOfQuestion: IAnswerDocument[]
-): Promise<AnswerWithChildren[]> => {
-  const nestedAnswers: AnswerWithChildren[] = [];
+): Promise<IAnswerWithChildren[]> => {
+  const nestedAnswers: IAnswerWithChildren[] = [];
   for (const answer of answersOfQuestion) {
     const subAnswers = (await retrieveModel(Answer, { parentId: answer._id })) as IAnswerDocument[];
-    const answerWithChildren: AnswerWithChildren = {
+    const answerWithChildren: IAnswerWithChildren = {
       ...answer.toObject(),
       children: [],
     };

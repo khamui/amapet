@@ -79,7 +79,8 @@ export class QuestionComponent implements OnInit {
   };
 
   public handleUpvoteQuestion = () => {
-    this.cs.updateQuestionUpvote(this.circle, this.question)
+    this.cs
+      .updateQuestionUpvote(this.circle, this.question)
       .pipe(take(1))
       .subscribe((updatedQuestion: Question) => {
         this.question = updatedQuestion;
@@ -87,7 +88,8 @@ export class QuestionComponent implements OnInit {
   };
 
   public handleDownvoteQuestion = () => {
-    this.cs.updateQuestionDownvote(this.circle, this.question)
+    this.cs
+      .updateQuestionDownvote(this.circle, this.question)
       .pipe(take(1))
       .subscribe((updatedQuestion: Question) => {
         this.question = updatedQuestion;
