@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 import { MICROSOFT_CLIENT_ID, JWT_SECRET } from '../server.js';
-import { findOrCreateUser, SocialUserPayload } from '../services/user.service.js';
+import { findOrCreateUser, ISocialUserPayload } from '../services/user.service.js';
 
 const EXP_IN_S = 604800; // 7 days expiration time
 
@@ -48,7 +48,7 @@ const verifyMicrosoftToken = async (token: string): Promise<IMicrosoftTokenPaylo
   return payload;
 };
 
-const extractUserPayload = (msPayload: IMicrosoftTokenPayload): SocialUserPayload => {
+const extractUserPayload = (msPayload: IMicrosoftTokenPayload): ISocialUserPayload => {
   return {
     email: msPayload.email || msPayload.preferred_username,
     firstname: msPayload.given_name || msPayload.name?.split(' ')[0],
