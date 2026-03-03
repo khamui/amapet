@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "clean": "rm -rf node_modules",
-    "cstart": "npm run clean && npm cache clean --force && npm i && npm start"
+    "cstart": "npm run clean && npm cache clean --force && npm ci && npm start"
   },
   "private": true,
   "dependencies": {
@@ -33,7 +33,7 @@
     "rxjs": "7.8.2",
     "tailwindcss": "^4.1.11",
     "tslib": "2.6.3",
-    "zone.js": "0.16.1"
+    "zone.js": "^0.15"
   },
   "devDependencies": {
     "@angular/build": "^20.3.2",
