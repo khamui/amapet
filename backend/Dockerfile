@@ -3,7 +3,7 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install --production
+RUN npm ci --production
 
 # Copy backend source code
 COPY . .
