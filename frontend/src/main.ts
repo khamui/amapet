@@ -47,7 +47,7 @@ bootstrapApplication(AppComponent, {
             provider: new MicrosoftLoginProvider(
               'c35f1a94-54c1-4382-8458-851e9f9b8c30', // TODO: Add Microsoft Client ID from Azure
               {
-                redirect_uri: environment.uiUrl,
+                redirect_uri: environment.redirectUri,
                 logout_redirect_uri: environment.uiUrl,
               },
             ),
