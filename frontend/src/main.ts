@@ -19,7 +19,7 @@ import { providePrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { StandardTheme } from './assets/themes/standard/standard-theme';
-import { environment } from './environments/environment.development';
+import { environment } from './environments/environment';
 
 const DefaultOptions = {
   darkModeSelector: '.darkmode',
