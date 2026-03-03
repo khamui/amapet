@@ -25,7 +25,10 @@ export const signin = (req: Request, res: Response): void => {
 
   verify()
     .then((token) => res.status(200).json({ token }))
-    .catch(console.error);
+    .catch((error) => {
+      console.error('Google signin error:', error);
+      res.status(401).json({ error: 'Authentication failed' });
+    });
 };
 
 const extractPayload = (ticket: LoginTicket): ISocialUserPayload => {
