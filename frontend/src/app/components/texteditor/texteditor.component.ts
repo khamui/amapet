@@ -6,6 +6,7 @@ import {
   OnInit,
   Output,
   PLATFORM_ID,
+  signal,
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -38,7 +39,9 @@ export class TexteditorComponent implements OnInit {
   ngOnInit(): void {
     if (this.initialValue) {
       this.textEditorForm.controls['textEditor'].setValue(this.initialValue);
-    };
+      const textOnly = this.initialValue.replace(/<[^>]*>/g, '').trim();
+      this.editorEmpty.set(textOnly === '');
+    }
   }
 
   get isBrowserOnly(): boolean {
@@ -65,4 +68,11 @@ export class TexteditorComponent implements OnInit {
   public textEditorForm = new FormGroup({
     textEditor: new FormControl(''),
   });
+
+  editorEmpty = signal(true);
+
+  onEditorChange(event: any): void {
+    const text = (event.textValue ?? '').trim();
+    this.editorEmpty.set(text === '');
+  }
 }
