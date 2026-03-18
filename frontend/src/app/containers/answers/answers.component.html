@@ -1,5 +1,10 @@
 @for (answer of answers(); track answer._id) {
   <div class="mb-2 mt-4">
+    @if (isSolution(answer) && !answer.deleted) {
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 mr-2 rounded-full bg-green-100 text-green-700 text-xs font-bold">
+        <i class="pi pi-check-circle text-xs"></i>Solution
+      </span>
+    }
     <span class="text-xs text-500 hover:text-700">{{ answer.ownerName }}</span
     ><span class="mx-2 text-xs text-500 hover:text-700">{{
       answer.created_at | dateAgo
@@ -26,6 +31,25 @@
           Delete
         </button>
       </span>
+    }
+    @if (canMarkSolution() && !answer.deleted) {
+      @if (isSolution(answer)) {
+        <button
+          type="button"
+          class="btn__link ml-2 text-green-600 font-semibold text-xs"
+          (click)="handleUnmarkSolution()"
+        >
+          <i class="pi pi-check-circle mr-1"></i>Unmark
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="btn__link ml-2 text-green-600 text-xs"
+          (click)="handleMarkAsSolution(answer)"
+        >
+          <i class="pi pi-check mr-1"></i>Mark Solution
+        </button>
+      }
     }
   </div>
   @if (!answer.deleted) {
@@ -100,6 +124,10 @@
             [questionId]="questionId()"
             [circleId]="circleId()"
             [answers]="answer.children"
+            [solutionId]="solutionId()"
+            [questionOwnerId]="questionOwnerId()"
+            [isQuestionType]="isQuestionType()"
+            (markSolution)="markSolution.emit($event)"
           ></ama-answers>
         }
       </div>

@@ -91,4 +91,14 @@ router.put('/circles/:id/questions/:qid/downvote', cors(corsOptions), [
   (req: Request, res: Response) => controllerCircles.updateVoteQuestion(req, res, 'down'),
 ]);
 
+/*
+ * Set/unset solution for a question.
+ */
+router.put('/circles/:id/questions/:qid/solution', cors(corsOptions), [
+  middlewareAuth.isAuthorized,
+  middlewareAuth.getUserIdFromToken,
+  middlewareCircles.solutionUpdateCheck,
+  controllerCircles.updateQuestionSolution,
+]);
+
 export default router;

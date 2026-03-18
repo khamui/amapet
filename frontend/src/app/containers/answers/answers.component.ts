@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { DividerModule } from 'primeng/divider';
@@ -41,6 +41,11 @@ export class AnswersComponent {
   public answers = input<Answer[] | undefined>();
   public questionId = input.required<string>();
   public circleId = input.required<string>();
+  public solutionId = input<string | undefined>();
+  public questionOwnerId = input<string | undefined>();
+  public isQuestionType = input<boolean>(false);
+
+  public markSolution = output<string | null>();
 
   public loading = false;
   public currentUserId!: string;
@@ -135,4 +140,22 @@ export class AnswersComponent {
     });
   };
   /* owner methods */
+
+  /* solution methods */
+  public isSolution = (answer: Answer): boolean => {
+    return this.solutionId() === answer._id;
+  };
+
+  public canMarkSolution = (): boolean => {
+    return this.currentUserId === this.questionOwnerId() && this.isQuestionType();
+  };
+
+  public handleMarkAsSolution = (answer: Answer) => {
+    this.markSolution.emit(answer._id as string);
+  };
+
+  public handleUnmarkSolution = () => {
+    this.markSolution.emit(null);
+  };
+  /* solution methods */
 }

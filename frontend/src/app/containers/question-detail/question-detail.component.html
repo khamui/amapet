@@ -53,8 +53,6 @@
             [ngClass]="
               question.intentionId === 'question'
                 ? 'intention-chip--question'
-                : question.intentionId === 'advice'
-                ? 'intention-chip--advice'
                 : question.intentionId === 'discussion'
                 ? 'intention-chip--discussion'
                 : question.intentionId === 'information'
@@ -66,6 +64,16 @@
             [innerHtml]="question.body"
             class="text-left text-sm font-semibold my-10 break-words"
           ></p>
+          @if (question.intentionId === 'question' && solutionAnswer()) {
+            <div class="mt-6 p-4 rounded-lg border-2 border-green-500 bg-green-50">
+              <div class="flex items-center gap-2 mb-3">
+                <i class="pi pi-check-circle text-green-600 text-xl"></i>
+                <span class="font-bold text-green-700">Solution</span>
+                <span class="text-xs text-gray-500">by {{ solutionAnswer()?.ownerName }}</span>
+              </div>
+              <div class="text-sm break-words" [innerHtml]="solutionAnswer()?.answerText"></div>
+            </div>
+          }
         </div>
         <div class="text-sm my-5">
           <i class="pi pi-comments"></i>
@@ -92,6 +100,10 @@
           [questionId]="question._id || ''"
           [circleId]="circle._id || ''"
           [answers]="ans.answers()"
+          [solutionId]="question.solutionId"
+          [questionOwnerId]="question.ownerId"
+          [isQuestionType]="question.intentionId === 'question'"
+          (markSolution)="handleMarkSolution($event)"
         ></ama-answers>
       }
     </div>

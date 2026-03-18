@@ -36,6 +36,24 @@
           <div class="mt-2">Users like your answer! Go there...</div>
         </div>
       </p-button>
+    } @else if (notification.type === "solution") {
+      <p-button
+        class="flex flex-col my-2 text-left"
+        [style]="{ justifyContent: 'flex-start' }"
+        [text]="!notification.unread"
+        [severity]="notification.unread ? 'success' : 'secondary'"
+        [raised]="notification.unread"
+        (click)="handleNotification(notification)"
+      >
+        <div class="flex flex-col justify-start">
+          <span class="font-bold text-left">
+            <i class="pi pi-check-circle mr-1"></i>Your answer was marked as solution!
+          </span>
+          <div class="m-0 mt-2 text-left text-sm">
+            Go check it out...
+          </div>
+        </div>
+      </p-button>
     } @else {
       <p-button
         class="flex flex-col my-2 text-left"

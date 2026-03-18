@@ -30,6 +30,7 @@ export interface IQuestion {
   upvotes: string[];
   downvotes: string[];
   intentionId?: string;
+  solutionId?: string;
 }
 
 export type IQuestionDocument = IQuestion & Document;

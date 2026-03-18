@@ -19,3 +19,7 @@ export const questionEditSchema = Joi.object({
   title: Joi.string().min(3).max(150).required(),
   body: Joi.string().max(3000).required(),
 });
+
+export const questionSolutionSchema = Joi.object({
+  answerId: Joi.string().allow(null).required(),
+});
