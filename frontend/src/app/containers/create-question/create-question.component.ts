@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  inject,
   Inject,
   OnInit,
   PLATFORM_ID,
@@ -28,6 +29,7 @@ import {
   IntentionId,
   QuestionIntentionsValue,
 } from 'src/app/typedefs/Settings.typedef';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'ama-create-question',
@@ -46,11 +48,17 @@ import {
   ],
 })
 export class CreateQuestionComponent implements OnInit {
+  private ses = inject(SettingsService);
+  public questionIntentions = computed(() => {
+    return this.ses
+      .intentions()
+      ?.value.filter((intention: QuestionIntentionsValue) => intention.active);
+  });
+
   circles: Circle[] = [];
 
   public loading = false;
   public circle!: Circle | undefined;
-  public questionIntentions: QuestionIntentionsValue[] = [];
 
   public selectedIntention = signal<IntentionId>('question');
 
@@ -64,11 +72,7 @@ export class CreateQuestionComponent implements OnInit {
     return isPlatformBrowser(this.platformId);
   }
 
-  async ngOnInit() {
-    const settingsIntentions = await this.cs.readIntentions();
-    this.questionIntentions =
-      settingsIntentions.value as QuestionIntentionsValue[];
-
+  ngOnInit() {
     //this.questionForm.controls.intentionSelect.setValue(
     //  this.questionIntentions[0].id,
     //);

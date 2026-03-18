@@ -6,11 +6,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { ApiService } from './api.service';
-import {
-  MaintenanceMode,
-  QuestionIntentionsValue,
-  Settings,
-} from '../typedefs/Settings.typedef';
+import { Settings } from '../typedefs/Settings.typedef';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
