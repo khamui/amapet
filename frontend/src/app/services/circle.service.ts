@@ -35,9 +35,7 @@ export class CircleService {
   };
 
   public readCircle = async (circleName: string) => {
-    return await this.api.read<Circle>(
-      `circles/${circleName}`,
-    );
+    return await this.api.read<Circle>(`circles/${circleName}`);
   };
 
   private updateCircles = (newCircles: Circle[]) => {
@@ -45,7 +43,7 @@ export class CircleService {
   };
 
   public circleExists = (circleName: string) => {
-     return this.api.readAsObservable$<{exists: boolean}>(
+    return this.api.readAsObservable$<{ exists: boolean }>(
       `circles/${circleName}/exists`,
     );
   };
@@ -81,7 +79,10 @@ export class CircleService {
   /* ########### CIRCLES ############ */
 
   /* ########### QUESTIONS ############ */
-  public readCircleQuestion = async (circleName: string, questionId: string) => {
+  public readCircleQuestion = async (
+    circleName: string,
+    questionId: string,
+  ) => {
     return await this.api.read<Question>(
       `circles/${circleName}/questions/${questionId}`,
     );
@@ -217,14 +218,4 @@ export class CircleService {
     );
   };
   /* ########### QUESTIONS ############ */
-
-  /* ########### SETTINGS ############ */
-  public readIntentions = async () => {
-    const settings = await this.api.read<Settings>(
-      `settings/question_intentions`,
-      true
-    );
-    return (settings.result as any)[0] as Settings;
-  };
-  /* ########### SETTINGS ############ */
 }
