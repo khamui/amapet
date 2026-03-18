@@ -1,8 +1,8 @@
 @if (question) {
   <div class="mb-3">
-    <p-button 
-      icon="pi pi-arrow-left" 
-      label="Back to Circle" 
+    <p-button
+      icon="pi pi-arrow-left"
+      label="Back to Circle"
       severity="secondary"
       [outlined]="true"
       (onClick)="goBack()"
@@ -10,30 +10,32 @@
   </div>
   <p-panel>
     <ng-template pTemplate="header">
-      <span class="text-xs text-bluegray-300">
-        Posted by {{ question.ownerName }}
-      </span>
-      <span class="text-xs text-bluegray-500 mx-1">
-        {{ question.created_at | dateAgo }}
-      </span>
-      @if (isOwner) {
-        <span class="text-xs ms-auto">
-          <button
-            type="button"
-            class="btn__link me-1"
-            (click)="handleEdit($event)"
-          >
-            Edit
-          </button>
-          <button
-            type="button"
-            class="btn__link"
-            (click)="handleDelete($event)"
-          >
-            Delete
-          </button>
+      <div>
+        <span class="text-xs text-bluegray-300">
+          Posted by {{ question.ownerName }}
         </span>
-      }
+        <span class="text-xs text-bluegray-500 mx-1">
+          {{ question.created_at | dateAgo }}
+        </span>
+        @if (isOwner) {
+          <span class="text-xs ms-auto">
+            <button
+              type="button"
+              class="btn__link me-1"
+              (click)="handleEdit($event)"
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              class="btn__link"
+              (click)="handleDelete($event)"
+            >
+              Delete
+            </button>
+          </span>
+        }
+      </div>
     </ng-template>
     <div class="flex justify-content-start">
       <div class="text-sm mr-1">
@@ -54,24 +56,33 @@
               question.intentionId === 'question'
                 ? 'intention-chip--question'
                 : question.intentionId === 'discussion'
-                ? 'intention-chip--discussion'
-                : question.intentionId === 'information'
-                ? 'intention-chip--information'
-                : 'intention-chip--question'
+                  ? 'intention-chip--discussion'
+                  : question.intentionId === 'information'
+                    ? 'intention-chip--information'
+                    : 'intention-chip--question'
             "
-          >{{ question.intentionId || 'question' }}</div>
+          >
+            {{ question.intentionId || "question" }}
+          </div>
           <p
             [innerHtml]="question.body"
             class="text-left text-sm font-semibold my-10 break-words"
           ></p>
-          @if (question.intentionId === 'question' && solutionAnswer()) {
-            <div class="mt-6 p-4 rounded-lg border-2 border-green-500 bg-green-50">
+          @if (question.intentionId === "question" && solutionAnswer()) {
+            <div
+              class="mt-6 p-4 rounded-lg border-2 border-green-500 bg-green-50"
+            >
               <div class="flex items-center gap-2 mb-3">
                 <i class="pi pi-check-circle text-green-600 text-xl"></i>
                 <span class="font-bold text-green-700">Solution</span>
-                <span class="text-xs text-gray-500">by {{ solutionAnswer()?.ownerName }}</span>
+                <span class="text-xs text-gray-500"
+                  >by {{ solutionAnswer()?.ownerName }}</span
+                >
               </div>
-              <div class="text-sm break-words" [innerHtml]="solutionAnswer()?.answerText"></div>
+              <div
+                class="text-sm break-words"
+                [innerHtml]="solutionAnswer()?.answerText"
+              ></div>
             </div>
           }
         </div>
