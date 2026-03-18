@@ -2,8 +2,11 @@ import { Request, Response } from 'express';
 import { generateModel, deleteModel, retrieveModel, updateModel } from '../dbaccess.js';
 import { Circle } from '../db/models/circle.js';
 import { User } from '../db/models/user.js';
+import { Answer } from '../db/models/answer.js';
+import { Notification } from '../db/models/notification.js';
 import mongoose from 'mongoose';
 import type { ICircleDocument, IQuestion } from '../db/models/circle.js';
+import type { INotification } from '../types/models.js';
 
 export const controllerCircles = {
   readOne: async (req: Request, res: Response): Promise<void> => {
@@ -170,6 +173,84 @@ export const controllerCircles = {
       const updatedQuestion = updated?.questions.find(
         (q: IQuestion) => q._id?.toString() === questionId
       );
+      res.status(200).json(updatedQuestion);
+    } catch (error) {
+      res.status(500).send(error instanceof Error ? error.message : 'Unknown error');
+    }
+  },
+  updateQuestionSolution: async (req: Request, res: Response): Promise<void> => {
+    const circleId = req.params.id as string;
+    const questionId = req.params.qid as string;
+    const { answerId } = req.body;
+    const userId = req.userPayload?._id;
+
+    try {
+      const filter = {
+        _id: circleId,
+        'questions._id': new mongoose.Types.ObjectId(questionId),
+      };
+
+      const foundCircle = (await retrieveModel(Circle, filter)) as ICircleDocument[];
+
+      if (!foundCircle[0]) {
+        res.status(404).send('Question not found');
+        return;
+      }
+
+      const question = foundCircle[0].questions.find(
+        (q: IQuestion) => q._id?.toString() === questionId
+      );
+
+      if (!question) {
+        res.status(404).send('Question not found');
+        return;
+      }
+
+      if (question.ownerId !== userId) {
+        res.status(403).send('Only question owner can mark solution');
+        return;
+      }
+
+      if (question.intentionId !== 'question') {
+        res.status(400).send('Solution marking only available for questions');
+        return;
+      }
+
+      let answer = null;
+      if (answerId) {
+        answer = await Answer.findById(answerId);
+        if (!answer || answer.deleted) {
+          res.status(400).send('Answer not found or deleted');
+          return;
+        }
+      }
+
+      const updateExpr = {
+        $set: {
+          'questions.$.solutionId': answerId,
+          'questions.$.modded_at': Date.now(),
+        },
+      };
+
+      const updated = await updateModel(Circle, filter, updateExpr);
+      const updatedQuestion = updated?.questions.find(
+        (q: IQuestion) => q._id?.toString() === questionId
+      );
+
+      // Create notification for answer owner (if marking solution and not own answer)
+      if (answerId && answer && answer.ownerId !== userId) {
+        const notifPayload: INotification = {
+          userId: answer.ownerId,
+          type: 'solution',
+          unread: true,
+          originCircleId: circleId,
+          originCircleName: foundCircle[0].name,
+          originQuestionId: questionId,
+          created_at: Date.now(),
+        };
+        await generateModel(Notification, notifPayload);
+      }
+
       res.status(200).json(updatedQuestion);
     } catch (error) {
       res.status(500).send(error instanceof Error ? error.message : 'Unknown error');

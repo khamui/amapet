@@ -6,7 +6,7 @@ export type Settings = {
   //value: QuestionIntentionsValue[] | MaintenanceMode;
 };
 
-export type IntentionId = 'question' | 'discussion' | 'advice' | 'information';
+export type IntentionId = 'question' | 'discussion' | 'information';
 
 export type QuestionIntentionsValue = {
   id: IntentionId;

@@ -12,7 +12,6 @@ const light = {
   },
   intention: {
     question: '{teal.200}',
-    advice: '{amber.200}',
     discussion: '{stone.300}',
     information: '{sky.200}',
   },

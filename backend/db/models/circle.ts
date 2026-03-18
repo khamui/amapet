@@ -14,6 +14,7 @@ const questionSubSchema = new Schema<IQuestion>(
     upvotes: { type: [String], default: [] },
     downvotes: { type: [String], default: [] },
     intentionId: String,
+    solutionId: { type: String, default: null },
   },
   { _id: false }
 );

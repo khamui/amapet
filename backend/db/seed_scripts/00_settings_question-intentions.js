@@ -9,7 +9,6 @@ db.platform_settings.insertOne({
   values: [
     { id: 'question', label: 'Question' },
     { id: 'discussion', label: 'Discussion' },
-    { id: 'advice', label: 'Advice' },
     { id: 'information', label: 'Information' },
   ],
 });

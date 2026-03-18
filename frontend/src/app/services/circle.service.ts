@@ -205,6 +205,17 @@ export class CircleService {
       `circles/${circle._id}/questions/${question._id}/downvote`,
     );
   };
+
+  public updateQuestionSolution = (
+    circle: Circle,
+    question: Question,
+    answerId: string | null,
+  ) => {
+    return this.api.updateAsObservable$<Question>(
+      `circles/${circle._id}/questions/${question._id}/solution`,
+      { answerId },
+    );
+  };
   /* ########### QUESTIONS ############ */
 
   /* ########### SETTINGS ############ */

@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, SharedModule } from 'primeng/api';
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { AnswerService } from 'src/app/services/answer.service';
@@ -53,11 +53,21 @@ export class QuestionDetailComponent implements OnInit {
   public question!: Question;
   public loading = false;
   public answers: Answer[] = [];
+  public solutionAnswer = signal<Answer | null>(null);
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   constructor() {
     this.currentUserId = this.as.getUserId();
+
+    // Update solution answer when answers change
+    effect(() => {
+      const answers = this.ans.answers();
+      if (this.question?.solutionId && answers.length > 0) {
+        const found = this.findAnswerById(answers, this.question.solutionId);
+        this.solutionAnswer.set(found);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -160,4 +170,29 @@ export class QuestionDetailComponent implements OnInit {
     const circleName = this.circle.name.replace(/^c\//, '');
     this.ro.navigate(['c', circleName]);
   }
+
+  private findAnswerById(answers: Answer[], id: string): Answer | null {
+    for (const answer of answers) {
+      if (answer._id === id) return answer;
+      if (answer.children && answer.children.length > 0) {
+        const found = this.findAnswerById(answer.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
+  public handleMarkSolution = (answerId: string | null) => {
+    this.cs.updateQuestionSolution(this.circle, this.question, answerId)
+      .pipe(take(1))
+      .subscribe((updatedQuestion: Question) => {
+        this.question = updatedQuestion;
+        if (answerId) {
+          const found = this.findAnswerById(this.ans.answers(), answerId);
+          this.solutionAnswer.set(found);
+        } else {
+          this.solutionAnswer.set(null);
+        }
+      });
+  };
 }

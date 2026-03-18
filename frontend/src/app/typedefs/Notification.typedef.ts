@@ -1,7 +1,7 @@
 export type Notification = {
   _id?: string;
   userId: string;
-  type: 'upvote' | 'comment';
+  type: 'upvote' | 'comment' | 'solution';
   value: number | string;
   unread: boolean;
   originCircleId: string;

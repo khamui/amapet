@@ -2,6 +2,10 @@ Amapet | Dev Context Core Concept
 
 Q&A Platform: Users create Circles (topics) to post questions & answers.
 
+Documentation of libraries
+
+- Use context7 where if possible
+
 Tech Stack
 
 - Frontend: Angular 20+, PrimeNG 20+, Tailwind CSS 4+

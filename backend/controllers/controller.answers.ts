@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { generateModel, retrieveModel, updateModel } from '../dbaccess.js';
 import { Answer } from '../db/models/answer.js';
+import { Circle } from '../db/models/circle.js';
 import mongoose from 'mongoose';
 import type { IAnswerDocument } from '../db/models/answer.js';
 
@@ -100,6 +101,13 @@ export const controllerAnswers = {
     try {
       // updating here, as we keep the post, but not its content
       await updateModel(Answer, filter, updateExpr);
+
+      // Clear solutionId from any questions that reference this answer
+      await Circle.updateMany(
+        { 'questions.solutionId': id },
+        { $set: { 'questions.$.solutionId': null } }
+      );
+
       res.status(204).send();
     } catch (error) {
       res.status(500).send(error instanceof Error ? error.message : 'Unknown error');
