@@ -38,18 +38,18 @@
       @if (isSolution(answer)) {
         <button
           type="button"
-          class="btn__link ml-2 text-green-600 font-semibold text-xs"
+          class="btn__link ml-2 text-rose-400 font-semibold text-xs"
           (click)="handleUnmarkSolution()"
         >
-          <i class="pi pi-check-circle mr-1"></i>Unmark
+          Unmark
         </button>
       } @else {
         <button
           type="button"
-          class="btn__link ml-2 text-green-600 text-xs"
+          class="btn__link ml-2 text-green-600 font-semibold text-xs"
           (click)="handleMarkAsSolution(answer)"
         >
-          <i class="pi pi-check mr-1"></i>Mark Solution
+          Mark as Solution
         </button>
       }
     }
