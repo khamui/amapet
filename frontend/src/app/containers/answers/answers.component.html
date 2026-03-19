@@ -16,7 +16,7 @@
     } @else if (answer.deleted) {
       <span class="mr-3 text-xs font-italic">(deleted)</span>
     }
-    @if (currentUserId === answer.ownerId && !answer.deleted) {
+    @if (currentUserId() === answer.ownerId && !answer.deleted) {
       <span class="text-xs">
         <button
           type="button"

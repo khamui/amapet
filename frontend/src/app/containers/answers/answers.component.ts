@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { DividerModule } from 'primeng/divider';
@@ -48,14 +48,14 @@ export class AnswersComponent {
   public markSolution = output<string | null>();
 
   public loading = false;
-  public currentUserId!: string;
+  public currentUserId = signal<string>('');
   public answerInEditing!: Answer | undefined;
   public allExpanded = true;
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   constructor() {
-    this.currentUserId = this.as.getUserId();
+    this.currentUserId.set(this.as.getUserId());
   }
 
   public submitAnswer = async ({
@@ -146,9 +146,9 @@ export class AnswersComponent {
     return this.solutionId() === answer._id;
   };
 
-  public canMarkSolution = (): boolean => {
-    return this.currentUserId === this.questionOwnerId() && this.isQuestionType();
-  };
+  public canMarkSolution = computed(() =>
+    this.currentUserId() === this.questionOwnerId() && this.isQuestionType()
+  );
 
   public handleMarkAsSolution = (answer: Answer) => {
     this.markSolution.emit(answer._id as string);

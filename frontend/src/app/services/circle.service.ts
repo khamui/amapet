@@ -207,14 +207,15 @@ export class CircleService {
     );
   };
 
-  public updateQuestionSolution = (
+  public updateQuestionSolution = async (
     circle: Circle,
     question: Question,
     answerId: string | null,
   ) => {
-    return this.api.updateAsObservable$<Question>(
+    return await this.api.update(
       `circles/${circle._id}/questions/${question._id}/solution`,
-      { answerId },
+      { answerId } as unknown as Circle,
+      true,
     );
   };
   /* ########### QUESTIONS ############ */

@@ -182,17 +182,20 @@ export class QuestionDetailComponent implements OnInit {
     return null;
   }
 
-  public handleMarkSolution = (answerId: string | null) => {
-    this.cs.updateQuestionSolution(this.circle, this.question, answerId)
-      .pipe(take(1))
-      .subscribe((updatedQuestion: Question) => {
-        this.question = updatedQuestion;
-        if (answerId) {
-          const found = this.findAnswerById(this.ans.answers(), answerId);
-          this.solutionAnswer.set(found);
-        } else {
-          this.solutionAnswer.set(null);
-        }
-      });
+  public handleMarkSolution = async (answerId: string | null) => {
+    const { isError, result } = await this.cs.updateQuestionSolution(
+      this.circle,
+      this.question,
+      answerId,
+    );
+    if (!isError) {
+      this.question = result as Question;
+      if (answerId) {
+        const found = this.findAnswerById(this.ans.answers(), answerId);
+        this.solutionAnswer.set(found);
+      } else {
+        this.solutionAnswer.set(null);
+      }
+    }
   };
 }
