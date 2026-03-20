@@ -20,7 +20,7 @@ export class AnswerService {
   public readAnswers = (byQuestionId: string) => {
     this.loadingList.set(true);
     this.api
-      .readAsObservable$<Answer[]>(`answers/${byQuestionId}`)
+      .readAsObservable$<Answer[]>(`/answers/${byQuestionId}`)
       .subscribe((answers: Answer[]) => {
         this.answers.set(answers);
         this.loadingList.set(false);
@@ -28,12 +28,12 @@ export class AnswerService {
   };
 
   public readSubAnswers$ = (byParentId: string) => {
-    return this.api.readAsObservable$<Answer[]>(`answers/${byParentId}`);
+    return this.api.readAsObservable$<Answer[]>(`/answers/${byParentId}`);
   };
 
   private readAllAnswers = async (byQuestionId: string) => {
     this.loadingList.set(true);
-    const allAnswersResponse = await this.api.read(`answers/${byQuestionId}`);
+    const allAnswersResponse = await this.api.read(`/answers/${byQuestionId}`);
     const { isError, result } = allAnswersResponse;
     this.loadingList.set(false);
     return result;
@@ -65,7 +65,7 @@ export class AnswerService {
     };
 
     const created$ = this.api.createAsObservable$<Answer>(
-      'answers/create',
+      '/answers/create',
       payload,
     );
     created$.subscribe(() => {
@@ -94,7 +94,7 @@ export class AnswerService {
     toBeUpdated: any[];
   }) => {
     const updated = this.api.updateAsObservable$<Answer>(
-      `answers/${id}/update`,
+      `/answers/${id}/update`,
       { toBeUpdated },
     );
     updated.subscribe(() => {
@@ -123,7 +123,7 @@ export class AnswerService {
     redirectId: string;
   }) => {
     const deleted = this.api.deleteAsObservable$<Answer>(
-      `answers/${id}/delete`,
+      `/answers/${id}/delete`,
     );
     deleted.subscribe(() => {
       try {
@@ -190,7 +190,7 @@ export class AnswerService {
     circleId: string,
   ) => {
     const updated$ = this.api.updateAsObservable$<Answer>(
-      `answers/${answer._id}/upvote`,
+      `/answers/${answer._id}/upvote`,
       {
         questionId,
         circleId,
@@ -204,7 +204,7 @@ export class AnswerService {
 
   public updateAnswerDownvote = (answer: Answer, qid: string) => {
     const updated$ = this.api.updateAsObservable$<Answer>(
-      `answers/${answer._id}/downvote`,
+      `/answers/${answer._id}/downvote`,
     );
 
     updated$.pipe(take(1)).subscribe(() => {

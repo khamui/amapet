@@ -10,6 +10,7 @@ import { ModerationComponent } from './containers/moderation/moderation.componen
 import { ModerationQuestionsComponent } from './containers/moderation-questions/moderation-questions.component';
 import { ModerationQuestionDetailComponent } from './containers/moderation-question-details/moderation-question-detail.component';
 import { GlobalSettingsComponent } from './containers/global-settings/global-settings.component';
+import { ProfileCirclesComponent } from './containers/profile-circles/profile-circles.component';
 import { NotFoundComponent } from './containers/not-found/not-found.component';
 import { permLevelGuard } from './guards/perm-level.guard';
 import { appAvailableGuard } from './guards/app-available.guard';
@@ -43,6 +44,11 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [appAvailableGuard],
+  },
+  {
+    path: 'profile/circles',
+    component: ProfileCirclesComponent,
     canActivate: [appAvailableGuard],
   },
   {

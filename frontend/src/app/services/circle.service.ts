@@ -28,14 +28,14 @@ export class CircleService {
   /* ########### CIRCLES ############ */
   public readCircles = () => {
     this.api
-      .readAsObservable$<Circle[]>('circles')
+      .readAsObservable$<Circle[]>('/circles')
       .subscribe((circles: Circle[]) => {
         this.updateCircles(circles);
       });
   };
 
   public readCircle = async (circleName: string) => {
-    return await this.api.read<Circle>(`circles/${circleName}`);
+    return await this.api.read<Circle>(`/circles/${circleName}`);
   };
 
   private updateCircles = (newCircles: Circle[]) => {
@@ -44,7 +44,7 @@ export class CircleService {
 
   public circleExists = (circleName: string) => {
     return this.api.readAsObservable$<{ exists: boolean }>(
-      `circles/${circleName}/exists`,
+      `/circles/${circleName}/exists`,
     );
   };
 
@@ -55,7 +55,7 @@ export class CircleService {
       questions: [],
     };
 
-    this.created = this.api.createAsObservable$<Circle>('circles', payload);
+    this.created = this.api.createAsObservable$<Circle>('/circles', payload);
     this.created.subscribe((newCircle: Circle) => {
       try {
         this.readCircles();
@@ -84,7 +84,7 @@ export class CircleService {
     questionId: string,
   ) => {
     return await this.api.read<Question>(
-      `circles/${circleName}/questions/${questionId}`,
+      `/circles/${circleName}/questions/${questionId}`,
     );
   };
 
@@ -103,7 +103,7 @@ export class CircleService {
       intentionId,
     };
     const createdQuestion$ = this.api.createAsObservable$(
-      `circles/${circle._id}/questions/create`,
+      `/circles/${circle._id}/questions/create`,
       payload,
     );
 
@@ -137,7 +137,7 @@ export class CircleService {
       body: bodyEditor,
     };
     const updatedQuestion$ = this.api.updateAsObservable$<Question>(
-      `circles/${circle._id}/questions/${question._id}/update`,
+      `/circles/${circle._id}/questions/${question._id}/update`,
       payload as Question,
     );
 
@@ -164,7 +164,7 @@ export class CircleService {
 
   deleteCircleQuestion = (circle: Circle, question: Question) => {
     const deleteQuestion$ = this.api.deleteAsObservable$<Question>(
-      `circles/${circle._id}/questions/${question._id}/delete`,
+      `/circles/${circle._id}/questions/${question._id}/delete`,
     );
 
     deleteQuestion$.subscribe(() => {
@@ -197,13 +197,13 @@ export class CircleService {
 
   public updateQuestionUpvote = (circle: Circle, question: Question) => {
     return this.api.updateAsObservable$<Question>(
-      `circles/${circle._id}/questions/${question._id}/upvote`,
+      `/circles/${circle._id}/questions/${question._id}/upvote`,
     );
   };
 
   public updateQuestionDownvote = (circle: Circle, question: Question) => {
     return this.api.updateAsObservable$<Question>(
-      `circles/${circle._id}/questions/${question._id}/downvote`,
+      `/circles/${circle._id}/questions/${question._id}/downvote`,
     );
   };
 
@@ -213,7 +213,7 @@ export class CircleService {
     answerId: string | null,
   ) => {
     return await this.api.update(
-      `circles/${circle._id}/questions/${question._id}/solution`,
+      `/circles/${circle._id}/questions/${question._id}/solution`,
       { answerId } as unknown as Circle,
       true,
     );

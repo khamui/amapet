@@ -33,7 +33,7 @@ export class SettingsService {
   // components.
   public init = async () => {
     const { isError, result } = await this.api.read<Settings[]>(
-      'settings',
+      '/settings',
       true,
     );
     if (!isError) {
@@ -49,7 +49,7 @@ export class SettingsService {
 
   public updateSetting = async <T>(settingId: string, reqPayload: T) => {
     const { result } = await this.api.update(
-      'settings',
+      '/settings',
       {
         id: settingId,
         value: reqPayload,

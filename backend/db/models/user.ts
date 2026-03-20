@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 import type { IUser, IUserDocument } from '../../types/models.js';
 
 const userSchema = new Schema<IUserDocument>({
+  username: { type: String, unique: true, sparse: true, index: true },
   firstname: String,
   lastname: String,
   email: String,

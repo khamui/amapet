@@ -1,0 +1,141 @@
+<h1 class="text-lg mt-4 mb-6">My Circles</h1>
+
+@if (circles().length === 0) {
+  <p class="text-gray-500">You don't have any circles yet.</p>
+} @else {
+  <p-table [value]="circles()" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Created</th>
+        <th>Members</th>
+        <th>Questions</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-circle>
+      <tr>
+        <td><a [routerLink]="'/' + circle.name" class="text-primary hover:underline">{{ circle.name }}</a></td>
+        <td>{{ humanizeDate(circle.created_at) }}</td>
+        <td>{{ circle.memberCount }}</td>
+        <td>{{ circle.questionCount }}</td>
+        <td class="flex gap-2">
+          <p-button
+            label="Edit"
+            severity="secondary"
+            size="small"
+            (click)="openEditDialog(circle)"
+          />
+          <p-button
+            label="Moderators"
+            severity="secondary"
+            size="small"
+            (click)="openModeratorDialog(circle)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+}
+
+<p-dialog
+  [(visible)]="editDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  header="Edit Circle Description"
+  [style]="{ width: '500px' }"
+>
+  <div class="flex flex-col gap-4">
+    <label for="about" class="font-medium">About</label>
+    <textarea
+      pTextarea
+      id="about"
+      [(ngModel)]="aboutText"
+      rows="5"
+      class="w-full"
+      placeholder="Describe your circle..."
+    ></textarea>
+    <div class="flex justify-end gap-2">
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        (click)="editDialogVisible.set(false)"
+      />
+      <p-button label="Save" (click)="saveAbout()" />
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog
+  [(visible)]="moderatorDialogVisible"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  header="Manage Moderators"
+  [style]="{ width: '500px' }"
+>
+  <div class="flex flex-col gap-4">
+    <div>
+      <label class="font-medium mb-2 block">Current Moderators</label>
+      @if (selectedCircle()?.moderators?.length === 0) {
+        <p class="text-gray-500">No moderators yet.</p>
+      } @else {
+        <div class="flex flex-col gap-2">
+          @for (mod of selectedCircle()?.moderators; track mod._id) {
+            <div class="flex items-center justify-between p-2 bg-gray-100 rounded">
+              <div class="flex items-center gap-2">
+                <span>{{ mod.username }}</span>
+                @if (isOwner(mod)) {
+                  <p-tag value="Owner" severity="info" />
+                }
+              </div>
+              @if (!isOwner(mod)) {
+                <p-button
+                  icon="pi pi-times"
+                  severity="danger"
+                  [text]="true"
+                  size="small"
+                  (click)="removeModerator(mod)"
+                />
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div>
+      <label class="font-medium mb-2 block">Add Moderator</label>
+      <p-autoComplete
+        [(ngModel)]="searchQuery"
+        [suggestions]="userSearchResults()"
+        (completeMethod)="searchUsers($event)"
+        (onSelect)="addModerator($event)"
+        field="username"
+        placeholder="Search by username..."
+        [style]="{ width: '100%' }"
+        [inputStyle]="{ width: '100%' }"
+      >
+        <ng-template let-user pTemplate="item">
+          <div class="flex flex-col">
+            <span class="font-medium">{{ user.username }}</span>
+            @if (user.firstname || user.lastname) {
+              <span class="text-sm text-gray-500">
+                {{ user.firstname }} {{ user.lastname }}
+              </span>
+            }
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+
+    <div class="flex justify-end">
+      <p-button
+        label="Close"
+        severity="secondary"
+        (click)="moderatorDialogVisible.set(false)"
+      />
+    </div>
+  </div>
+</p-dialog>
