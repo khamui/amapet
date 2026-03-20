@@ -15,6 +15,7 @@ import { TopbarComponent } from './containers/topbar/topbar.component';
 import { SoonAvailableComponent } from './containers/soon-available/soon-available.component';
 import { SettingsService } from './services/settings.service';
 import { UiStateService } from './services/ui-state.service';
+import { ThemeService } from './services/theme.service';
 import { NgClass } from '@angular/common';
 import { CircleBoxModerationComponent } from './containers/circle-box-moderation/circle-box-moderation.component';
 import { filter } from 'rxjs';
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit {
   private as = inject(AuthService);
   public ses = inject(SettingsService);
   public uiState = inject(UiStateService);
+  private themeService = inject(ThemeService);
 
   // Computed signal that directly references auth service's isLoggedIn
   public isLoggedIn = computed(() => this.as.isLoggedIn());

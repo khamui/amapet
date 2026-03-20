@@ -29,7 +29,13 @@
     }
     @if (isLoggedIn()) {
       <ama-notifications></ama-notifications>
-      <p-menu #menu [model]="userMenuItems()" [popup]="true"></p-menu>
+      <p-menu #menu [model]="userMenuItems()" [popup]="true">
+        <ng-template #start>
+          <div class="p-2 flex justify-center border-b border-surface-200">
+            <ama-theme-switcher></ama-theme-switcher>
+          </div>
+        </ng-template>
+      </p-menu>
       <p-button
         styleClass="mr-2 p-3"
         [rounded]="true"

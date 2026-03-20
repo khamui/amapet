@@ -9,13 +9,14 @@ import { MenuModule } from 'primeng/menu';
 import { ModerationStore } from 'src/app/stores/moderation.store';
 import { SocialLoginDialogComponent } from 'src/app/components/social-login-dialog/social-login-dialog.component';
 import { UiStateService } from 'src/app/services/ui-state.service';
+import { ThemeSwitcherComponent } from 'src/app/components/theme-switcher/theme-switcher.component';
 
 @Component({
   selector: 'ama-topbar',
   templateUrl: './topbar.component.html',
   styleUrls: ['./topbar.component.scss'],
   standalone: true,
-  imports: [ToolbarModule, ButtonModule, NotificationsComponent, MenuModule, SocialLoginDialogComponent],
+  imports: [ToolbarModule, ButtonModule, NotificationsComponent, MenuModule, SocialLoginDialogComponent, ThemeSwitcherComponent],
 })
 export class TopbarComponent {
   public router = inject(Router);
