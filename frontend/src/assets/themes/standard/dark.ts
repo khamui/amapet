@@ -1,13 +1,14 @@
+import { accentTokensDark, intentionTokensDark } from './tokens';
+
 const dark = {
   primary: {
-    color: '{pink.600}',
+    color: '{teal.400}',
     inverseColor: '#ffffff',
-    hoverColor: '{zinc.900}',
-    activeColor: '{zinc.800}',
+    hoverColor: '{teal.300}',
+    activeColor: '{teal.500}',
   },
-  accent: {
-    success: '{teal.900}',
-  },
+  accent: accentTokensDark,
+  intention: intentionTokensDark,
 };
 
 export default dark;

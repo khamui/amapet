@@ -33,18 +33,14 @@
   font-size: 0.75rem;
 
   &--question {
-    background-color: var(--intention-question-bg);
-  }
-
-  &--advice {
-    background-color: var(--intention-advice-bg);
+    background-color: var(--p-intention-question);
   }
 
   &--discussion {
-    background-color: var(--intention-discussion-bg);
+    background-color: var(--p-intention-discussion);
   }
 
   &--information {
-    background-color: var(--intention-information-bg);
+    background-color: var(--p-intention-information);
   }
 }

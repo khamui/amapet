@@ -20,7 +20,9 @@ Frontend Rules
   observables only if really needed (complex RxJS pipelines, integrating with
   other observable streams).
 - Styling: Strict Tailwind utility classes; no custom CSS.
-- UI: Use PrimeNG components; align with Design Tokens (theming).
+- UI: Use PrimeNG components.
+- Theming: Use best practices of primeng's theming concept:
+  https://primeng.org/theming/styled.md
 - Standards: Standalone components, functional interceptors, inject(), input(),
   output() pattern.
 

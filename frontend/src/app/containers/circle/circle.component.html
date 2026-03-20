@@ -1,9 +1,12 @@
 @if (circle) {
-  <h3 class="font-weight-300 text-xl mb-5">{{ circle.name }}</h3>
+  <h3 class="font-weight-300 text-xl mb-1">{{ circle.name }}</h3>
+  @if (circle.about) {
+    <p class="text-gray-400 mb-5">{{ circle.about }}</p>
+  }
   @if (isLoggedIn()) {
     <div class="w-full">
       <input
-        class="w-full"
+        class="w-full border-2 border-primary"
         type="text"
         pInputText
         placeholder="Ask me anything..."
