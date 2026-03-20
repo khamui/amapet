@@ -11,7 +11,6 @@ const userSchema = new Schema<IUserDocument>({
   followedQuestions: { type: [String], default: [] },
   respectPoints: Number,
   permLevel: Number, // 1 = platform maintainer
-  moderatedCircleIds: { type: [String], default: [] },
 });
 
 export const User = model<IUserDocument>('User', userSchema);

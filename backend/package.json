@@ -12,7 +12,8 @@
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "clean": "rm -rf node_modules dist",
-        "cstart": "npm run clean && npm cache clean --force && npm i && npm start"
+        "cstart": "npm run clean && npm cache clean --force && npm i && npm start",
+        "migrate:owner-names": "tsx scripts/migrate-owner-names.ts"
     },
     "dependencies": {
         "body-parser": "1.20.3",

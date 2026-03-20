@@ -2,7 +2,7 @@
   <div class="col-span-2">
     <p-card subheader="Account">
       <h2 class="mb-2">
-        {{ user.firstname }} {{ user.lastname }}
+        {{ user.username }}
       </h2>
       <span class="font-medium text-500 text-sm font-italic">{{
         user.email
@@ -10,7 +10,7 @@
       <!--<p class="text-cyan-500 font-medium font-italic capitalize italic">
         {{ user.level }}
       </p>-->
-        <p class="text-600 text-sm">
+      <p class="text-600 text-sm">
         You received
         <!--<span class="text-cyan-500 font-medium font-italic text-md">
           {{ user.respect }}
@@ -24,8 +24,8 @@
       <p><span>tbd</span></p>
     </p-card>
   </div>
-  <a routerLink="/profile/circles" class="no-underline">
-    <p-card subheader="Circles" class="cursor-pointer hover:bg-gray-50">
+  <a routerLink="/profile/circles" class="no-underline block">
+    <p-card subheader="Circles" styleClass="cursor-pointer hover:[--p-card-background:var(--p-gray-50)]">
       <p>
         <span>{{ user.numOfCircles }}</span>
       </p>

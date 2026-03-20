@@ -59,7 +59,6 @@ export const findOrCreateUser = async (
       authProvider: provider,
       followedCircles: [],
       followedQuestions: [],
-      moderatedCircleIds: [],
       respectPoints: 0,
     };
     result = await generateModel(User, newUser);

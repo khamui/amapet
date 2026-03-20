@@ -26,7 +26,7 @@ const circleSchema = new Schema<ICircleDocument>({
   about: String,
   questions: { type: [questionSubSchema], default: [] },
   memberCount: Number,
-  moderators: { type: [String], default: [] },
+  moderators: { type: [String], default: [], index: true },
 });
 
 export const Circle = mongoose.model<ICircleDocument>('Circle', circleSchema);

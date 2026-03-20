@@ -22,7 +22,7 @@ export class ModerationStore {
 
   public async fetchModeratedCircleIds() {
     const { isError: _, result } = await this.api.read(
-      'moderatedCircleIds',
+      '/moderatedCircleIds',
       true,
     );
     this.moderatedCircleIds.set((result as any).moderatedCircleIds || []);
@@ -58,7 +58,7 @@ export class ModerationStore {
       id: string;
       name: string;
       description: string;
-    }>('moderatedCircles', true);
+    }>('/moderatedCircles', true);
 
     if (!response.isError) {
       this.moderatedCircles.set(

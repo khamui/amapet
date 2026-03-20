@@ -1,7 +1,22 @@
 <div>
-  @if (circleMenuItems().length > 0) {
-    <div class="max-h-[calc(100vh-16rem)] overflow-y-auto mb-3">
-      <ama-sidebox [items]="circleMenuItems()" context="circles"></ama-sidebox>
+  @if (ownedCircleMenuItems().length > 0) {
+    <div class="mb-4">
+      <ama-sidebox
+        [items]="ownedCircleMenuItems()"
+        context="owned-circles"
+        heading="My Circles"
+      />
+    </div>
+  }
+  @if (unownedCircleMenuItems().length > 0) {
+    <div class="mb-4">
+      <div class="max-h-[calc(100vh-16rem)] overflow-y-auto">
+        <ama-sidebox
+          [items]="unownedCircleMenuItems()"
+          context="circles"
+          heading="Explore Circles"
+        ></ama-sidebox>
+      </div>
     </div>
   }
   @if (isLoggedIn()) {

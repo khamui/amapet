@@ -20,6 +20,7 @@ export class SideboxComponent {
 
   public items = input<MenuItem[]>();
   public context = input<string>();
+  public heading = input<string>();
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 

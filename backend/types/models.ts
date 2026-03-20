@@ -13,7 +13,6 @@ export interface IUser {
   followedQuestions: string[];
   respectPoints?: number;
   permLevel?: number; // 1 = platform maintainer
-  moderatedCircleIds: string[];
 }
 
 export interface IUserDocument extends IUser, Document {}
