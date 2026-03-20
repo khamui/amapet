@@ -1,12 +1,12 @@
 import {
   Component,
   computed,
+  effect,
   inject,
   Inject,
   OnInit,
   PLATFORM_ID,
   signal,
-  WritableSignal,
 } from '@angular/core';
 import {
   FormControl,
@@ -55,6 +55,10 @@ export class CreateQuestionComponent implements OnInit {
       ?.value.filter((intention: QuestionIntentionsValue) => intention.active);
   });
 
+  public hasSingleIntention = computed(() => {
+    return (this.questionIntentions()?.length ?? 0) === 1;
+  });
+
   circles: Circle[] = [];
 
   public loading = false;
@@ -66,7 +70,15 @@ export class CreateQuestionComponent implements OnInit {
     private cs: CircleService,
     private ar: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object,
-  ) {}
+  ) {
+    effect(() => {
+      const intentions = this.questionIntentions();
+      if (intentions?.length === 1) {
+        this.selectedIntention.set(intentions[0].id);
+        this.questionForm.controls.intentionSelect.setValue(intentions[0].id);
+      }
+    });
+  }
 
   get isBrowserOnly(): boolean {
     return isPlatformBrowser(this.platformId);
