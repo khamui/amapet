@@ -27,7 +27,7 @@ export class SideboxComponent {
     event.stopPropagation();
     event.preventDefault();
 
-    const response = await this.api.create('follow-circle', {
+    const response = await this.api.create('/follow-circle', {
       circleName: item.label,
     });
     item.state.isFollowed =

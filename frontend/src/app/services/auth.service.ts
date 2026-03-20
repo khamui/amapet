@@ -145,8 +145,8 @@ export class AuthService {
     // Route to correct backend endpoint based on provider
     const endpoint =
       provider === MicrosoftLoginProvider.PROVIDER_ID
-        ? 'microsoft-signin'
-        : 'google-signin';
+        ? '/microsoft-signin'
+        : '/google-signin';
 
     const authToken = await this.api.create(endpoint, { token });
 
@@ -218,7 +218,7 @@ export class AuthService {
    *
    ***/
   public getFollowedCircles = async () => {
-    const { isError, result } = await this.api.read('profile', true);
+    const { isError, result } = await this.api.read('/profile', true);
     return (result as any).profile.followedCircles || [];
   };
 

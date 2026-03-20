@@ -31,7 +31,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.timerSubscription$ = timer(0, INTERVAL_IN_MS)
-      .pipe(switchMap(() => this.nos.getAll(`notifications`)))
+      .pipe(switchMap(() => this.nos.getAll(`/notifications`)))
       .subscribe((notificationsResponse: unknown) => {
         this.notifications = notificationsResponse as Notification[];
         console.log('not length', this.notifications.length);
@@ -64,9 +64,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     ]);
 
     if (notification.unread) {
-      this.nos.markAsRead(`notifications/${notification._id}`).subscribe(() => {
+      this.nos.markAsRead(`/notifications/${notification._id}`).subscribe(() => {
         this.nos
-          .getAll('notifications')
+          .getAll('/notifications')
           .subscribe((notificationsResponse: unknown) => {
             this.notifications = notificationsResponse as Notification[];
             this.unreadItems = this.notifications.filter(

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/typedefs/User.typedef';
 import { CardModule } from 'primeng/card';
@@ -9,7 +10,7 @@ import { ApiService } from 'src/app/services/api.service';
     templateUrl: './profile.component.html',
     styleUrls: ['./profile.component.scss'],
     standalone: true,
-    imports: [CardModule]
+    imports: [CardModule, RouterLink]
 })
 export class ProfileComponent implements OnInit {
   user!: User;
@@ -18,7 +19,7 @@ export class ProfileComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.user = this.as.getUser() as User;
-    const { isError, result } = await this.api.read('profile', true);
+    const { isError, result } = await this.api.read('/profile', true);
     if (isError) {
       console.error('Error fetching profile:', result);
     } else {
