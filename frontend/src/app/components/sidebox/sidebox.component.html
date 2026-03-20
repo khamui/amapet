@@ -1,11 +1,14 @@
 <p-menu [model]="items()">
+  <ng-template #start>
+    <h3 class="font-600 text-gray-400 ml-2 px-2 pt-2">{{ heading() }}</h3>
+  </ng-template>
   <ng-template #item let-item>
     <a
       class="flex items-center p-menu-item-link justify-between"
       [routerLink]="item.routerLink"
     >
       <span class="ml-2">{{ item.label }}</span>
-      @if (context() === 'circles' && isLoggedIn()) {
+      @if (context() === "circles" && isLoggedIn()) {
         @if (item?.state?.isFollowed) {
           <p-button
             icon="pi pi-star-fill"
@@ -15,7 +18,6 @@
             [text]="true"
             (onClick)="handleFollowCircle($event, item)"
           />
-
         } @else {
           <p-button
             icon="pi pi-star"

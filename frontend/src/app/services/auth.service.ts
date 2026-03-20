@@ -196,9 +196,7 @@ export class AuthService {
    ***/
   public getUserName = () => {
     const userPayload = this.getUser();
-    return `${(userPayload as User).firstname} ${
-      (userPayload as User).lastname
-    }`;
+    return (userPayload as User).username ?? '';
   };
 
   /***

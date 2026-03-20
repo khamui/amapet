@@ -27,7 +27,7 @@ router.get('/settings', cors(corsOptions), [controllerSettings.readSettings]);
  * Authentication required.
  */
 router.put('/settings', cors(corsOptions), [
-  middlewareAuth.isAuthorized,
+  middlewareAuth.isPlatformMaintainer,
   controllerSettings.updateSetting,
 ]);
 

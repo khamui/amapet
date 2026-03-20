@@ -171,11 +171,6 @@ export const controllerProfile = {
       circle.moderators.push(userId);
       await circle.save();
 
-      if (!user.moderatedCircleIds.includes(circleId)) {
-        user.moderatedCircleIds.push(circleId);
-        await user.save();
-      }
-
       return res.status(200).json({
         moderator: { _id: userId, username: user.username },
       });
@@ -200,10 +195,6 @@ export const controllerProfile = {
 
       circle.moderators = circle.moderators.filter((id) => id !== moderatorId);
       await circle.save();
-
-      await User.findByIdAndUpdate(moderatorId, {
-        $pull: { moderatedCircleIds: circleId },
-      });
 
       return res.status(200).json({ success: true });
     } catch (error) {

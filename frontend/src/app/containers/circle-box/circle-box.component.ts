@@ -37,20 +37,20 @@ export class CircleBoxComponent implements OnInit {
   private as = inject(AuthService);
 
   circles$!: Observable<Circle[]>;
-  circleMenuItems = signal<MenuItem[]>([]);
+  ownedCircleMenuItems = signal<MenuItem[]>([]);
+  unownedCircleMenuItems = signal<MenuItem[]>([]);
   circleNameInput = new Subject<string>();
   circleExists = false;
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   constructor() {
-    // React to login state changes
+    // React to login state changes - update follow state for unowned circles
     effect(async () => {
       const loggedIn = this.as.isLoggedIn();
       if (loggedIn) {
-        // Use untracked to read circleMenuItems without creating a dependency
-        // This prevents infinite loop: effect reads signal -> writes signal -> triggers effect
-        const items = untracked(() => this.circleMenuItems());
+        // Use untracked to read signal without creating a dependency
+        const items = untracked(() => this.unownedCircleMenuItems());
         if (items.length > 0) {
           const followedCircles = (await this.as.getFollowedCircles()) || [];
           const updatedItems = items.map((item) => ({
@@ -59,7 +59,7 @@ export class CircleBoxComponent implements OnInit {
               isFollowed: followedCircles.includes(item.label || ''),
             },
           })) as MenuItem[];
-          this.circleMenuItems.set([...updatedItems].sort(this.sortFavorites));
+          this.unownedCircleMenuItems.set([...updatedItems].sort(this.sortFavorites));
         }
       }
     });
@@ -67,16 +67,31 @@ export class CircleBoxComponent implements OnInit {
 
   ngOnInit(): void {
     this.cs.circles$.subscribe(async (circles: Circle[]) => {
+      const userId = this.as.getUserId();
       const followedCircles =
         (this.isLoggedIn() && (await this.as.getFollowedCircles())) || [];
-      const items = circles.map((circle: Circle) => ({
+
+      // Split into owned and unowned
+      const owned = circles.filter((c) => c.ownerId === userId);
+      const unowned = circles.filter((c) => c.ownerId !== userId);
+
+      // Owned circles - no follow state needed
+      this.ownedCircleMenuItems.set(
+        owned.map((circle) => ({
+          label: circle.name,
+          routerLink: ['/' + circle.name],
+        })) as MenuItem[]
+      );
+
+      // Unowned circles - with follow state
+      const unownedItems = unowned.map((circle) => ({
         label: circle.name,
-        command: () => this.router.navigate([circle.name]),
+        routerLink: ['/' + circle.name],
         state: {
           isFollowed: followedCircles.includes(circle.name),
         },
       })) as MenuItem[];
-      this.circleMenuItems.set([...items].sort(this.sortFavorites));
+      this.unownedCircleMenuItems.set([...unownedItems].sort(this.sortFavorites));
     });
 
     this.circleNameInput
