@@ -5,11 +5,10 @@ import {
   inject,
   OnInit,
   signal,
-  untracked,
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MenuItem, SharedModule } from 'primeng/api';
-import { Observable, Subject, debounceTime } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
@@ -36,7 +35,7 @@ export class CircleBoxComponent implements OnInit {
   private router = inject(Router);
   private as = inject(AuthService);
 
-  circles$!: Observable<Circle[]>;
+  private circles: Circle[] = [];
   ownedCircleMenuItems = signal<MenuItem[]>([]);
   unownedCircleMenuItems = signal<MenuItem[]>([]);
   circleNameInput = new Subject<string>();
@@ -45,53 +44,50 @@ export class CircleBoxComponent implements OnInit {
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   constructor() {
-    // React to login state changes - update follow state for unowned circles
-    effect(async () => {
-      const loggedIn = this.as.isLoggedIn();
-      if (loggedIn) {
-        // Use untracked to read signal without creating a dependency
-        const items = untracked(() => this.unownedCircleMenuItems());
-        if (items.length > 0) {
-          const followedCircles = (await this.as.getFollowedCircles()) || [];
-          const updatedItems = items.map((item) => ({
-            ...item,
-            state: {
-              isFollowed: followedCircles.includes(item.label || ''),
-            },
-          })) as MenuItem[];
-          this.unownedCircleMenuItems.set([...updatedItems].sort(this.sortFavorites));
-        }
-      }
+    // React to login state changes - reprocess circles with new user context
+    effect(() => {
+      // Track login state changes
+      this.as.isLoggedIn();
+      // Reprocess circles when login state changes
+      this.processCircles();
     });
   }
 
-  ngOnInit(): void {
-    this.cs.circles$.subscribe(async (circles: Circle[]) => {
-      const userId = this.as.getUserId();
-      const followedCircles =
-        (this.isLoggedIn() && (await this.as.getFollowedCircles())) || [];
+  private processCircles = async () => {
+    const circles = this.circles;
+    if (circles.length === 0) return;
 
-      // Split into owned and unowned
-      const owned = circles.filter((c) => c.ownerId === userId);
-      const unowned = circles.filter((c) => c.ownerId !== userId);
+    const userId = this.as.getUserId();
+    const followedCircles =
+      (this.isLoggedIn() && (await this.as.getFollowedCircles())) || [];
 
-      // Owned circles - no follow state needed
-      this.ownedCircleMenuItems.set(
-        owned.map((circle) => ({
-          label: circle.name,
-          routerLink: ['/' + circle.name],
-        })) as MenuItem[]
-      );
+    // Split into owned and unowned
+    const owned = circles.filter((c) => c.ownerId === userId);
+    const unowned = circles.filter((c) => c.ownerId !== userId);
 
-      // Unowned circles - with follow state
-      const unownedItems = unowned.map((circle) => ({
+    // Owned circles - no follow state needed
+    this.ownedCircleMenuItems.set(
+      owned.map((circle) => ({
         label: circle.name,
         routerLink: ['/' + circle.name],
-        state: {
-          isFollowed: followedCircles.includes(circle.name),
-        },
-      })) as MenuItem[];
-      this.unownedCircleMenuItems.set([...unownedItems].sort(this.sortFavorites));
+      })) as MenuItem[]
+    );
+
+    // Unowned circles - with follow state
+    const unownedItems = unowned.map((circle) => ({
+      label: circle.name,
+      routerLink: ['/' + circle.name],
+      state: {
+        isFollowed: followedCircles.includes(circle.name),
+      },
+    })) as MenuItem[];
+    this.unownedCircleMenuItems.set([...unownedItems].sort(this.sortFavorites));
+  };
+
+  ngOnInit(): void {
+    this.cs.circles$.subscribe((circles: Circle[]) => {
+      this.circles = circles;
+      this.processCircles();
     });
 
     this.circleNameInput
