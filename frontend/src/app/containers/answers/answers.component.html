@@ -18,13 +18,15 @@
     }
     @if (currentUserId() === answer.ownerId && !answer.deleted) {
       <span class="text-xs">
-        <button
-          type="button"
-          class="btn__link mx-1"
-          (click)="toggleEditForm(answer)"
-        >
-          Edit
-        </button>
+        @if (!isSolution(answer)) {
+          <button
+            type="button"
+            class="btn__link mx-1"
+            (click)="toggleEditForm(answer)"
+          >
+            Edit
+          </button>
+        }
         <button
           type="button"
           class="btn__link mx-1"
