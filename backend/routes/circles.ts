@@ -18,7 +18,10 @@ const router = express.Router();
 /*
  * GET a circle by circle name.
  */
-router.get('/circles/:name', cors(corsOptions), [controllerCircles.readOne]);
+router.get('/circles/:name', cors(corsOptions), [
+  middlewareAuth.optionalUserFromToken,
+  controllerCircles.readOne,
+]);
 
 /*
  * GET all circles.
@@ -44,7 +47,10 @@ router.post('/circles', cors(corsOptions), [
 /*
  * GET a question in circle by circle name.
  */
-router.get('/circles/:name/questions/:qid', cors(corsOptions), [controllerCircles.readOneQuestion]);
+router.get('/circles/:name/questions/:qid', cors(corsOptions), [
+  middlewareAuth.optionalUserFromToken,
+  controllerCircles.readOneQuestion,
+]);
 
 /*
  * Create a question in circle by circle id.

@@ -10,7 +10,7 @@
   </div>
   <p-panel>
     <ng-template pTemplate="header">
-      <div>
+      <div class="flex items-center">
         <span class="text-xs text-bluegray-300">
           Posted by {{ question.ownerName }}
         </span>
@@ -34,6 +34,30 @@
               Delete
             </button>
           </span>
+        }
+        @if (isModerator()) {
+          <span class="text-xs">
+            <button
+              type="button"
+              class="btn__link ms-1"
+              (click)="handleModerate($event)"
+            >
+              Moderate
+            </button>
+          </span>
+          @if (question.moderationInfo?.status === "approved") {
+            <span
+              class="inline-flex items-center gap-1 px-2 py-0.5 ms-2 rounded-full bg-green-100 text-green-700 text-xs font-bold"
+            >
+              <i class="pi pi-check text-xs"></i>Approved
+            </span>
+          } @else if (question.moderationInfo?.status === "blocked") {
+            <span
+              class="inline-flex items-center gap-1 px-2 py-0.5 ms-2 rounded-full bg-red-100 text-red-700 text-xs font-bold"
+            >
+              <i class="pi pi-ban text-xs"></i>Blocked
+            </span>
+          }
         }
       </div>
     </ng-template>
@@ -68,6 +92,14 @@
             [innerHtml]="question.body"
             class="text-left text-sm font-semibold my-10 break-words"
           ></p>
+          @if (question.moderationInfo?.noteText) {
+            <div class="my-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
+              <span class="font-bold text-yellow-700">
+                <i class="pi pi-info-circle mr-1"></i>Moderator's Note
+              </span>
+              <p class="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{{ question.moderationInfo?.noteText }}</p>
+            </div>
+          }
           @if (question.intentionId === "question" && solutionAnswer()) {
             <div
               class="mt-6 p-4 rounded-lg border-2 border-green-500 bg-green-50"
@@ -90,12 +122,16 @@
           <i class="pi pi-comments"></i>
           <span class="mx-2">{{ ans.answers().length || 0 }} answers</span>
         </div>
-        @if (isLoggedIn()) {
+        @if (isLoggedIn() && !question.moderationInfo?.closed) {
           <div class="w-full mt-5 mb-3">
             <ama-texteditor
               (submit)="submitAnswer($event)"
               [loading]="loading"
             ></ama-texteditor>
+          </div>
+        } @else if (question.moderationInfo?.closed) {
+          <div class="text-sm text-gray-500 italic my-5">
+            Comments are closed on this question.
           </div>
         }
       </div>
@@ -110,10 +146,12 @@
         <ama-answers
           [questionId]="question._id || ''"
           [circleId]="circle._id || ''"
+          [circleName]="circle.name || ''"
           [answers]="ans.answers()"
           [solutionId]="question.solutionId"
           [questionOwnerId]="question.ownerId"
           [isQuestionType]="question.intentionId === 'question'"
+          [isClosed]="question.moderationInfo?.closed || false"
           (markSolution)="handleMarkSolution($event)"
         ></ama-answers>
       }

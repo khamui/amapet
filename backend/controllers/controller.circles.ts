@@ -11,12 +11,38 @@ import type { INotification } from '../types/models.js';
 export const controllerCircles = {
   readOne: async (req: Request, res: Response): Promise<void> => {
     const { name: circleName } = req.params;
+    const userId = req.userPayload?._id;
+
     try {
       const filter = {
         name: `c/${circleName}`,
       };
-      const foundCircle = (await retrieveModel(Circle, filter)) as ICircleDocument[];
-      res.status(200).json(foundCircle[0]);
+      const foundCircles = (await retrieveModel(
+        Circle,
+        filter
+      )) as ICircleDocument[];
+
+      if (!foundCircles[0]) {
+        res.status(404).send('Circle not found');
+        return;
+      }
+
+      const circle = foundCircles[0];
+      const isModerator =
+        userId &&
+        (circle.moderators.includes(userId) || circle.ownerId === userId);
+
+      if (!isModerator) {
+        const filteredQuestions = circle.questions.filter(
+          (q) => q.moderationInfo?.status !== 'blocked'
+        );
+        const circleResponse = circle.toObject();
+        circleResponse.questions = filteredQuestions;
+        res.status(200).json(circleResponse);
+        return;
+      }
+
+      res.status(200).json(circle);
     } catch {
       res.status(500).send("couldn't retrieve model");
     }
@@ -67,15 +93,42 @@ export const controllerCircles = {
   readOneQuestion: async (req: Request, res: Response): Promise<void> => {
     const circleName = req.params.name as string;
     const questionId = req.params.qid as string;
+    const userId = req.userPayload?._id;
+
     try {
       const filter = {
         name: `c/${circleName}`,
         'questions._id': new mongoose.Types.ObjectId(questionId),
       };
-      const foundCircle = (await retrieveModel(Circle, filter)) as ICircleDocument[];
-      const foundQuestion = Array.from(foundCircle[0].questions).find(
+      const foundCircles = (await retrieveModel(
+        Circle,
+        filter
+      )) as ICircleDocument[];
+
+      if (!foundCircles[0]) {
+        res.status(404).send('Question not found');
+        return;
+      }
+
+      const circle = foundCircles[0];
+      const foundQuestion = Array.from(circle.questions).find(
         (q: IQuestion) => q._id?.toString() === questionId
       );
+
+      if (!foundQuestion) {
+        res.status(404).send('Question not found');
+        return;
+      }
+
+      const isModerator =
+        userId &&
+        (circle.moderators.includes(userId) || circle.ownerId === userId);
+
+      if (!isModerator && foundQuestion.moderationInfo?.status === 'blocked') {
+        res.status(404).send('Question not found');
+        return;
+      }
+
       res.status(200).json(foundQuestion);
     } catch {
       res.status(500).send("couldn't retrieve model");

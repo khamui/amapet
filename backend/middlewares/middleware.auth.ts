@@ -5,6 +5,29 @@ import type { UserPayload } from '../types/express.js';
 import { User } from '../db/models/user.js';
 
 export const middlewareAuth = {
+  optionalUserFromToken: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): void => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      next();
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET || '') as UserPayload;
+        req.userPayload = decoded;
+      } catch {
+        // Invalid token, continue without user context
+      }
+    }
+    next();
+  },
+
   isAuthorized: (req: Request, res: Response, next: NextFunction): void => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {

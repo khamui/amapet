@@ -1,5 +1,14 @@
 import { Types, Document } from 'mongoose';
 
+// ============ Moderation ============
+export interface IModerationInfo {
+  status?: 'unread' | 'approved' | 'blocked';
+  closed?: boolean; // only for questions
+  noteText?: string;
+  lastModeratedBy?: string;
+  lastModeratedAt?: number;
+}
+
 // ============ User ============
 export type AuthProvider = 'google' | 'microsoft';
 
@@ -31,6 +40,7 @@ export interface IQuestion {
   downvotes: string[];
   intentionId?: string;
   solutionId?: string;
+  moderationInfo?: IModerationInfo;
 }
 
 export type IQuestionDocument = IQuestion & Document;
@@ -62,6 +72,7 @@ export interface IAnswer {
   downvotes: string[];
   deleted?: boolean;
   children: Types.ObjectId[];
+  moderationInfo?: IModerationInfo;
 }
 
 export type IAnswerDocument = IAnswer & Document;

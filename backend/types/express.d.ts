@@ -1,4 +1,5 @@
 import { JwtPayload } from 'jsonwebtoken';
+import { ICircleDocument } from './models.js';
 
 export interface UserPayload extends JwtPayload {
   _id: string;
@@ -12,6 +13,7 @@ declare global {
     interface Request {
       user?: JwtPayload | string;
       userPayload?: UserPayload;
+      circle?: ICircleDocument;
     }
   }
 }

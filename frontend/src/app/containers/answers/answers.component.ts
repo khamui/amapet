@@ -13,6 +13,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
 import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { Router } from '@angular/router';
+import { ModerationStore } from 'src/app/stores/moderation.store';
 
 @Component({
   selector: 'ama-answers',
@@ -36,14 +37,17 @@ export class AnswersComponent {
   private as = inject(AuthService);
   private ans = inject(AnswerService);
   private cos = inject(ConfirmationService);
+  private moderationStore = inject(ModerationStore);
   public router = inject(Router);
 
   public answers = input<Answer[] | undefined>();
   public questionId = input.required<string>();
   public circleId = input.required<string>();
+  public circleName = input<string>('');
   public solutionId = input<string | undefined>();
   public questionOwnerId = input<string | undefined>();
   public isQuestionType = input<boolean>(false);
+  public isClosed = input<boolean>(false);
 
   public markSolution = output<string | null>();
 
@@ -53,6 +57,16 @@ export class AnswersComponent {
   public allExpanded = true;
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
+  public isModerator = computed(() => {
+    const moderatedIds = this.moderationStore.getModeratedCircleIds();
+    return moderatedIds.includes(this.circleId());
+  });
+  public filteredAnswers = computed(() => {
+    const answers = this.answers();
+    if (!answers) return [];
+    if (this.isModerator()) return answers;
+    return this.filterBlockedAnswers(answers);
+  });
 
   constructor() {
     this.currentUserId.set(this.as.getUserId());
@@ -158,4 +172,21 @@ export class AnswersComponent {
     this.markSolution.emit(null);
   };
   /* solution methods */
+
+  /* moderation methods */
+  public handleModerateAnswer = (event: MouseEvent, answer: Answer) => {
+    event.stopPropagation();
+    const plainCircleName = this.circleName().replace('c/', '');
+    this.router.navigate(['moderate', 'c', plainCircleName, 'q', this.questionId()]);
+  };
+
+  private filterBlockedAnswers(answers: Answer[]): Answer[] {
+    return answers
+      .filter(a => a.moderationInfo?.status !== 'blocked')
+      .map(a => ({
+        ...a,
+        children: a.children ? this.filterBlockedAnswers(a.children) : undefined
+      }));
+  }
+  /* moderation methods */
 }

@@ -1,5 +1,25 @@
 import mongoose, { Schema } from 'mongoose';
-import type { ICircle, ICircleDocument, IQuestion } from '../../types/models.js';
+import type {
+  ICircle,
+  ICircleDocument,
+  IModerationInfo,
+  IQuestion,
+} from '../../types/models.js';
+
+const moderationInfoSubSchema = new Schema<IModerationInfo>(
+  {
+    status: {
+      type: String,
+      enum: ['unread', 'approved', 'blocked'],
+      default: 'unread',
+    },
+    closed: { type: Boolean, default: false },
+    noteText: { type: String, default: '' },
+    lastModeratedBy: { type: String, default: null },
+    lastModeratedAt: { type: Number, default: null },
+  },
+  { _id: false }
+);
 
 const questionSubSchema = new Schema<IQuestion>(
   {
@@ -15,6 +35,10 @@ const questionSubSchema = new Schema<IQuestion>(
     downvotes: { type: [String], default: [] },
     intentionId: String,
     solutionId: { type: String, default: null },
+    moderationInfo: {
+      type: moderationInfoSubSchema,
+      default: () => ({ status: 'unread' }),
+    },
   },
   { _id: false }
 );
