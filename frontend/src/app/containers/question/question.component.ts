@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { take } from 'rxjs';
 import { CircleService } from 'src/app/services/circle.service';
+import { ModerationStore } from 'src/app/stores/moderation.store';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
@@ -31,7 +32,13 @@ export class QuestionComponent implements OnInit {
   @Input() circle!: Circle;
   @Input() currentUserId!: string;
 
+  private moderationStore = inject(ModerationStore);
+
   isOwner = false;
+  isModerator = computed(() => {
+    const moderatedIds = this.moderationStore.getModeratedCircleIds();
+    return this.circle?._id ? moderatedIds.includes(this.circle._id) : false;
+  });
 
   constructor(
     private ro: Router,
@@ -76,6 +83,12 @@ export class QuestionComponent implements OnInit {
       },
       reject: () => {},
     });
+  };
+
+  handleModerate = (event: MouseEvent) => {
+    event.stopPropagation();
+    const plainCircleName = this.circle.name.replace('c/', '');
+    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question._id]);
   };
 
   public handleUpvoteQuestion = () => {

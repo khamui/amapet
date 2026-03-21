@@ -4,6 +4,7 @@ import { Answer } from '../db/models/answer.js';
 import { Circle } from '../db/models/circle.js';
 import mongoose from 'mongoose';
 import type { IAnswerDocument } from '../db/models/answer.js';
+import type { IModerationInfo } from '../types/models.js';
 
 interface IAnswerWithChildren {
   _id: unknown;
@@ -18,53 +19,131 @@ interface IAnswerWithChildren {
   downvotes: string[];
   deleted?: boolean;
   children: IAnswerWithChildren[];
+  moderationInfo?: IModerationInfo;
 }
 
 const makeAnswersTree = async (
-  answersOfQuestion: IAnswerDocument[]
+  answersOfQuestion: IAnswerDocument[],
+  isModerator: boolean
 ): Promise<IAnswerWithChildren[]> => {
   const nestedAnswers: IAnswerWithChildren[] = [];
   for (const answer of answersOfQuestion) {
-    const subAnswers = (await retrieveModel(Answer, { parentId: answer._id })) as IAnswerDocument[];
+    // Skip blocked answers for non-moderators
+    if (!isModerator && answer.moderationInfo?.status === 'blocked') {
+      continue;
+    }
+
+    const subAnswers = (await retrieveModel(Answer, {
+      parentId: answer._id,
+    })) as IAnswerDocument[];
     const answerWithChildren: IAnswerWithChildren = {
       ...answer.toObject(),
       children: [],
     };
     if (subAnswers?.length > 0) {
-      answerWithChildren.children = await makeAnswersTree(subAnswers);
+      answerWithChildren.children = await makeAnswersTree(
+        subAnswers,
+        isModerator
+      );
     }
     nestedAnswers.push(answerWithChildren);
   }
   return nestedAnswers;
 };
 
+const findQuestionIdFromAnswer = async (
+  parentId: string,
+  parentType: string
+): Promise<string | null> => {
+  if (parentType === 'question') {
+    return parentId;
+  }
+
+  // Traverse up to find the question
+  let currentParentId = parentId;
+  let depth = 0;
+  const maxDepth = 50; // Prevent infinite loops
+
+  while (depth < maxDepth) {
+    const parentAnswer = await Answer.findById(currentParentId);
+    if (!parentAnswer) {
+      return null;
+    }
+    if (parentAnswer.parentType === 'question') {
+      return parentAnswer.parentId || null;
+    }
+    currentParentId = parentAnswer.parentId || '';
+    depth++;
+  }
+  return null;
+};
+
 export const controllerAnswers = {
   readAll: async (req: Request, res: Response): Promise<void> => {
-    const { parentId } = req.params;
+    const parentId = req.params.parentId as string;
+    const userId = req.userPayload?._id;
+
     try {
-      const answers = (await retrieveModel(Answer, { parentId })) as IAnswerDocument[];
-      const answersWithSub = await makeAnswersTree(answers);
+      // Check if user is a moderator of the circle this question belongs to
+      let isModerator = false;
+
+      const circle = await Circle.findOne({
+        'questions._id': new mongoose.Types.ObjectId(parentId),
+      });
+
+      if (circle && userId) {
+        isModerator =
+          circle.moderators.includes(userId) || circle.ownerId === userId;
+      }
+
+      const answers = (await retrieveModel(Answer, {
+        parentId,
+      })) as IAnswerDocument[];
+      const answersWithSub = await makeAnswersTree(answers, isModerator);
       res.status(200).json(answersWithSub);
     } catch (error) {
       res.status(500).send(error);
     }
   },
+
   createOne: async (req: Request, res: Response): Promise<void> => {
     const { parentId, parentType, ownerId, ownerName, answerText } = req.body;
 
-    const payload = {
-      _id: new mongoose.Types.ObjectId(),
-      created_at: Date.now(),
-      parentId,
-      parentType,
-      ownerId,
-      ownerName,
-      answerText,
-      upvotes: [ownerId],
-      downvotes: [],
-    };
-
     try {
+      // Check if the question is closed
+      const questionId = await findQuestionIdFromAnswer(parentId, parentType);
+
+      if (questionId) {
+        const circle = await Circle.findOne({
+          'questions._id': new mongoose.Types.ObjectId(questionId),
+        });
+
+        if (circle) {
+          const question = circle.questions.find(
+            (q) => q._id?.toString() === questionId
+          );
+
+          if (question?.moderationInfo?.closed) {
+            res
+              .status(400)
+              .json({ error: 'Comments are closed on this question' });
+            return;
+          }
+        }
+      }
+
+      const payload = {
+        _id: new mongoose.Types.ObjectId(),
+        created_at: Date.now(),
+        parentId,
+        parentType,
+        ownerId,
+        ownerName,
+        answerText,
+        upvotes: [ownerId],
+        downvotes: [],
+      };
+
       const newAnswer = await generateModel(Answer, payload);
       res.status(201).json(newAnswer);
     } catch (error) {

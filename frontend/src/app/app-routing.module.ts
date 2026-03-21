@@ -6,14 +6,13 @@ import { CircleComponent } from './containers/circle/circle.component';
 import { CreateQuestionComponent } from './containers/create-question/create-question.component';
 import { QuestionDetailComponent } from './containers/question-detail/question-detail.component';
 import { EditQuestionComponent } from './containers/edit-question/edit-question.component';
-import { ModerationComponent } from './containers/moderation/moderation.component';
-import { ModerationQuestionsComponent } from './containers/moderation-questions/moderation-questions.component';
 import { ModerationQuestionDetailComponent } from './containers/moderation-question-details/moderation-question-detail.component';
 import { GlobalSettingsComponent } from './containers/global-settings/global-settings.component';
 import { ProfileCirclesComponent } from './containers/profile-circles/profile-circles.component';
 import { NotFoundComponent } from './containers/not-found/not-found.component';
 import { permLevelGuard } from './guards/perm-level.guard';
 import { appAvailableGuard } from './guards/app-available.guard';
+import { moderationGuard } from './guards/moderation.guard';
 
 const routes: Routes = [
   {
@@ -52,16 +51,9 @@ const routes: Routes = [
     canActivate: [appAvailableGuard],
   },
   {
-    path: 'moderation',
-    component: ModerationComponent,
-  },
-  {
-    path: 'moderate/c/:name',
-    component: ModerationQuestionsComponent,
-  },
-  {
     path: 'moderate/c/:name/q/:qid',
     component: ModerationQuestionDetailComponent,
+    canActivate: [moderationGuard],
   },
   {
     path: 'global-settings',

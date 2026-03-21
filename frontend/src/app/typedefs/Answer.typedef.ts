@@ -1,3 +1,5 @@
+import { ModerationInfo } from './Question.typedef';
+
 export type Answer = {
   _id?: string;
   parentId: string;
@@ -13,4 +15,5 @@ export type Answer = {
   children?: Answer[];
   questionId?: string;
   circleId?: string;
+  moderationInfo?: ModerationInfo;
 }

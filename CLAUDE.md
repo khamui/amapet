@@ -23,6 +23,7 @@ Frontend Rules
 - UI: Use PrimeNG components.
 - Theming: Use best practices of primeng's theming concept:
   https://primeng.org/theming/styled.md
+- Themes: always adjust for light and dark themes.
 - Standards: Standalone components, functional interceptors, inject(), input(),
   output() pattern.
 

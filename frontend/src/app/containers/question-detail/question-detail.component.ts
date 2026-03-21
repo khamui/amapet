@@ -5,6 +5,7 @@ import { take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { AnswerService } from 'src/app/services/answer.service';
 import { CircleService } from 'src/app/services/circle.service';
+import { ModerationStore } from 'src/app/stores/moderation.store';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
@@ -45,6 +46,7 @@ export class QuestionDetailComponent implements OnInit {
   private ro = inject(Router);
   private cos = inject(ConfirmationService);
   private as = inject(AuthService);
+  private moderationStore = inject(ModerationStore);
   public ans = inject(AnswerService);
 
   circle!: Circle;
@@ -56,6 +58,10 @@ export class QuestionDetailComponent implements OnInit {
   public solutionAnswer = signal<Answer | null>(null);
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
+  public isModerator = computed(() => {
+    const moderatedIds = this.moderationStore.getModeratedCircleIds();
+    return this.circle?._id ? moderatedIds.includes(this.circle._id) : false;
+  });
 
   constructor() {
     this.currentUserId = this.as.getUserId();
@@ -80,10 +86,29 @@ export class QuestionDetailComponent implements OnInit {
       const circleName = paramMap.get('name');
 
       this.circle = await this.getCircle(circleName);
-      //this.question = await this.getQuestion(circleName, questionId);
+
+      // Try to find question in circle.questions first
       this.question = this.circle.questions.find(
         (q) => q._id === questionId,
       ) as Question;
+
+      // If not found, check if user is moderator and look in moderated circles
+      if (!this.question) {
+        const moderatedCircles = this.moderationStore.moderatedCircles$();
+        const moderatedCircle = moderatedCircles.find(
+          (c) => c.name === `c/${circleName}`,
+        );
+        if (moderatedCircle) {
+          this.question = moderatedCircle.questions.find(
+            (q) => q._id === questionId,
+          ) as Question;
+        }
+      }
+
+      // Fallback: fetch question directly if still not found
+      if (!this.question) {
+        this.question = await this.getQuestion(circleName, questionId);
+      }
 
       if (this.currentUserId === this.question?.ownerId) {
         this.isOwner = true;
@@ -170,6 +195,12 @@ export class QuestionDetailComponent implements OnInit {
     const circleName = this.circle.name.replace(/^c\//, '');
     this.ro.navigate(['c', circleName]);
   }
+
+  handleModerate = (event: MouseEvent) => {
+    event.stopPropagation();
+    const plainCircleName = this.circle.name.replace('c/', '');
+    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question._id]);
+  };
 
   private findAnswerById(answers: Answer[], id: string): Answer | null {
     for (const answer of answers) {

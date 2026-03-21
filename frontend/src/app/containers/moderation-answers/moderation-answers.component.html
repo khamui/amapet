@@ -1,13 +1,41 @@
 @for (answer of answers; track answer._id) {
-  <div class="mb-2 mt-4">
-    <span class="text-xs text-500 hover:text-700">{{ answer.ownerName }}</span
-    ><span class="mx-2 text-xs text-500 hover:text-700">{{
-      answer.created_at | dateAgo
-    }}</span>
-    @if (answer.modded_at && !answer.deleted) {
-      <span class="mr-3 text-xs font-italic">(edited)</span>
-    } @else if (answer.deleted) {
-      <span class="mr-3 text-xs font-italic">(deleted)</span>
+  <div class="mb-2 mt-4 flex justify-between items-center">
+    <div>
+      <span class="text-xs text-500 hover:text-700">{{ answer.ownerName }}</span
+      ><span class="mx-2 text-xs text-500 hover:text-700">{{
+        answer.created_at | dateAgo
+      }}</span>
+      @if (answer.modded_at && !answer.deleted) {
+        <span class="mr-3 text-xs font-italic">(edited)</span>
+      } @else if (answer.deleted) {
+        <span class="mr-3 text-xs font-italic">(deleted)</span>
+      }
+    </div>
+    @if (!answer.deleted) {
+      <div class="flex gap-1">
+        <p-button
+          icon="pi pi-check"
+          [severity]="getAnswerStatus(answer) === 'approved' ? 'success' : 'secondary'"
+          [variant]="getAnswerStatus(answer) === 'approved' ? 'outlined' : 'text'"
+          size="small"
+          [rounded]="true"
+          [loading]="processingAnswerId() === answer._id"
+          [disabled]="processingAnswerId() !== null"
+          (onClick)="handleApproveAnswer(answer)"
+          [pTooltip]="getAnswerStatus(answer) === 'approved' ? 'Unapprove' : 'Approve'"
+        ></p-button>
+        <p-button
+          icon="pi pi-ban"
+          [severity]="getAnswerStatus(answer) === 'blocked' ? 'danger' : 'secondary'"
+          [variant]="getAnswerStatus(answer) === 'blocked' ? 'outlined' : 'text'"
+          size="small"
+          [rounded]="true"
+          [loading]="processingAnswerId() === answer._id"
+          [disabled]="processingAnswerId() !== null"
+          (onClick)="handleBlockAnswer(answer)"
+          [pTooltip]="getAnswerStatus(answer) === 'blocked' ? 'Unblock' : 'Block'"
+        ></p-button>
+      </div>
     }
   </div>
   @if (!answer.deleted) {
@@ -18,9 +46,9 @@
           (answer.upvotes?.length || 0) - (answer.downvotes?.length || 0) > 0
             ? 'text-green-600'
             : (answer.upvotes?.length || 0) - (answer.downvotes?.length || 0) <
-              0
-            ? 'text-red-700'
-            : ''
+                0
+              ? 'text-red-700'
+              : ''
         "
       >
         <div>

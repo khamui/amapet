@@ -16,7 +16,10 @@ const router = express.Router();
 /*
  * GET all answers and subanswers of question.
  */
-router.get('/answers/:parentId', cors(corsOptions), [controllerAnswers.readAll]);
+router.get('/answers/:parentId', cors(corsOptions), [
+  middlewareAuth.optionalUserFromToken,
+  controllerAnswers.readAll,
+]);
 
 /*
  * Create an answer in question.

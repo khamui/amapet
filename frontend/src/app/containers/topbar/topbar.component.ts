@@ -66,16 +66,6 @@ export class TopbarComponent {
       },
     ];
 
-    if (this.moderationStore.getModeratedCircleIds().length > 0) {
-      items.push({
-        label: 'Moderation',
-        icon: 'pi pi-shield',
-        command: () => {
-          this.router.navigate(['moderation']);
-        },
-      });
-    }
-
     this.userMenuItems.set(items);
   }
 

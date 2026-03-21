@@ -21,12 +21,7 @@
         </div>
       </ng-template>
       <div class="p-3">
-        @if (isInModerationView()) {
-          <ama-circle-box-moderation></ama-circle-box-moderation>
-        }
-        @if (isInCircleView() && !isInModerationView()) {
-          <ama-circle-box></ama-circle-box>
-        }
+        <ama-circle-box></ama-circle-box>
       </div>
     </p-drawer>
     @if (ses.isMaintenance()) {
@@ -42,12 +37,7 @@
     >
       <div class="max-w-2/8 lg:block hidden">
         <div class="p-3">
-          @if (isInModerationView()) {
-            <ama-circle-box-moderation></ama-circle-box-moderation>
-          }
-          @if (isInCircleView() && !isInModerationView()) {
-            <ama-circle-box></ama-circle-box>
-          }
+          <ama-circle-box></ama-circle-box>
         </div>
       </div>
       <div class="lg:w-6/8 w-full">

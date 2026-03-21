@@ -17,7 +17,6 @@ import { SettingsService } from './services/settings.service';
 import { UiStateService } from './services/ui-state.service';
 import { ThemeService } from './services/theme.service';
 import { NgClass } from '@angular/common';
-import { CircleBoxModerationComponent } from './containers/circle-box-moderation/circle-box-moderation.component';
 import { filter } from 'rxjs';
 
 @Component({
@@ -30,7 +29,6 @@ import { filter } from 'rxjs';
     ToastModule,
     DrawerModule,
     CircleBoxComponent,
-    CircleBoxModerationComponent,
     TopbarComponent,
     SoonAvailableComponent,
     MessageModule,
@@ -47,8 +45,6 @@ export class AppComponent implements OnInit {
   // Computed signal that directly references auth service's isLoggedIn
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
-  public isInModerationView = signal(false);
-  public isInCircleView = signal(false);
   public isFullScreenRoute = signal(false);
 
   async ngOnInit() {
@@ -73,7 +69,6 @@ export class AppComponent implements OnInit {
       '/explore',
       '/c/',
       '/profile',
-      '/moderation',
       '/moderate/',
       '/global-settings',
     ];
@@ -81,13 +76,5 @@ export class AppComponent implements OnInit {
       (route) => url === route || url.startsWith(route)
     );
     this.isFullScreenRoute.set(!isKnownRoute);
-
-    if (url.startsWith('/moderation') || url.startsWith('/moderate')) {
-      this.isInCircleView.set(false);
-      this.isInModerationView.set(true);
-    } else {
-      this.isInModerationView.set(false);
-      this.isInCircleView.set(true);
-    }
   };
 }
