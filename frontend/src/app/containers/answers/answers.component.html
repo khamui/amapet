@@ -2,7 +2,7 @@
   <div class="mb-2 mt-4 flex items-center">
     @if (isSolution(answer) && !answer.deleted) {
       <span
-        class="inline-flex items-center gap-1 px-2 py-0.5 mr-2 rounded-full bg-green-100 text-green-700 text-xs font-bold"
+        class="inline-flex items-center gap-1 px-2 py-0.5 mr-2 rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-bold"
       >
         <i class="pi pi-check-circle text-xs"></i>Solution
       </span>
@@ -47,11 +47,11 @@
         </button>
       </span>
       @if (answer.moderationInfo?.status === 'approved') {
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 ms-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 ms-1 rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-bold">
           <i class="pi pi-check text-xs"></i>Approved
         </span>
       } @else if (answer.moderationInfo?.status === 'blocked') {
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 ms-1 rounded-full bg-red-100 text-red-700 text-xs font-bold">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 ms-1 rounded-full bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 text-xs font-bold">
           <i class="pi pi-ban text-xs"></i>Blocked
         </span>
       }
