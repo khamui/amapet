@@ -25,7 +25,7 @@ const generatePseudoWord = (): string => {
   return consonant + vowel + ending;
 };
 
-const generateUsername = async (): Promise<string> => {
+export const generateUsername = async (): Promise<string> => {
   const maxRetries = 10;
   for (let i = 0; i < maxRetries; i++) {
     const word1 = generatePseudoWord();

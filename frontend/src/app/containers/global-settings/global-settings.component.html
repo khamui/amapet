@@ -39,3 +39,89 @@
     "
   />
 </div>
+
+<p-divider />
+
+<h2 class="text-lg mt-4 mb-6">Database Management</h2>
+
+<div class="flex flex-col gap-6 p-3">
+  <div class="flex items-center justify-between">
+    <div>
+      <h3 class="text-md font-medium">Seed Sample Data</h3>
+      <p class="text-sm text-surface-500">
+        @if (dbs.canSeed()) {
+          Populate the database with sample circles, questions, and answers.
+        } @else {
+          Seeding is disabled because circles already exist.
+        }
+      </p>
+    </div>
+    <p-button
+      label="Seed Data"
+      icon="pi pi-database"
+      [disabled]="!dbs.canSeed() || dbs.isLoading()"
+      [loading]="dbs.isLoading()"
+      (onClick)="handleSeed()"
+    />
+  </div>
+
+  <p-divider />
+
+  <div>
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h3 class="text-md font-medium">Backups</h3>
+        <p class="text-sm text-surface-500">
+          Create and restore database backups.
+        </p>
+      </div>
+      <p-button
+        label="Create Backup"
+        icon="pi pi-save"
+        [loading]="dbs.isLoading()"
+        [disabled]="dbs.isLoading()"
+        (onClick)="handleCreateBackup()"
+      />
+    </div>
+
+    @if (dbs.backups().length > 0) {
+      <div class="flex flex-col gap-2">
+        <p class="text-sm font-medium text-surface-600">Available backups:</p>
+        @for (backup of dbs.backups(); track backup.name) {
+          <div
+            class="flex items-center justify-between p-3 rounded-lg bg-surface-50 dark:bg-surface-800"
+          >
+            <div class="flex flex-col">
+              <span class="text-sm font-mono">{{ backup.name }}</span>
+              <span class="text-xs text-surface-500">{{
+                backup.createdAt | date: 'medium'
+              }}</span>
+            </div>
+            <div class="flex gap-2">
+              <p-button
+                label="Download"
+                icon="pi pi-download"
+                severity="secondary"
+                size="small"
+                [disabled]="dbs.isLoading()"
+                (onClick)="handleDownload(backup.name)"
+              />
+              <p-button
+                label="Restore"
+                icon="pi pi-replay"
+                severity="secondary"
+                size="small"
+                [disabled]="dbs.isLoading()"
+                (onClick)="handleRestore(backup.name)"
+              />
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="text-sm text-surface-500 italic">No backups available.</p>
+    }
+  </div>
+</div>
+
+<p-confirmDialog />

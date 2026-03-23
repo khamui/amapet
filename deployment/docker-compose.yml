@@ -38,11 +38,14 @@ services:
     restart: unless-stopped
     ports:
       - "${BACKEND_PORT}:3000"
+    volumes:
+      - ./backups:/app/backups
     environment:
       MONGO_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017/${MONGO_DB}?authSource=admin
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       MICROSOFT_CLIENT_ID: ${MICROSOFT_CLIENT_ID}
+      PLATFORM_ADMIN_EMAIL: ${PLATFORM_ADMIN_EMAIL}
     depends_on:
       - mongo
     networks:
