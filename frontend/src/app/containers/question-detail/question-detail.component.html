@@ -97,7 +97,9 @@
               <span class="font-bold text-yellow-700">
                 <i class="pi pi-info-circle mr-1"></i>Moderator's Note
               </span>
-              <p class="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{{ question.moderationInfo?.noteText }}</p>
+              <p class="text-sm text-gray-700 mt-2 whitespace-pre-wrap">
+                {{ question.moderationInfo?.noteText }}
+              </p>
             </div>
           }
           @if (question.intentionId === "question" && solutionAnswer()) {
@@ -136,7 +138,7 @@
         }
       </div>
     </div>
-    <div class="my-5">
+    <div class="my-5 ms-[3.5rem]">
       @if (ans.loadingList()) {
         <p-progressBar
           mode="indeterminate"

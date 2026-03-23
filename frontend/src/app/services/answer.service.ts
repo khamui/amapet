@@ -20,7 +20,7 @@ export class AnswerService {
   public readAnswers = (byQuestionId: string) => {
     this.loadingList.set(true);
     this.api
-      .readAsObservable$<Answer[]>(`/answers/${byQuestionId}`)
+      .readAsObservable$<Answer[]>(`/answers/${byQuestionId}`, true)
       .subscribe((answers: Answer[]) => {
         this.answers.set(answers);
         this.loadingList.set(false);
@@ -28,12 +28,12 @@ export class AnswerService {
   };
 
   public readSubAnswers$ = (byParentId: string) => {
-    return this.api.readAsObservable$<Answer[]>(`/answers/${byParentId}`);
+    return this.api.readAsObservable$<Answer[]>(`/answers/${byParentId}`, true);
   };
 
   private readAllAnswers = async (byQuestionId: string) => {
     this.loadingList.set(true);
-    const allAnswersResponse = await this.api.read(`/answers/${byQuestionId}`);
+    const allAnswersResponse = await this.api.read(`/answers/${byQuestionId}`, true);
     const { isError, result } = allAnswersResponse;
     this.loadingList.set(false);
     return result;
