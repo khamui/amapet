@@ -1,0 +1,206 @@
+{
+  "version": "1.0",
+  "createdAt": "2026-03-23T11:11:24.667Z",
+  "collections": {
+    "users": [
+      {
+        "_id": "69c11878df45e837e2290a85",
+        "username": "shaist_thus_78",
+        "firstname": "kha",
+        "lastname": "tran",
+        "email": "kaaamui@googlemail.com",
+        "authProvider": "google",
+        "followedCircles": [],
+        "followedQuestions": [],
+        "respectPoints": 0,
+        "__v": 0,
+        "permLevel": 1
+      }
+    ],
+    "circles": [
+      {
+        "_id": "69c11908df45e837e2290aa1",
+        "created_at": 1774262536034,
+        "ownerId": "69c11878df45e837e2290a85",
+        "name": "c/test2",
+        "about": "",
+        "questions": [
+          {
+            "_id": "69c1190bdf45e837e2290aaa",
+            "circleId": "69c11908df45e837e2290aa1",
+            "ownerId": "69c11878df45e837e2290a85",
+            "ownerName": "shaist_thus_78",
+            "created_at": 1774262539220,
+            "title": "test2",
+            "body": "",
+            "upvotes": [
+              "69c11878df45e837e2290a85"
+            ],
+            "downvotes": [],
+            "intentionId": "question",
+            "solutionId": "69c1190fdf45e837e2290abc",
+            "moderationInfo": {
+              "status": "unread",
+              "closed": false,
+              "noteText": "",
+              "lastModeratedBy": null,
+              "lastModeratedAt": null
+            },
+            "modded_at": 1774262544949
+          }
+        ],
+        "memberCount": 1,
+        "moderators": [
+          "69c11878df45e837e2290a85"
+        ],
+        "__v": 0
+      },
+      {
+        "_id": "69c11fbb84f27c9dc4719f6c",
+        "created_at": 1774264251926,
+        "ownerId": "69c11878df45e837e2290a85",
+        "name": "c/test3",
+        "about": "",
+        "questions": [
+          {
+            "_id": "69c11fc484f27c9dc4719f75",
+            "circleId": "69c11fbb84f27c9dc4719f6c",
+            "ownerId": "69c11878df45e837e2290a85",
+            "ownerName": "shaist_thus_78",
+            "created_at": 1774264260413,
+            "title": "test3",
+            "body": "",
+            "upvotes": [
+              "69c11878df45e837e2290a85"
+            ],
+            "downvotes": [],
+            "intentionId": "question",
+            "solutionId": null,
+            "moderationInfo": {
+              "status": "unread",
+              "closed": false,
+              "noteText": "",
+              "lastModeratedBy": null,
+              "lastModeratedAt": null
+            }
+          }
+        ],
+        "memberCount": 1,
+        "moderators": [
+          "69c11878df45e837e2290a85"
+        ],
+        "__v": 0
+      }
+    ],
+    "answers": [
+      {
+        "_id": "69c1190fdf45e837e2290abc",
+        "parentId": "69c1190bdf45e837e2290aaa",
+        "parentType": "question",
+        "ownerId": "69c11878df45e837e2290a85",
+        "ownerName": "shaist_thus_78",
+        "created_at": 1774262543407,
+        "answerText": "<p>test2</p>",
+        "upvotes": [
+          "69c11878df45e837e2290a85"
+        ],
+        "downvotes": [],
+        "children": [],
+        "moderationInfo": {
+          "status": "unread",
+          "noteText": "",
+          "lastModeratedBy": null,
+          "lastModeratedAt": null
+        },
+        "__v": 0
+      },
+      {
+        "_id": "69c11fc884f27c9dc4719f87",
+        "parentId": "69c11fc484f27c9dc4719f75",
+        "parentType": "question",
+        "ownerId": "69c11878df45e837e2290a85",
+        "ownerName": "shaist_thus_78",
+        "created_at": 1774264264091,
+        "answerText": "<p>test3</p>",
+        "upvotes": [
+          "69c11878df45e837e2290a85"
+        ],
+        "downvotes": [],
+        "children": [],
+        "moderationInfo": {
+          "status": "unread",
+          "noteText": "",
+          "lastModeratedBy": null,
+          "lastModeratedAt": null
+        },
+        "__v": 0
+      },
+      {
+        "_id": "69c11fd084f27c9dc4719f96",
+        "parentId": "69c1190bdf45e837e2290aaa",
+        "parentType": "question",
+        "ownerId": "69c11878df45e837e2290a85",
+        "ownerName": "shaist_thus_78",
+        "created_at": 1774264272891,
+        "answerText": "<p>test3</p>",
+        "upvotes": [
+          "69c11878df45e837e2290a85"
+        ],
+        "downvotes": [],
+        "children": [],
+        "moderationInfo": {
+          "status": "unread",
+          "noteText": "",
+          "lastModeratedBy": null,
+          "lastModeratedAt": null
+        },
+        "__v": 0
+      }
+    ],
+    "notifications": [
+      {
+        "_id": "69c1190fdf45e837e2290ab9",
+        "userId": "69c11878df45e837e2290a85",
+        "type": "comment",
+        "value": {
+          "text": "<p>test2</p>"
+        },
+        "unread": true,
+        "originCircleId": "69c11908df45e837e2290aa1",
+        "originCircleName": "c/test2",
+        "originQuestionId": "69c1190bdf45e837e2290aaa",
+        "created_at": 1774262543394,
+        "__v": 0
+      },
+      {
+        "_id": "69c11fc884f27c9dc4719f84",
+        "userId": "69c11878df45e837e2290a85",
+        "type": "comment",
+        "value": {
+          "text": "<p>test3</p>"
+        },
+        "unread": true,
+        "originCircleId": "69c11fbb84f27c9dc4719f6c",
+        "originCircleName": "c/test3",
+        "originQuestionId": "69c11fc484f27c9dc4719f75",
+        "created_at": 1774264264086,
+        "__v": 0
+      },
+      {
+        "_id": "69c11fd084f27c9dc4719f93",
+        "userId": "69c11878df45e837e2290a85",
+        "type": "comment",
+        "value": {
+          "text": "<p>test3</p>"
+        },
+        "unread": true,
+        "originCircleId": "69c11908df45e837e2290aa1",
+        "originCircleName": "c/test2",
+        "originQuestionId": "69c1190bdf45e837e2290aaa",
+        "created_at": 1774264272887,
+        "__v": 0
+      }
+    ],
+    "platform_settings": []
+  }
+}

@@ -13,6 +13,12 @@
         "format": "prettier --write .",
         "clean": "rm -rf node_modules dist",
         "cstart": "npm run clean && npm cache clean --force && npm i && npm start",
+        "db:seed": "tsx scripts/seed.ts",
+        "db:seed:dev": "tsx scripts/seed.ts --dev",
+        "db:migrate": "tsx scripts/migrate.ts --up",
+        "db:migrate:status": "tsx scripts/migrate.ts --status",
+        "db:backup": "tsx scripts/backup.ts",
+        "db:restore": "tsx scripts/restore.ts",
         "migrate:owner-names": "tsx scripts/migrate-owner-names.ts"
     },
     "dependencies": {

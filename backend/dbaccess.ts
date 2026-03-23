@@ -1,5 +1,6 @@
 import mongoose, { Model, Document, FilterQuery, UpdateQuery } from 'mongoose';
 import { MONGO_URI } from './server.js';
+import { runInitialSetup } from './db/setup/index.js';
 
 export const corsOptions = {
   origin: ['http://localhost:4200', 'https://helpa.ws', 'https://www.helpa.ws'],
@@ -13,6 +14,7 @@ async function connectWithRetry(mongodb_url: string): Promise<void> {
     try {
       await mongoose.connect(mongodb_url);
       console.log('Connected to MongoDB');
+      await runInitialSetup();
       return;
     } catch {
       console.log(`MongoDB connection attempt ${i + 1} failed, retrying in ${retryInterval}ms...`);

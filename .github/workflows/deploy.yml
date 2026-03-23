@@ -60,6 +60,7 @@ jobs:
           ME_PASSWORD="${{ secrets.ME_PASSWORD }}"
           BACKEND_PORT="${{ secrets.BACKEND_PORT }}"
           FRONTEND_PORT="${{ secrets.FRONTEND_PORT }}"
+          PLATFORM_ADMIN_EMAIL="${{ secrets.PLATFORM_ADMIN_EMAIL }}"
           EOF
 
       # Upload files to VPS (deployment/, frontend/, backend/)

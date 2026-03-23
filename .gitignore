@@ -7,3 +7,5 @@ database/db.env
 
 frontend/.angular/
 frontend/dist/
+
+backend/backups/
