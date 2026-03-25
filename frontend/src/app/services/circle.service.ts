@@ -5,7 +5,7 @@ import { Circle } from '../typedefs/Circle.typedef';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Question } from '../typedefs/Question.typedef';
+import { Question, PaginatedQuestionsResponse } from '../typedefs/Question.typedef';
 import { Settings } from '../typedefs/Settings.typedef';
 
 @Injectable({
@@ -36,6 +36,16 @@ export class CircleService {
 
   public readCircle = async (circleName: string) => {
     return await this.api.read<Circle>(`/circles/${circleName}`);
+  };
+
+  public readCircleQuestions = async (
+    circleName: string,
+    skip: number = 0,
+    limit: number = 50,
+  ) => {
+    return await this.api.read<PaginatedQuestionsResponse>(
+      `/circles/${circleName}/questions?skip=${skip}&limit=${limit}`,
+    );
   };
 
   private updateCircles = (newCircles: Circle[]) => {

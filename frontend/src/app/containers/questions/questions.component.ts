@@ -1,39 +1,36 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ModerationStore } from 'src/app/stores/moderation.store';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
 import { QuestionComponent } from '../question/question.component';
-import { NgFor } from '@angular/common';
 
 @Component({
-    selector: 'ama-questions',
-    templateUrl: './questions.component.html',
-    styleUrls: ['./questions.component.scss'],
-    standalone: true,
-    imports: [NgFor, QuestionComponent],
+  selector: 'ama-questions',
+  templateUrl: './questions.component.html',
+  styleUrls: ['./questions.component.scss'],
+  standalone: true,
+  imports: [QuestionComponent],
 })
 export class QuestionsComponent {
-  @Input() questions!: Question[];
-  @Input() circle!: Circle;
+  questions = input.required<Question[]>();
+  circle = input.required<Circle>();
 
   private as = inject(AuthService);
   private moderationStore = inject(ModerationStore);
 
-  currentUserId!: string;
+  currentUserId = this.as.getUserId();
 
-  constructor() {
-    this.currentUserId = this.as.getUserId();
-  }
-
-  get isModerator(): boolean {
+  isModerator = computed(() => {
     const moderatedIds = this.moderationStore.getModeratedCircleIds();
-    return this.circle?._id ? moderatedIds.includes(this.circle._id) : false;
-  }
+    const circleId = this.circle()?._id;
+    return circleId ? moderatedIds.includes(circleId) : false;
+  });
 
-  get filteredQuestions(): Question[] {
-    if (!this.questions) return [];
-    if (this.isModerator) return this.questions;
-    return this.questions.filter(q => q.moderationInfo?.status !== 'blocked');
-  }
+  filteredQuestions = computed(() => {
+    const qs = this.questions();
+    if (!qs) return [];
+    if (this.isModerator()) return qs;
+    return qs.filter((q) => q.moderationInfo?.status !== 'blocked');
+  });
 }

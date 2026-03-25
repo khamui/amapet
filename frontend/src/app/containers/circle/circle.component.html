@@ -1,7 +1,7 @@
-@if (circle) {
-  <h3 class="font-weight-300 text-xl mb-1">{{ circle.name }}</h3>
-  @if (circle.about) {
-    <p class="text-gray-400 mb-5">{{ circle.about }}</p>
+@if (circle()) {
+  <h3 class="font-weight-300 text-xl mb-1">{{ circle()!.name }}</h3>
+  @if (circle()!.about) {
+    <p class="text-gray-400 mb-5">{{ circle()!.about }}</p>
   }
   @if (isLoggedIn()) {
     <div class="w-full">
@@ -15,7 +15,22 @@
     </div>
   }
   <ama-questions
-    [questions]="allQuestions"
-    [circle]="circle"
+    [questions]="allQuestions()"
+    [circle]="circle()!"
   ></ama-questions>
+
+  <div #scrollSentinel class="h-1"></div>
+
+  @if (isLoading()) {
+    <div class="flex justify-center py-4">
+      <p-progressSpinner
+        styleClass="w-8 h-8"
+        strokeWidth="4"
+      ></p-progressSpinner>
+    </div>
+  }
+
+  @if (!hasMore() && questions().length > 0) {
+    <p class="text-center text-surface-500 py-4">End of the feed.</p>
+  }
 }

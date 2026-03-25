@@ -23,3 +23,8 @@ export const questionEditSchema = Joi.object({
 export const questionSolutionSchema = Joi.object({
   answerId: Joi.string().allow(null).required(),
 });
+
+export const questionsPaginationSchema = Joi.object({
+  skip: Joi.number().integer().min(0).default(0),
+  limit: Joi.number().integer().min(1).max(100).default(50),
+});

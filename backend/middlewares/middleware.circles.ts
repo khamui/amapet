@@ -4,6 +4,7 @@ import {
   questionCreateSchema,
   questionEditSchema,
   questionSolutionSchema,
+  questionsPaginationSchema,
 } from './validators/validator.circles.js';
 
 export const middlewareCircles = {
@@ -44,6 +45,16 @@ export const middlewareCircles = {
       console.log(error);
       res.status(400).send(error.message);
     } else {
+      next();
+    }
+  },
+  questionsPaginationCheck: (req: Request, res: Response, next: NextFunction): void => {
+    const { error, value } = questionsPaginationSchema.validate(req.query);
+
+    if (error) {
+      res.status(400).send(error.message);
+    } else {
+      req.query = value;
       next();
     }
   },

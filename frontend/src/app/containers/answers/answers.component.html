@@ -7,7 +7,7 @@
         <i class="pi pi-check-circle text-xs"></i>Solution
       </span>
     }
-    <span class="text-xs text-500 hover:text-700">{{ answer.ownerName }}</span
+    <ama-username-badge [username]="answer.ownerName || ''" [userId]="answer.ownerId || ''"></ama-username-badge
     ><span class="mx-2 text-xs text-500 hover:text-700">{{
       answer.created_at | dateAgo
     }}</span>

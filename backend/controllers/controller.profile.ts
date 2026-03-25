@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Circle } from '../db/models/circle.js';
 import { User } from '../db/models/user.js';
 import { retrieveModelById, retrieveModel, retrieveOneModelByQuery } from '../dbaccess.js';
+import { getAuraLevel } from '../utils/aura.utils.js';
 import type { IUserDocument } from '../db/models/user.js';
 import type { ICircleDocument } from '../db/models/circle.js';
 
@@ -11,7 +12,7 @@ interface IUserProfile {
   email?: string;
   followedCircles: string[];
   followedQuestions: string[];
-  respectPoints?: number;
+  aura?: number;
   numOfCircles?: number;
   numOfQuestions?: number;
 }
@@ -46,7 +47,7 @@ export const controllerProfile = {
         email: dbUser.email,
         followedCircles: dbUser.followedCircles,
         followedQuestions: dbUser.followedQuestions,
-        respectPoints: dbUser.respectPoints,
+        aura: dbUser.aura,
       };
 
       // query get extra fields { numOfCircles, numOfQuestions, level }
@@ -108,10 +109,12 @@ export const controllerProfile = {
 
       const moderatorIds = [...new Set(circles.flatMap((c) => c.moderators))];
       const moderatorUsers = (await User.find({ _id: { $in: moderatorIds } })) as IUserDocument[];
-      const moderatorMap = new Map(moderatorUsers.map((u) => [u._id.toString(), u.username || '']));
+      const moderatorMap = new Map(
+        moderatorUsers.map((u) => [u._id?.toString(), u.username || ''])
+      );
 
       const ownedCircles: IOwnedCircle[] = circles.map((circle) => ({
-        _id: circle._id.toString(),
+        _id: circle._id!.toString(),
         name: circle.name || '',
         about: circle.about || '',
         created_at: circle.created_at || 0,
@@ -157,7 +160,7 @@ export const controllerProfile = {
         return res.status(404).json({ error: 'User not found' });
       }
 
-      const userId = user._id.toString();
+      const userId = user._id!.toString();
 
       const circle = await Circle.findById(circleId);
       if (!circle) {
@@ -220,6 +223,26 @@ export const controllerProfile = {
       return res.status(200).json({ users });
     } catch (error) {
       console.error('Error searching users:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  getUserAura: async (req: Request, res: Response): Promise<Response> => {
+    const { userId } = req.params;
+
+    try {
+      const user = await User.findById(userId).select('aura');
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const aura = user.aura || 0;
+      return res.status(200).json({
+        aura,
+        level: getAuraLevel(aura),
+      });
+    } catch (error) {
+      console.error('Error retrieving user aura:', error);
       return res.status(500).json({ error: 'Internal server error' });
     }
   },

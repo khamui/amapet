@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
+import { UsernameBadgeComponent } from 'src/app/components/username-badge/username-badge.component';
 import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { Router } from '@angular/router';
@@ -30,6 +31,7 @@ import { ModerationStore } from 'src/app/stores/moderation.store';
     ConfirmDialogModule,
     TexteditorComponent,
     VoteComponent,
+    UsernameBadgeComponent,
     Button
   ],
 })
