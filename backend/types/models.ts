@@ -20,7 +20,7 @@ export interface IUser {
   authProvider?: AuthProvider;
   followedCircles: string[];
   followedQuestions: string[];
-  respectPoints?: number;
+  aura?: number;
   permLevel?: number; // 1 = platform maintainer
 }
 

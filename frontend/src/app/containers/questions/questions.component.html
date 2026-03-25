@@ -1,11 +1,11 @@
 <div class="my-4">
-  <ng-container *ngFor="let question of filteredQuestions">
+  @for (question of filteredQuestions(); track question._id) {
     <div class="my-2">
       <ama-question
-        [circle]="circle"
+        [circle]="circle()"
         [question]="question"
         [currentUserId]="currentUserId"
       ></ama-question>
     </div>
-  </ng-container>
+  }
 </div>

@@ -45,6 +45,16 @@ router.post('/circles', cors(corsOptions), [
 // ############ QUESTIONS #############
 
 /*
+ * GET paginated questions in a circle by circle name.
+ * Query params: ?skip=0&limit=50
+ */
+router.get('/circles/:name/questions', cors(corsOptions), [
+  middlewareAuth.optionalUserFromToken,
+  middlewareCircles.questionsPaginationCheck,
+  controllerCircles.readQuestions,
+]);
+
+/*
  * GET a question in circle by circle name.
  */
 router.get('/circles/:name/questions/:qid', cors(corsOptions), [

@@ -59,7 +59,7 @@ export const findOrCreateUser = async (
       authProvider: provider,
       followedCircles: [],
       followedQuestions: [],
-      respectPoints: 0,
+      aura: 0,
     };
     result = await generateModel(User, newUser);
   } else if (!result.username) {

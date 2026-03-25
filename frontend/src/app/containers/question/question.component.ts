@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
+import { UsernameBadgeComponent } from 'src/app/components/username-badge/username-badge.component';
 
 @Component({
   selector: 'ama-question',
@@ -25,6 +26,7 @@ import { VoteComponent } from 'src/app/components/vote/vote.component';
     DividerModule,
     ConfirmDialogModule,
     VoteComponent,
+    UsernameBadgeComponent,
   ],
 })
 export class QuestionComponent implements OnInit {

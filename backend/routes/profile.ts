@@ -78,4 +78,11 @@ router.get('/users/search', cors(corsOptions), [
   controllerProfile.searchUsers,
 ]);
 
+/*
+ * Get user's Aura (public endpoint).
+ */
+router.get('/users/:userId/aura', cors(corsOptions), [
+  controllerProfile.getUserAura,
+]);
+
 export default router;

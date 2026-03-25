@@ -18,6 +18,7 @@ import { PanelModule } from 'primeng/panel';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { NgClass } from '@angular/common';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
+import { UsernameBadgeComponent } from 'src/app/components/username-badge/username-badge.component';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -36,6 +37,7 @@ import { ButtonModule } from 'primeng/button';
     ConfirmDialogModule,
     DateAgoPipe,
     VoteComponent,
+    UsernameBadgeComponent,
     ProgressBarModule,
     ButtonModule,
   ],

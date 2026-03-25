@@ -6,7 +6,7 @@
     <ng-template pTemplate="header">
       <div class="w-full flex items-center">
         <span class="text-xs text-bluegray-300">
-          Posted by {{ question.ownerName }}
+          Posted by <ama-username-badge [username]="question.ownerName || ''" [userId]="question.ownerId || ''"></ama-username-badge>
         </span>
         <span class="text-xs text-bluegray-500 mx-1 font-semibold">
           {{ question.created_at | dateAgo }}

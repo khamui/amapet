@@ -7,31 +7,34 @@
       <span class="font-medium text-500 text-sm font-italic">{{
         user.email
       }}</span>
-      <!--<p class="text-cyan-500 font-medium font-italic capitalize italic">
-        {{ user.level }}
-      </p>-->
       <p class="text-600 text-sm">
-        You received
-        <!--<span class="text-cyan-500 font-medium font-italic text-md">
-          {{ user.respect }}
-        </span>-->
-        respect from other users.
+        You have
+        <span class="text-purple-600 font-medium font-italic text-md">
+          {{ user.aura || 0 }}
+        </span>
+        Aura, your level is
+        <span class="text-purple-600 font-medium font-italic text-sm">
+          {{ getAuraLevel(user.aura || 0) }}
+        </span>
       </p>
     </p-card>
   </div>
-  <div>
+  <!--<div>
     <p-card subheader="Avatar">
       <p><span>tbd</span></p>
     </p-card>
-  </div>
+  </div>-->
   <a routerLink="/profile/circles" class="no-underline block">
-    <p-card subheader="Circles" styleClass="cursor-pointer hover:[--p-card-background:var(--p-gray-50)]">
+    <p-card
+      subheader="Circles"
+      styleClass="cursor-pointer hover:[--p-card-background:var(--p-gray-50)]"
+    >
       <p>
         <span>{{ user.numOfCircles }}</span>
       </p>
     </p-card>
   </a>
-  <div>
+  <!--<div>
     <p-card subheader="Questions">
       <p>
         <span>{{ user.numOfQuestions }}</span>
@@ -41,7 +44,7 @@
   <div>
     <p-card subheader="Comments">
       <p>
-        <!--<span>{{ user.comments.length }}</span>-->
+        <span>{{ user.comments.length }}</span>
         tbd
       </p>
     </p-card>
@@ -49,9 +52,9 @@
   <div>
     <p-card subheader="Following">
       <p>
-        <!--<span>{{ user.followedCircles.length }}</span>-->
+        <span>{{ user.followedCircles.length }}</span>
         tbd
       </p>
     </p-card>
-  </div>
+  </div>-->
 </div>

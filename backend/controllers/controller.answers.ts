@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { generateModel, retrieveModel, updateModel } from '../dbaccess.js';
 import { Answer } from '../db/models/answer.js';
 import { Circle } from '../db/models/circle.js';
+import { User } from '../db/models/user.js';
 import mongoose from 'mongoose';
 import type { IAnswerDocument } from '../db/models/answer.js';
 import type { IModerationInfo } from '../types/models.js';
@@ -224,6 +225,15 @@ export const controllerAnswers = {
 
     try {
       const updated = await updateModel(Answer, filter, updateExpr);
+
+      // Update answer owner's Aura (skip self-votes)
+      if (updated?.ownerId && updated.ownerId !== userId) {
+        const auraChange = direction === 'up' ? 1 : -1;
+        await User.findByIdAndUpdate(updated.ownerId, [
+          { $set: { aura: { $max: [0, { $add: [{ $ifNull: ['$aura', 0] }, auraChange] }] } } },
+        ]);
+      }
+
       res.status(200).json(updated);
     } catch (error) {
       res.status(500).send(error instanceof Error ? error.message : 'Unknown error');

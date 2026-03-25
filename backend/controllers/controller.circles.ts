@@ -47,6 +47,59 @@ export const controllerCircles = {
       res.status(500).send("couldn't retrieve model");
     }
   },
+  readQuestions: async (req: Request, res: Response): Promise<void> => {
+    const { name: circleName } = req.params;
+    const skip = parseInt(req.query.skip as string) || 0;
+    const limit = parseInt(req.query.limit as string) || 50;
+    const userId = req.userPayload?._id;
+
+    try {
+      const pipeline = [
+        { $match: { name: `c/${circleName}` } },
+        {
+          $project: {
+            _id: 1,
+            ownerId: 1,
+            moderators: 1,
+            totalQuestions: { $size: '$questions' },
+            questions: {
+              $slice: [{ $reverseArray: '$questions' }, skip, limit],
+            },
+          },
+        },
+      ];
+
+      const results = await Circle.aggregate(pipeline);
+
+      if (!results[0]) {
+        res.status(404).send('Circle not found');
+        return;
+      }
+
+      const { questions, totalQuestions, ownerId, moderators } = results[0];
+
+      const isModerator =
+        userId && (moderators.includes(userId) || ownerId === userId);
+
+      const filteredQuestions = isModerator
+        ? questions
+        : questions.filter((q: IQuestion) => q.moderationInfo?.status !== 'blocked');
+
+      const hasMore = skip + limit < totalQuestions;
+
+      res.status(200).json({
+        questions: filteredQuestions,
+        pagination: {
+          skip,
+          limit,
+          total: totalQuestions,
+          hasMore,
+        },
+      });
+    } catch {
+      res.status(500).send("couldn't retrieve questions");
+    }
+  },
   readAll: async (req: Request, res: Response): Promise<void> => {
     try {
       const circles = await retrieveModel(Circle);
@@ -226,6 +279,15 @@ export const controllerCircles = {
       const updatedQuestion = updated?.questions.find(
         (q: IQuestion) => q._id?.toString() === questionId
       );
+
+      // Update question owner's Aura (skip self-votes)
+      if (updatedQuestion?.ownerId && updatedQuestion.ownerId !== userId) {
+        const auraChange = direction === 'up' ? 1 : -1;
+        await User.findByIdAndUpdate(updatedQuestion.ownerId, [
+          { $set: { aura: { $max: [0, { $add: [{ $ifNull: ['$aura', 0] }, auraChange] }] } } },
+        ]);
+      }
+
       res.status(200).json(updatedQuestion);
     } catch (error) {
       res.status(500).send(error instanceof Error ? error.message : 'Unknown error');
@@ -269,6 +331,9 @@ export const controllerCircles = {
         return;
       }
 
+      // Store previous solutionId for Aura adjustment
+      const previousSolutionId = question.solutionId;
+
       let answer = null;
       if (answerId) {
         answer = await Answer.findById(answerId);
@@ -289,6 +354,24 @@ export const controllerCircles = {
       const updatedQuestion = updated?.questions.find(
         (q: IQuestion) => q._id?.toString() === questionId
       );
+
+      // Aura adjustments for solution marking/unmarking
+      // -50 from previous solution owner (if exists and different from new)
+      if (previousSolutionId && previousSolutionId !== answerId) {
+        const previousAnswer = await Answer.findById(previousSolutionId);
+        if (previousAnswer?.ownerId) {
+          await User.findByIdAndUpdate(previousAnswer.ownerId, [
+            { $set: { aura: { $max: [0, { $add: [{ $ifNull: ['$aura', 0] }, -50] }] } } },
+          ]);
+        }
+      }
+
+      // +50 to new solution owner (if marking and not same as previous)
+      if (answerId && answer && answerId !== previousSolutionId) {
+        await User.findByIdAndUpdate(answer.ownerId, [
+          { $set: { aura: { $add: [{ $ifNull: ['$aura', 0] }, 50] } } },
+        ]);
+      }
 
       // Create notification for answer owner (if marking solution and not own answer)
       if (answerId && answer && answer.ownerId !== userId) {

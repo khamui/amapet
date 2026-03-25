@@ -12,7 +12,7 @@
     <ng-template pTemplate="header">
       <div class="flex items-center">
         <span class="text-xs text-bluegray-300">
-          Posted by {{ question.ownerName }}
+          Posted by <ama-username-badge [username]="question.ownerName || ''" [userId]="question.ownerId || ''"></ama-username-badge>
         </span>
         <span class="text-xs text-bluegray-500 mx-1">
           {{ question.created_at | dateAgo }}
@@ -110,7 +110,7 @@
                 <i class="pi pi-check-circle text-green-600 text-xl"></i>
                 <span class="font-bold text-green-700">Solution</span>
                 <span class="text-xs text-gray-500"
-                  >by {{ solutionAnswer()?.ownerName }}</span
+                  >by <ama-username-badge [username]="solutionAnswer()?.ownerName || ''" [userId]="solutionAnswer()?.ownerId || ''"></ama-username-badge></span
                 >
               </div>
               <div

@@ -19,3 +19,13 @@ export type ModerationInfo = {
   closed?: boolean;
   noteText?: string;
 }
+
+export type PaginatedQuestionsResponse = {
+  questions: Question[];
+  pagination: {
+    skip: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+}
