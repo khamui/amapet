@@ -15,7 +15,13 @@
     </ng-template>
     <ng-template pTemplate="body" let-circle>
       <tr>
-        <td><a [routerLink]="'/' + circle.name" class="text-primary hover:underline">{{ circle.name }}</a></td>
+        <td>
+          <a
+            [routerLink]="'/' + circle.name"
+            class="text-primary hover:underline"
+            >{{ circle.name }}</a
+          >
+        </td>
         <td>{{ humanizeDate(circle.created_at) }}</td>
         <td>{{ circle.memberCount }}</td>
         <td>{{ circle.questionCount }}</td>
@@ -83,7 +89,9 @@
       } @else {
         <div class="flex flex-col gap-2">
           @for (mod of selectedCircle()?.moderators; track mod._id) {
-            <div class="flex items-center justify-between p-2 bg-gray-100 rounded">
+            <div
+              class="flex items-center justify-between p-2 bg-gray-100 rounded"
+            >
               <div class="flex items-center gap-2">
                 <span>{{ mod.username }}</span>
                 @if (isOwner(mod)) {
@@ -116,6 +124,7 @@
         placeholder="Search by username..."
         [style]="{ width: '100%' }"
         [inputStyle]="{ width: '100%' }"
+        appendTo="body"
       >
         <ng-template let-user pTemplate="item">
           <span class="font-medium">{{ user.username }}</span>

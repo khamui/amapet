@@ -1,10 +1,15 @@
 <p-toolbar>
   <button
     (click)="handleNavigateHome()"
-    class="p-toolbar-group-start cursor-pointer lg:block hidden"
+    class="p-toolbar-group-start cursor-pointer lg:flex hidden items-center gap-2"
   >
-    <img class="image" src="../../../assets/helpaws_logo_petrol.png" />
-    <span>helpa.ws</span>
+    <img class="h-10" src="../../../assets/helpaws_logo_petrol.png" />
+    <span class="font-semibold text-lg">helpa.ws</span>
+    <span
+      class="text-xs font-bold bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300 px-2 py-0.5 rounded-full"
+    >
+      BETA
+    </span>
   </button>
   <div class="block lg:hidden">
     <p-button
