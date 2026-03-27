@@ -1,4 +1,5 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, inject, signal, computed, effect } from '@angular/core';
+import { ConsentService } from './consent.service';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -8,6 +9,7 @@ const STORAGE_KEY = 'ama-theme';
   providedIn: 'root',
 })
 export class ThemeService {
+  private readonly consentService = inject(ConsentService);
   private readonly mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
   public readonly theme = signal<Theme>(this.getStoredTheme());
@@ -34,7 +36,10 @@ export class ThemeService {
 
   public setTheme(theme: Theme): void {
     this.theme.set(theme);
-    localStorage.setItem(STORAGE_KEY, theme);
+    // Only persist to localStorage if user has accepted consent
+    if (this.consentService.isAccepted()) {
+      localStorage.setItem(STORAGE_KEY, theme);
+    }
   }
 
   private getStoredTheme(): Theme {

@@ -10,6 +10,9 @@ import { ModerationQuestionDetailComponent } from './containers/moderation-quest
 import { GlobalSettingsComponent } from './containers/global-settings/global-settings.component';
 import { ProfileCirclesComponent } from './containers/profile-circles/profile-circles.component';
 import { NotFoundComponent } from './containers/not-found/not-found.component';
+import { ImprintComponent } from './containers/legal/imprint/imprint.component';
+import { PrivacyComponent } from './containers/legal/privacy/privacy.component';
+import { DisclaimerComponent } from './containers/legal/disclaimer/disclaimer.component';
 import { permLevelGuard } from './guards/perm-level.guard';
 import { appAvailableGuard } from './guards/app-available.guard';
 import { moderationGuard } from './guards/moderation.guard';
@@ -60,6 +63,9 @@ const routes: Routes = [
     component: GlobalSettingsComponent,
     canActivate: [permLevelGuard, appAvailableGuard],
   },
+  { path: 'imprint', component: ImprintComponent },
+  { path: 'privacy', component: PrivacyComponent },
+  { path: 'disclaimer', component: DisclaimerComponent },
   { path: '', redirectTo: 'explore', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

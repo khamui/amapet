@@ -1,0 +1,94 @@
+<div class="max-w-3xl mx-auto p-6 pb-20">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0">
+      @if (isGerman()) {
+        Impressum
+      } @else {
+        Imprint
+      }
+    </h1>
+    <div class="flex gap-2">
+      <p-button
+        [label]="isGerman() ? 'EN' : 'DE'"
+        [outlined]="true"
+        size="small"
+        (click)="toggleLanguage()"
+      />
+      <p-button
+        icon="pi pi-times"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        (click)="dismiss()"
+      />
+    </div>
+  </div>
+
+  <div class="prose dark:prose-invert text-surface-700 dark:text-surface-300">
+    @if (isGerman()) {
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Angaben gemäß § 5 TMG</h2>
+      <p class="mb-4">
+        {{ info().name }}<br />
+        {{ info().street }}<br />
+        {{ info().city }}<br />
+        {{ info().country }}
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Kontakt</h2>
+      <p class="mb-4">
+        E-Mail: {{ info().email }}
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+      <p class="mb-4">
+        {{ info().name }}<br />
+        {{ info().street }}<br />
+        {{ info().city }}
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">EU-Streitschlichtung</h2>
+      <p class="mb-4">
+        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener" class="text-primary hover:underline">
+          https://ec.europa.eu/consumers/odr/
+        </a>
+      </p>
+      <p class="mb-4">
+        Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+        Verbraucherschlichtungsstelle teilzunehmen.
+      </p>
+    } @else {
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Information according to § 5 TMG</h2>
+      <p class="mb-4">
+        {{ info().name }}<br />
+        {{ info().street }}<br />
+        {{ info().city }}<br />
+        {{ info().country }}
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Contact</h2>
+      <p class="mb-4">
+        Email: {{ info().email }}
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Responsible for content according to § 55 Abs. 2 RStV</h2>
+      <p class="mb-4">
+        {{ info().name }}<br />
+        {{ info().street }}<br />
+        {{ info().city }}
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">EU Dispute Resolution</h2>
+      <p class="mb-4">
+        The European Commission provides a platform for online dispute resolution (ODR):
+        <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener" class="text-primary hover:underline">
+          https://ec.europa.eu/consumers/odr/
+        </a>
+      </p>
+      <p class="mb-4">
+        We are not willing or obliged to participate in dispute resolution proceedings before a
+        consumer arbitration board.
+      </p>
+    }
+  </div>
+</div>

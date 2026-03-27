@@ -1,0 +1,101 @@
+<div class="max-w-3xl mx-auto p-6 pb-20">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0">
+      @if (isGerman()) {
+        Haftungsausschluss
+      } @else {
+        Disclaimer
+      }
+    </h1>
+    <div class="flex gap-2">
+      <p-button
+        [label]="isGerman() ? 'EN' : 'DE'"
+        [outlined]="true"
+        size="small"
+        (click)="toggleLanguage()"
+      />
+      <p-button
+        icon="pi pi-times"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        (click)="dismiss()"
+      />
+    </div>
+  </div>
+
+  <div class="prose dark:prose-invert text-surface-700 dark:text-surface-300">
+    @if (isGerman()) {
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Haftung für Inhalte</h2>
+      <p class="mb-4">
+        Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit
+        und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir
+        gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
+        Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder
+        gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine
+        rechtswidrige Tätigkeit hinweisen.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Haftung für Links</h2>
+      <p class="mb-4">
+        Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben.
+        Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der
+        verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die
+        verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
+        Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche
+        Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht
+        zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. Urheberrecht</h2>
+      <p class="mb-4">
+        Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
+        Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
+        Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+        Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Nutzergenerierte Inhalte</h2>
+      <p class="mb-4">
+        Diese Plattform ermöglicht Nutzern das Erstellen von Fragen und Antworten. Für von Nutzern erstellte
+        Inhalte übernehmen wir keine Haftung. Die Verantwortung für nutzergenerierte Inhalte liegt beim
+        jeweiligen Verfasser. Wir behalten uns vor, rechtswidrige oder unangemessene Inhalte zu entfernen.
+      </p>
+    } @else {
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Liability for Content</h2>
+      <p class="mb-4">
+        The contents of our pages were created with the greatest care. However, we cannot guarantee the
+        accuracy, completeness, and timeliness of the content. As a service provider, we are responsible
+        for our own content on these pages in accordance with general laws pursuant to § 7 (1) TMG. However,
+        according to §§ 8 to 10 TMG, we are not obligated as a service provider to monitor transmitted or
+        stored third-party information or to investigate circumstances that indicate illegal activity.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Liability for Links</h2>
+      <p class="mb-4">
+        Our offer contains links to external third-party websites, over whose content we have no influence.
+        Therefore, we cannot assume any liability for this external content. The respective provider or
+        operator of the pages is always responsible for the content of the linked pages. The linked pages
+        were checked for possible legal violations at the time of linking. Illegal content was not
+        identifiable at the time of linking. However, permanent content control of the linked pages is not
+        reasonable without concrete evidence of a violation of the law. If we become aware of any legal
+        violations, we will remove such links immediately.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. Copyright</h2>
+      <p class="mb-4">
+        The content and works created by the site operators on these pages are subject to German copyright
+        law. Duplication, processing, distribution, and any kind of exploitation outside the limits of
+        copyright require the written consent of the respective author or creator. Downloads and copies of
+        this site are only permitted for private, non-commercial use.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. User-Generated Content</h2>
+      <p class="mb-4">
+        This platform allows users to create questions and answers. We assume no liability for user-created
+        content. Responsibility for user-generated content lies with the respective author. We reserve the
+        right to remove illegal or inappropriate content.
+      </p>
+    }
+  </div>
+</div>
