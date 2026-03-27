@@ -1,1 +1,36 @@
-<p>explore works!</p>
+<div class="mb-4">
+  <h3 class="text-xl font-light mb-1">Explore</h3>
+  <p class="text-surface-500 dark:text-surface-400 mb-4">
+    Popular posts across all circles
+  </p>
+</div>
+
+@for (question of questions(); track question._id) {
+  <div class="my-2">
+    <ama-question
+      [question]="question"
+      [circle]="getCircleStub(question)"
+      [currentUserId]="currentUserId()"
+    ></ama-question>
+  </div>
+}
+
+<div #scrollSentinel class="h-1"></div>
+
+@if (isLoading()) {
+  <div class="flex justify-center py-4">
+    <p-progressSpinner styleClass="w-8 h-8" strokeWidth="4"></p-progressSpinner>
+  </div>
+}
+
+@if (!hasMore() && questions().length > 0) {
+  <p class="text-center text-surface-500 dark:text-surface-400 py-4">
+    End of the feed.
+  </p>
+}
+
+@if (!isLoading() && questions().length === 0) {
+  <p class="text-center text-surface-500 dark:text-surface-400 py-8">
+    No posts found.
+  </p>
+}
