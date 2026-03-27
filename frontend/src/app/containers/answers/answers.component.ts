@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { Router } from '@angular/router';
 import { ModerationStore } from 'src/app/stores/moderation.store';
+import { SocialLoginDialogComponent } from 'src/app/components/social-login-dialog/social-login-dialog.component';
 
 @Component({
   selector: 'ama-answers',
@@ -32,7 +33,8 @@ import { ModerationStore } from 'src/app/stores/moderation.store';
     TexteditorComponent,
     VoteComponent,
     UsernameBadgeComponent,
-    Button
+    Button,
+    SocialLoginDialogComponent,
   ],
 })
 export class AnswersComponent {
@@ -57,6 +59,7 @@ export class AnswersComponent {
   public currentUserId = signal<string>('');
   public answerInEditing!: Answer | undefined;
   public allExpanded = true;
+  public showLoginDialog = signal(false);
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
   public isModerator = computed(() => {
@@ -191,4 +194,8 @@ export class AnswersComponent {
       }));
   }
   /* moderation methods */
+
+  public openLoginDialog() {
+    this.showLoginDialog.set(true);
+  }
 }

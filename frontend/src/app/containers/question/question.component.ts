@@ -5,7 +5,7 @@ import { take } from 'rxjs';
 import { CircleService } from 'src/app/services/circle.service';
 import { ModerationStore } from 'src/app/stores/moderation.store';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
-import { Question } from 'src/app/typedefs/Question.typedef';
+import { Question, ExploreQuestion } from 'src/app/typedefs/Question.typedef';
 import { DateAgoPipe } from '../../pipes/date-ago.pipe';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DividerModule } from 'primeng/divider';
@@ -41,6 +41,10 @@ export class QuestionComponent implements OnInit {
     const moderatedIds = this.moderationStore.getModeratedCircleIds();
     return this.circle?._id ? moderatedIds.includes(this.circle._id) : false;
   });
+
+  get answerCount(): number {
+    return (this.question as ExploreQuestion).answerCount ?? 0;
+  }
 
   constructor(
     private ro: Router,
