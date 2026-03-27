@@ -22,6 +22,8 @@ jobs:
 
           FRONTEND_CHANGED="false"
           BACKEND_CHANGED="false"
+          DEPLOYMENT_CHANGED="false"
+          WORKFLOWS_CHANGED="false"
 
           if git diff --name-only HEAD~1 HEAD | grep -q '^frontend/'; then
             echo "Frontend changed!"
@@ -33,11 +35,25 @@ jobs:
             BACKEND_CHANGED="true"
           fi
 
+          if git diff --name-only HEAD~1 HEAD | grep -q '^deployment/'; then
+            echo "Deployment config changed!"
+            DEPLOYMENT_CHANGED="true"
+          fi
+
+          if git diff --name-only HEAD~1 HEAD | grep -q '^\.github/workflows/'; then
+            echo "Workflows changed!"
+            WORKFLOWS_CHANGED="true"
+          fi
+
           echo "frontend=$FRONTEND_CHANGED" >> $GITHUB_OUTPUT
           echo "backend=$BACKEND_CHANGED" >> $GITHUB_OUTPUT
+          echo "deployment=$DEPLOYMENT_CHANGED" >> $GITHUB_OUTPUT
+          echo "workflows=$WORKFLOWS_CHANGED" >> $GITHUB_OUTPUT
 
           echo "Frontend changed: $FRONTEND_CHANGED"
           echo "Backend changed: $BACKEND_CHANGED"
+          echo "Deployment changed: $DEPLOYMENT_CHANGED"
+          echo "Workflows changed: $WORKFLOWS_CHANGED"
 
       # Setup SSH
       - name: Setup SSH
@@ -90,13 +106,28 @@ jobs:
 
           chmod 600 .env
 
+          # Workflows changed warning
+          if [ "${{ steps.changes.outputs.workflows }}" = "true" ]; then
+            echo "::warning::Workflow files changed - changes will apply on next run"
+          fi
+
+          # If deployment config changed, restart entire stack
+          if [ "${{ steps.changes.outputs.deployment }}" = "true" ]; then
+            echo "Deployment config changed - restarting entire stack"
+            docker compose down
+          fi
+
+          # If frontend changed, stop and rebuild
           if [ "${{ steps.changes.outputs.frontend }}" = "true" ]; then
             echo "Rebuilding frontend"
+            docker compose stop frontend
             docker compose build frontend
           fi
 
+          # If backend changed, stop and rebuild
           if [ "${{ steps.changes.outputs.backend }}" = "true" ]; then
             echo "Rebuilding backend"
+            docker compose stop backend
             docker compose build backend
           fi
 
