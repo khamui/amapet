@@ -7,5 +7,6 @@ database/db.env
 
 frontend/.angular/
 frontend/dist/
+frontend/src/assets/config/legal-info.json
 
 backend/backups/

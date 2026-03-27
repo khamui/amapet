@@ -13,6 +13,8 @@ import { DrawerModule } from 'primeng/drawer';
 import { CircleBoxComponent } from './containers/circle-box/circle-box.component';
 import { TopbarComponent } from './containers/topbar/topbar.component';
 import { SoonAvailableComponent } from './containers/soon-available/soon-available.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { CookieBannerComponent } from './components/cookie-banner/cookie-banner.component';
 import { SettingsService } from './services/settings.service';
 import { UiStateService } from './services/ui-state.service';
 import { ThemeService } from './services/theme.service';
@@ -33,6 +35,8 @@ import { filter } from 'rxjs';
     SoonAvailableComponent,
     MessageModule,
     NgClass,
+    FooterComponent,
+    CookieBannerComponent,
   ],
 })
 export class AppComponent implements OnInit {
