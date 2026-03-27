@@ -14,6 +14,7 @@ import profileRoutes from './routes/profile.js';
 import settingsRoutes from './routes/settings.js';
 import moderationRoutes from './routes/moderation.js';
 import databaseRoutes from './routes/route.database.js';
+import exploreRoutes from './routes/explore.js';
 
 // env
 import * as dotenv from 'dotenv';
@@ -39,6 +40,7 @@ app.use('/', profileRoutes);
 app.use('/', settingsRoutes);
 app.use('/', moderationRoutes);
 app.use('/', databaseRoutes);
+app.use('/', exploreRoutes);
 
 const port = PORT || '3000';
 app.set('port', port);

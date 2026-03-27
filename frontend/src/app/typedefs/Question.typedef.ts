@@ -29,3 +29,20 @@ export type PaginatedQuestionsResponse = {
     hasMore: boolean;
   };
 }
+
+export type ExploreQuestion = Question & {
+  circleName: string;
+  answerCount: number;
+  popularityScore: number;
+  isFavorite: boolean;
+};
+
+export type PaginatedExploreResponse = {
+  questions: ExploreQuestion[];
+  pagination: {
+    skip: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+}
