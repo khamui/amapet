@@ -137,7 +137,7 @@
               styleClass="p-button-warning"
               size="small"
               [outlined]="true"
-              (onClick)="router.navigate(['signin'])"
+              (onClick)="openLoginDialog()"
             ></p-button>
           </div>
         }
@@ -158,3 +158,5 @@
     </div>
   }
 }
+
+<ama-social-login-dialog [(visible)]="showLoginDialog"></ama-social-login-dialog>
