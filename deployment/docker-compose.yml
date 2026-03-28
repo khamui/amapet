@@ -59,6 +59,8 @@ services:
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT}:80"
+    volumes:
+      - ../frontend/src/assets/config/legal-info.json:/usr/share/nginx/html/assets/config/legal-info.json:ro
     depends_on:
       - backend
     networks:
