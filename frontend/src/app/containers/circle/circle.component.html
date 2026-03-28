@@ -1,7 +1,7 @@
 @if (circle()) {
   <h3 class="font-weight-300 text-xl mb-1">{{ circle()!.name }}</h3>
   @if (circle()!.about) {
-    <p class="text-gray-400 mb-5">{{ circle()!.about }}</p>
+    <p class="text-gray-400 dark:text-surface-500 mb-5">{{ circle()!.about }}</p>
   }
   @if (isLoggedIn()) {
     <div class="w-full">

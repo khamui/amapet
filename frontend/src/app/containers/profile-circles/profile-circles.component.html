@@ -1,7 +1,7 @@
 <h1 class="text-lg mt-4 mb-6">My Circles</h1>
 
 @if (circles().length === 0) {
-  <p class="text-gray-500">You don't have any circles yet.</p>
+  <p class="text-gray-500 dark:text-surface-400">You don't have any circles yet.</p>
 } @else {
   <p-table [value]="circles()" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
@@ -85,12 +85,12 @@
     <div>
       <label class="font-medium mb-2 block">Current Moderators</label>
       @if (selectedCircle()?.moderators?.length === 0) {
-        <p class="text-gray-500">No moderators yet.</p>
+        <p class="text-gray-500 dark:text-surface-400">No moderators yet.</p>
       } @else {
         <div class="flex flex-col gap-2">
           @for (mod of selectedCircle()?.moderators; track mod._id) {
             <div
-              class="flex items-center justify-between p-2 bg-gray-100 rounded"
+              class="flex items-center justify-between p-2 bg-gray-100 dark:bg-surface-800 rounded"
             >
               <div class="flex items-center gap-2">
                 <span>{{ mod.username }}</span>

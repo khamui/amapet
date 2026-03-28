@@ -1,6 +1,8 @@
 @import "primeicons/primeicons.css";
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.darkmode, .darkmode *));
+
 html {
   font-size: 14px;
 }
