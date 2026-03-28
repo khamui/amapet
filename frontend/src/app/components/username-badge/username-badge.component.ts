@@ -8,7 +8,7 @@ import { AuraService } from 'src/app/services/aura.service';
   imports: [TooltipModule],
   template: `
     <span
-      class="text-xs text-500 hover:text-700 cursor-default"
+      class="text-xs text-500 dark:text-surface-400 hover:text-700 dark:hover:text-surface-300 cursor-default"
       [pTooltip]="tooltipText()"
       tooltipPosition="top"
     >

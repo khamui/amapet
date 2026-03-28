@@ -2,13 +2,13 @@
   <div class="max-w-[50rem] flex flex-col items-center">
     <div class="mx-4 sm:mx-[2rem] md:mx-[3rem] lg:mx-[5rem] text-center">
       @if (isBackendDown()) {
-        <h1 class="text-8xl font-bold text-gray-400 mb-4">Offline</h1>
+        <h1 class="text-8xl font-bold text-gray-400 dark:text-surface-500 mb-4">Offline</h1>
         <p class="text-lg text-color-gray-800 my-4">
           We're having trouble connecting to our servers. Please check your
           internet connection and try again.
         </p>
       } @else {
-        <h1 class="text-8xl font-bold text-gray-400 mb-4">404</h1>
+        <h1 class="text-8xl font-bold text-gray-400 dark:text-surface-500 mb-4">404</h1>
         <p class="text-lg text-color-gray-800 my-4">
           The page you're looking for doesn't exist or may have been moved.
         </p>

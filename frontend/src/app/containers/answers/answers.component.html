@@ -8,7 +8,7 @@
       </span>
     }
     <ama-username-badge [username]="answer.ownerName || ''" [userId]="answer.ownerId || ''"></ama-username-badge
-    ><span class="mx-2 text-xs text-500 hover:text-700">{{
+    ><span class="mx-2 text-xs text-500 dark:text-surface-400 hover:text-700 dark:hover:text-surface-300">{{
       answer.created_at | dateAgo
     }}</span>
     @if (answer.modded_at && !answer.deleted) {
@@ -68,7 +68,7 @@
       } @else {
         <button
           type="button"
-          class="btn__link ml-2 text-green-600 font-semibold text-xs"
+          class="btn__link ml-2 text-green-600 dark:text-green-400 font-semibold text-xs"
           (click)="handleMarkAsSolution(answer)"
         >
           Mark as Solution
