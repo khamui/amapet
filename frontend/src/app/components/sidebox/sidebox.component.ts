@@ -1,5 +1,5 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -12,7 +12,7 @@ import { FollowResponse } from 'src/app/typedefs/FollowResponse.typedef';
   templateUrl: './sidebox.component.html',
   styleUrls: ['./sidebox.component.scss'],
   standalone: true,
-  imports: [MenuModule, ButtonModule, RouterLink],
+  imports: [MenuModule, ButtonModule, RouterLink, RouterLinkActive],
 })
 export class SideboxComponent {
   private api = inject(ApiService<any>);
