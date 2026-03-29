@@ -19,7 +19,10 @@
       <ng-template pTemplate="header">
         <div class="flex items-center gap-2">
           <img class="h-6" src="../assets/helpaws_logo_petrol.png" />
-          <span class="font-semibold">helpa.ws</span>
+          <span
+            class="font-semibold text-lg bg-gradient-to-r from-teal-400 to-amber-400 dark:from-teal-200 dark:to-zinc-50 bg-clip-text text-transparent"
+            >Helpaws</span
+          >
           <span
             class="text-xs font-bold bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300 px-1.5 py-0.5 rounded-full"
           >
@@ -28,12 +31,21 @@
         </div>
       </ng-template>
       <div class="p-3">
+        <div class="mb-4">
+          <ama-sidebox
+            [items]="[{ label: 'Explore Questions', routerLink: '/explore' }]"
+            heading="Discover"
+          />
+        </div>
         <ama-circle-box></ama-circle-box>
       </div>
     </p-drawer>
     @if (ses.isMaintenance()) {
       <div class="px-20 pb-2 position-relative pt-30">
-        <p-message severity="info">The platform is currently in maintenance mode. This app is currently not running in Production environment.</p-message>
+        <p-message severity="info"
+          >The platform is currently in maintenance mode. This app is currently
+          not running in Production environment.</p-message
+        >
       </div>
     }
     <div
@@ -44,6 +56,12 @@
     >
       <div class="max-w-2/8 lg:block hidden">
         <div class="p-3">
+          <div class="mb-4">
+            <ama-sidebox
+              [items]="[{ label: 'Explore Questions', routerLink: '/explore' }]"
+              heading="Discover"
+            />
+          </div>
           <ama-circle-box></ama-circle-box>
         </div>
       </div>

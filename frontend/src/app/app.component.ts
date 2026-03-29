@@ -15,6 +15,7 @@ import { TopbarComponent } from './containers/topbar/topbar.component';
 import { SoonAvailableComponent } from './containers/soon-available/soon-available.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CookieBannerComponent } from './components/cookie-banner/cookie-banner.component';
+import { SideboxComponent } from './components/sidebox/sidebox.component';
 import { SettingsService } from './services/settings.service';
 import { UiStateService } from './services/ui-state.service';
 import { ThemeService } from './services/theme.service';
@@ -37,6 +38,7 @@ import { filter } from 'rxjs';
     NgClass,
     FooterComponent,
     CookieBannerComponent,
+    SideboxComponent,
   ],
 })
 export class AppComponent implements OnInit {
