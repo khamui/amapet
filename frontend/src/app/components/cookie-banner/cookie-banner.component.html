@@ -4,23 +4,30 @@
   >
     <div class="flex flex-col gap-4">
       <div class="text-sm text-surface-700 dark:text-surface-300">
-        <p class="font-medium mb-2">Cookie & Storage Notice</p>
-        <p>
-          We use localStorage to store your authentication token and theme preferences.
-          By accepting, you consent to this data storage.
-          <a routerLink="/privacy" class="text-primary hover:underline">Learn more</a>
-        </p>
+        @if (isGerman()) {
+          <p class="font-medium mb-2">Cookies & Pfoten</p>
+          <p>
+            Wir nutzen Cookies, um helpa.ws sicher und nutzerfreundlich zu machen. Einverstanden?
+            <a routerLink="/privacy" class="text-primary hover:underline">Mehr erfahren</a>
+          </p>
+        } @else {
+          <p class="font-medium mb-2">Cookies & Paws</p>
+          <p>
+            We use cookies to keep helpa.ws secure and user-friendly. Do you agree?
+            <a routerLink="/privacy" class="text-primary hover:underline">Learn more</a>
+          </p>
+        }
       </div>
       <div class="flex flex-wrap gap-2 justify-end">
         <p-button
-          label="Reject"
+          [label]="isGerman() ? 'Nur Notwendige' : 'Essential Only'"
           [outlined]="true"
           severity="secondary"
           size="small"
           (click)="reject()"
         />
         <p-button
-          label="Accept"
+          [label]="isGerman() ? 'Akzeptieren' : 'Accept All'"
           size="small"
           (click)="accept()"
         />

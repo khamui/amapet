@@ -2,9 +2,9 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0">
       @if (isGerman()) {
-        Haftungsausschluss
+        Medizinischer Hinweis
       } @else {
-        Disclaimer
+        Medical Disclaimer
       }
     </h1>
     <div class="flex gap-2">
@@ -26,75 +26,60 @@
 
   <div class="prose dark:prose-invert text-surface-700 dark:text-surface-300">
     @if (isGerman()) {
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Haftung für Inhalte</h2>
+      <div class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 mb-6">
+        <p class="font-semibold text-amber-800 dark:text-amber-200 mb-2">WICHTIGER HINWEIS</p>
+        <p class="text-amber-700 dark:text-amber-300">
+          Die Inhalte auf helpa.ws dienen dem Erfahrungsaustausch unter Tierhaltern. Sie sind keine
+          medizinischen Ratschläge. Suchen Sie bei gesundheitlichen Problemen Ihres Tieres immer
+          einen Tierarzt auf. Die Nutzung der Informationen erfolgt auf eigene Gefahr.
+        </p>
+      </div>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Kein Ersatz für professionelle Beratung</h2>
       <p class="mb-4">
-        Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit
-        und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir
-        gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.
-        Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder
-        gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine
-        rechtswidrige Tätigkeit hinweisen.
+        Die auf dieser Plattform geteilten Informationen, Tipps und Erfahrungen stammen von anderen
+        Tierhaltern und ersetzen in keinem Fall die professionelle Diagnose oder Behandlung durch
+        einen qualifizierten Tierarzt.
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Haftung für Links</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Erfahrungsaustausch</h2>
       <p class="mb-4">
-        Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben.
-        Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der
-        verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die
-        verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
-        Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche
-        Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht
-        zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+        helpa.ws ist eine Plattform für den Austausch von Erfahrungen zwischen Tierhaltern. Die hier
+        geteilten Informationen spiegeln persönliche Erfahrungen wider und sind nicht als medizinische
+        Empfehlungen zu verstehen.
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. Urheberrecht</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Im Notfall</h2>
       <p class="mb-4">
-        Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen
-        Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
-        Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-        Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
-      </p>
-
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Nutzergenerierte Inhalte</h2>
-      <p class="mb-4">
-        Diese Plattform ermöglicht Nutzern das Erstellen von Fragen und Antworten. Für von Nutzern erstellte
-        Inhalte übernehmen wir keine Haftung. Die Verantwortung für nutzergenerierte Inhalte liegt beim
-        jeweiligen Verfasser. Wir behalten uns vor, rechtswidrige oder unangemessene Inhalte zu entfernen.
+        Bei akuten gesundheitlichen Problemen oder Notfällen Ihres Tieres kontaktieren Sie bitte
+        umgehend einen Tierarzt oder eine tierärztliche Notfallpraxis.
       </p>
     } @else {
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Liability for Content</h2>
+      <div class="bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-500 p-4 mb-6">
+        <p class="font-semibold text-amber-800 dark:text-amber-200 mb-2">IMPORTANT NOTICE</p>
+        <p class="text-amber-700 dark:text-amber-300">
+          Content on helpa.ws is for peer-to-peer exchange among pet owners. It does not constitute
+          medical advice. Always consult a veterinarian for health issues regarding your pet. Use of
+          any information provided is at your own risk.
+        </p>
+      </div>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">No Substitute for Professional Advice</h2>
       <p class="mb-4">
-        The contents of our pages were created with the greatest care. However, we cannot guarantee the
-        accuracy, completeness, and timeliness of the content. As a service provider, we are responsible
-        for our own content on these pages in accordance with general laws pursuant to § 7 (1) TMG. However,
-        according to §§ 8 to 10 TMG, we are not obligated as a service provider to monitor transmitted or
-        stored third-party information or to investigate circumstances that indicate illegal activity.
+        The information, tips, and experiences shared on this platform come from other pet owners and
+        do not replace professional diagnosis or treatment by a qualified veterinarian.
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Liability for Links</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Peer Exchange</h2>
       <p class="mb-4">
-        Our offer contains links to external third-party websites, over whose content we have no influence.
-        Therefore, we cannot assume any liability for this external content. The respective provider or
-        operator of the pages is always responsible for the content of the linked pages. The linked pages
-        were checked for possible legal violations at the time of linking. Illegal content was not
-        identifiable at the time of linking. However, permanent content control of the linked pages is not
-        reasonable without concrete evidence of a violation of the law. If we become aware of any legal
-        violations, we will remove such links immediately.
+        helpa.ws is a platform for sharing experiences between pet owners. The information shared here
+        reflects personal experiences and should not be understood as medical recommendations.
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. Copyright</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">In Case of Emergency</h2>
       <p class="mb-4">
-        The content and works created by the site operators on these pages are subject to German copyright
-        law. Duplication, processing, distribution, and any kind of exploitation outside the limits of
-        copyright require the written consent of the respective author or creator. Downloads and copies of
-        this site are only permitted for private, non-commercial use.
-      </p>
-
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. User-Generated Content</h2>
-      <p class="mb-4">
-        This platform allows users to create questions and answers. We assume no liability for user-created
-        content. Responsibility for user-generated content lies with the respective author. We reserve the
-        right to remove illegal or inappropriate content.
+        For acute health problems or emergencies with your pet, please contact a veterinarian or
+        emergency veterinary clinic immediately.
       </p>
     }
   </div>

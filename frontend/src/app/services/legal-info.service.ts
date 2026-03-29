@@ -6,6 +6,7 @@ export interface LegalInfo {
   city: string;
   country: string;
   email: string;
+  website: string;
 }
 
 const DEFAULT_INFO: LegalInfo = {
@@ -14,6 +15,7 @@ const DEFAULT_INFO: LegalInfo = {
   city: '',
   country: '',
   email: '',
+  website: '',
 };
 
 @Injectable({

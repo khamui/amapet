@@ -13,6 +13,7 @@ import { NotFoundComponent } from './containers/not-found/not-found.component';
 import { ImprintComponent } from './containers/legal/imprint/imprint.component';
 import { PrivacyComponent } from './containers/legal/privacy/privacy.component';
 import { DisclaimerComponent } from './containers/legal/disclaimer/disclaimer.component';
+import { TermsComponent } from './containers/legal/terms/terms.component';
 import { permLevelGuard } from './guards/perm-level.guard';
 import { appAvailableGuard } from './guards/app-available.guard';
 import { moderationGuard } from './guards/moderation.guard';
@@ -66,6 +67,7 @@ const routes: Routes = [
   { path: 'imprint', component: ImprintComponent },
   { path: 'privacy', component: PrivacyComponent },
   { path: 'disclaimer', component: DisclaimerComponent },
+  { path: 'terms', component: TermsComponent },
   { path: '', redirectTo: 'explore', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];

@@ -1,0 +1,97 @@
+<div class="max-w-3xl mx-auto p-6 pb-20">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0">
+      @if (isGerman()) {
+        Nutzungsbedingungen
+      } @else {
+        Terms of Use
+      }
+    </h1>
+    <div class="flex gap-2">
+      <p-button
+        [label]="isGerman() ? 'EN' : 'DE'"
+        [outlined]="true"
+        size="small"
+        (click)="toggleLanguage()"
+      />
+      <p-button
+        icon="pi pi-times"
+        [rounded]="true"
+        [text]="true"
+        severity="secondary"
+        (click)="dismiss()"
+      />
+    </div>
+  </div>
+
+  <div class="prose dark:prose-invert text-surface-700 dark:text-surface-300">
+    @if (isGerman()) {
+      <p class="mb-4 italic text-surface-500 dark:text-surface-400">
+        Regeln für die Community.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Geltungsbereich</h2>
+      <p class="mb-4">
+        Diese Bedingungen regeln die Nutzung der Plattform helpa.ws. Mit der Registrierung akzeptiert
+        der Nutzer diese Regeln.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Keine professionelle Beratung</h2>
+      <p class="mb-4">
+        Die auf der Plattform geteilten Informationen sind rein informativ. Sie ersetzen keine
+        tierärztliche Diagnose oder Behandlung.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. Nutzerinhalte & Urheberrecht</h2>
+      <p class="mb-4">
+        Nutzer dürfen nur Bilder und Texte hochladen, an denen sie die Rechte besitzen. Mit dem
+        Hochladen räumt der Nutzer helpa.ws ein zeitlich und räumlich unbeschränktes Recht zur
+        Darstellung des Inhalts auf der Plattform ein.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Verbotene Inhalte</h2>
+      <p class="mb-4">
+        Beleidigungen, Diskriminierung, Spam sowie der gewerbliche Handel mit Tieren (insbesondere
+        Welpenhandel) sind untersagt.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">5. Haftung</h2>
+      <p class="mb-4">
+        helpa.ws macht sich Nutzerbeiträge nicht zu eigen und übernimmt keine Haftung für deren
+        Richtigkeit.
+      </p>
+    } @else {
+      <p class="mb-4 italic text-surface-500 dark:text-surface-400">
+        Community rules.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Scope</h2>
+      <p class="mb-4">
+        These terms govern the use of helpa.ws. By registering, the user accepts these rules.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. No Professional Advice</h2>
+      <p class="mb-4">
+        Information shared on this platform is for informational purposes only. It is not a substitute
+        for veterinary diagnosis or treatment.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. User Content & Copyright</h2>
+      <p class="mb-4">
+        Users may only upload content (images/text) they own the rights to. By posting, the user
+        grants helpa.ws a non-exclusive right to display the content on the platform.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Prohibited Content</h2>
+      <p class="mb-4">
+        Harassment, discrimination, spam, and the commercial trade of animals (especially puppy
+        trading) are strictly forbidden.
+      </p>
+
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">5. Liability</h2>
+      <p class="mb-4">
+        helpa.ws does not adopt user content as its own and is not liable for its accuracy.
+      </p>
+    }
+  </div>
+</div>
