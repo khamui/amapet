@@ -26,6 +26,10 @@
 
   <div class="prose dark:prose-invert text-surface-700 dark:text-surface-300">
     @if (isGerman()) {
+      <p class="mb-4 italic text-surface-500 dark:text-surface-400">
+        Wir nehmen den Schutz Ihrer Daten ernst.
+      </p>
+
       <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Verantwortlicher</h2>
       <p class="mb-4">
         Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br />
@@ -35,14 +39,11 @@
         E-Mail: {{ info().email }}
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Welche Daten wir speichern</h2>
-      <p class="mb-4">Wir speichern folgende Daten im localStorage Ihres Browsers:</p>
-      <ul class="list-disc pl-6 mb-4">
-        <li><strong>Authentifizierungstoken (JWT):</strong> Wird nach erfolgreicher Anmeldung gespeichert, um Sie eingeloggt zu halten.</li>
-        <li><strong>Theme-Einstellung:</strong> Ihre bevorzugte Farbeinstellung (hell/dunkel/System).</li>
-        <li><strong>Einwilligungsstatus:</strong> Ob Sie der Datenspeicherung zugestimmt haben.</li>
-        <li><strong>Spracheinstellung:</strong> Ihre bevorzugte Sprache für rechtliche Seiten.</li>
-      </ul>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Datenverarbeitung</h2>
+      <p class="mb-4">
+        Wir speichern Ihre E-Mail-Adresse und Ihren Benutzernamen zur Bereitstellung Ihres Kontos.
+        IP-Adressen werden zur Betrugsprävention kurzzeitig gespeichert.
+      </p>
 
       <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. Drittanbieter-Dienste</h2>
       <p class="mb-4">Wir nutzen folgende Drittanbieter für die Authentifizierung:</p>
@@ -63,30 +64,22 @@
         </li>
       </ul>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Ihre Rechte</h2>
-      <p class="mb-4">Sie haben folgende Rechte bezüglich Ihrer personenbezogenen Daten:</p>
-      <ul class="list-disc pl-6 mb-4">
-        <li><strong>Auskunftsrecht:</strong> Sie können Auskunft über Ihre gespeicherten Daten verlangen.</li>
-        <li><strong>Berichtigungsrecht:</strong> Sie können die Korrektur unrichtiger Daten verlangen.</li>
-        <li><strong>Löschungsrecht:</strong> Sie können die Löschung Ihrer Daten verlangen.</li>
-        <li><strong>Widerspruchsrecht:</strong> Sie können der Verarbeitung Ihrer Daten widersprechen.</li>
-        <li><strong>Datenübertragbarkeit:</strong> Sie können Ihre Daten in einem gängigen Format erhalten.</li>
-      </ul>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Weitergabe</h2>
       <p class="mb-4">
-        Um Ihre Rechte auszuüben, kontaktieren Sie uns bitte unter: {{ info().email }}
+        Wir geben keine persönlichen Daten an Dritte weiter, außer es ist zur Diensterbringung
+        (z.B. Hosting) notwendig.
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">5. Datenlöschung</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">5. Ihre Rechte</h2>
       <p class="mb-4">
-        Sie können alle lokal gespeicherten Daten jederzeit löschen, indem Sie den localStorage Ihres Browsers leeren
-        oder sich ausloggen. Bei Löschung Ihres Kontos werden alle serverseitig gespeicherten Daten entfernt.
-      </p>
-
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">6. Änderungen dieser Datenschutzerklärung</h2>
-      <p class="mb-4">
-        Wir behalten uns vor, diese Datenschutzerklärung zu ändern. Die aktuelle Version finden Sie immer auf dieser Seite.
+        Sie haben jederzeit das Recht auf Auskunft, Korrektur oder Löschung Ihrer Daten.
+        Kontaktieren Sie uns dazu unter: {{ info().email }}
       </p>
     } @else {
+      <p class="mb-4 italic text-surface-500 dark:text-surface-400">
+        We take your privacy seriously.
+      </p>
+
       <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">1. Data Controller</h2>
       <p class="mb-4">
         The data controller responsible for this website is:<br />
@@ -96,14 +89,11 @@
         Email: {{ info().email }}
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Data We Store</h2>
-      <p class="mb-4">We store the following data in your browser's localStorage:</p>
-      <ul class="list-disc pl-6 mb-4">
-        <li><strong>Authentication Token (JWT):</strong> Stored after successful login to keep you signed in.</li>
-        <li><strong>Theme Preference:</strong> Your preferred color scheme (light/dark/system).</li>
-        <li><strong>Consent Status:</strong> Whether you have agreed to data storage.</li>
-        <li><strong>Language Preference:</strong> Your preferred language for legal pages.</li>
-      </ul>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">2. Data Processing</h2>
+      <p class="mb-4">
+        We store your email and username to provide your account. IP addresses are stored temporarily
+        for security purposes.
+      </p>
 
       <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">3. Third-Party Services</h2>
       <p class="mb-4">We use the following third-party services for authentication:</p>
@@ -124,28 +114,16 @@
         </li>
       </ul>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Your Rights</h2>
-      <p class="mb-4">You have the following rights regarding your personal data:</p>
-      <ul class="list-disc pl-6 mb-4">
-        <li><strong>Right of Access:</strong> You can request information about your stored data.</li>
-        <li><strong>Right to Rectification:</strong> You can request correction of inaccurate data.</li>
-        <li><strong>Right to Erasure:</strong> You can request deletion of your data.</li>
-        <li><strong>Right to Object:</strong> You can object to the processing of your data.</li>
-        <li><strong>Right to Data Portability:</strong> You can receive your data in a common format.</li>
-      </ul>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">4. Data Sharing</h2>
       <p class="mb-4">
-        To exercise your rights, please contact us at: {{ info().email }}
+        We do not share personal data with third parties unless necessary for service provision
+        (e.g., hosting).
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">5. Data Deletion</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">5. Your Rights</h2>
       <p class="mb-4">
-        You can delete all locally stored data at any time by clearing your browser's localStorage
-        or by logging out. When you delete your account, all server-side stored data will be removed.
-      </p>
-
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">6. Changes to This Privacy Policy</h2>
-      <p class="mb-4">
-        We reserve the right to modify this privacy policy. The current version can always be found on this page.
+        You have the right to access, correct, or delete your data at any time.
+        Contact us at: {{ info().email }}
       </p>
     }
   </div>

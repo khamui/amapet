@@ -26,7 +26,7 @@
 
   <div class="prose dark:prose-invert text-surface-700 dark:text-surface-300">
     @if (isGerman()) {
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Angaben gemäß § 5 TMG</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Angaben gemäß § 5 TMG / § 18 MStV</h2>
       <p class="mb-4">
         {{ info().name }}<br />
         {{ info().street }}<br />
@@ -36,10 +36,11 @@
 
       <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Kontakt</h2>
       <p class="mb-4">
-        E-Mail: {{ info().email }}
+        E-Mail: {{ info().email }}<br />
+        Webseite: {{ info().website }}
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
       <p class="mb-4">
         {{ info().name }}<br />
         {{ info().street }}<br />
@@ -58,7 +59,7 @@
         Verbraucherschlichtungsstelle teilzunehmen.
       </p>
     } @else {
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Information according to § 5 TMG</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Information according to § 5 TMG / § 18 MStV</h2>
       <p class="mb-4">
         {{ info().name }}<br />
         {{ info().street }}<br />
@@ -68,10 +69,11 @@
 
       <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Contact</h2>
       <p class="mb-4">
-        Email: {{ info().email }}
+        Email: {{ info().email }}<br />
+        Website: {{ info().website }}
       </p>
 
-      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Responsible for content according to § 55 Abs. 2 RStV</h2>
+      <h2 class="text-lg font-semibold mt-6 mb-3 text-surface-800 dark:text-surface-100">Responsible for content according to § 18 Abs. 2 MStV</h2>
       <p class="mb-4">
         {{ info().name }}<br />
         {{ info().street }}<br />
