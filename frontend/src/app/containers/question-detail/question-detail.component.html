@@ -4,7 +4,7 @@
       icon="pi pi-arrow-left"
       label="Back to Circle"
       severity="secondary"
-      [outlined]="true"
+      [raised]="true"
       (onClick)="goBack()"
     ></p-button>
   </div>
@@ -12,7 +12,11 @@
     <ng-template pTemplate="header">
       <div class="flex items-center">
         <span class="text-xs text-bluegray-300 dark:text-surface-500">
-          Posted by <ama-username-badge [username]="question.ownerName || ''" [userId]="question.ownerId || ''"></ama-username-badge>
+          Posted by
+          <ama-username-badge
+            [username]="question.ownerName || ''"
+            [userId]="question.ownerId || ''"
+          ></ama-username-badge>
         </span>
         <span class="text-xs text-bluegray-500 dark:text-surface-400 mx-1">
           {{ question.created_at | dateAgo }}
@@ -93,11 +97,15 @@
             class="text-left text-sm font-semibold my-10 break-words"
           ></p>
           @if (question.moderationInfo?.noteText) {
-            <div class="my-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded">
+            <div
+              class="my-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded"
+            >
               <span class="font-bold text-yellow-700 dark:text-yellow-400">
                 <i class="pi pi-info-circle mr-1"></i>Moderator's Note
               </span>
-              <p class="text-sm text-gray-700 dark:text-surface-300 mt-2 whitespace-pre-wrap">
+              <p
+                class="text-sm text-gray-700 dark:text-surface-300 mt-2 whitespace-pre-wrap"
+              >
                 {{ question.moderationInfo?.noteText }}
               </p>
             </div>
@@ -107,11 +115,19 @@
               class="mt-6 p-4 rounded-lg border-2 border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-900/20"
             >
               <div class="flex items-center gap-2 mb-3">
-                <i class="pi pi-check-circle text-green-600 dark:text-green-400 text-xl"></i>
-                <span class="font-bold text-green-700 dark:text-green-400">Solution</span>
-                <span class="text-xs text-gray-500 dark:text-surface-400"
-                  >by <ama-username-badge [username]="solutionAnswer()?.ownerName || ''" [userId]="solutionAnswer()?.ownerId || ''"></ama-username-badge></span
+                <i
+                  class="pi pi-check-circle text-green-600 dark:text-green-400 text-xl"
+                ></i>
+                <span class="font-bold text-green-700 dark:text-green-400"
+                  >Solution</span
                 >
+                <span class="text-xs text-gray-500 dark:text-surface-400"
+                  >by
+                  <ama-username-badge
+                    [username]="solutionAnswer()?.ownerName || ''"
+                    [userId]="solutionAnswer()?.ownerId || ''"
+                  ></ama-username-badge
+                ></span>
               </div>
               <div
                 class="text-sm break-words"

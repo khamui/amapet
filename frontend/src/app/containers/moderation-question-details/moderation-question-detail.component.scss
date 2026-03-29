@@ -1,18 +1,13 @@
-::ng-deep .override__p-panel .p-panel .p-panel-header {
-  background-color: var(--p-surface-0);
+::ng-deep .button--approve .p-button-label,
+::ng-deep .button--block .p-button-label,
+::ng-deep .button--approve-actions .p-button-label {
+  color: var(--p-yellow-700);
 }
 
-::ng-deep .button--approve .p-button-text {
+:host-context(.darkmode) ::ng-deep .button--approve .p-button-label,
+:host-context(.darkmode) ::ng-deep .button--block .p-button-label,
+:host-context(.darkmode) ::ng-deep .button--approve-actions .p-button-label {
   color: var(--p-yellow-500);
-}
-
-::ng-deep .button--block .p-button-text {
-  color: var(--p-yellow-500);
-}
-
-::ng-deep .button--approve-actions .p-button-text {
-  color: var(--p-yellow-500);
-
 }
 
 ::ng-deep .p-toggleswitch-slider {
@@ -20,8 +15,12 @@
 }
 
 .approve-actions__container {
-  border: 1px solid var(--p-yellow-200);
+  border: 1px solid var(--p-yellow-500);
   border-radius: 6px;
+}
+
+:host-context(.darkmode) .approve-actions__container {
+  border-color: var(--p-yellow-500);
 }
 
 .intention-chip {
