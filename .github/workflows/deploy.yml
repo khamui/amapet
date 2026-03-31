@@ -77,6 +77,12 @@ jobs:
           BACKEND_PORT="${{ secrets.BACKEND_PORT }}"
           FRONTEND_PORT="${{ secrets.FRONTEND_PORT }}"
           PLATFORM_ADMIN_EMAIL="${{ secrets.PLATFORM_ADMIN_EMAIL }}"
+          LEGAL_NAME="${{ secrets.LEGAL_NAME }}"
+          LEGAL_STREET="${{ secrets.LEGAL_STREET }}"
+          LEGAL_CITY="${{ secrets.LEGAL_CITY }}"
+          LEGAL_COUNTRY="${{ secrets.LEGAL_COUNTRY }}"
+          LEGAL_EMAIL="${{ secrets.LEGAL_EMAIL }}"
+          LEGAL_WEBSITE="${{ secrets.LEGAL_WEBSITE }}"
           EOF
 
       # Upload files to VPS (deployment/, frontend/, backend/)

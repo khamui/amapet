@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { ApiService } from './api.service';
 
 export interface LegalInfo {
   name: string;
@@ -22,6 +23,7 @@ const DEFAULT_INFO: LegalInfo = {
   providedIn: 'root',
 })
 export class LegalInfoService {
+  private readonly api = inject(ApiService);
   private readonly info = signal<LegalInfo>(DEFAULT_INFO);
   private readonly loaded = signal(false);
 
@@ -33,14 +35,9 @@ export class LegalInfoService {
   }
 
   private async loadInfo(): Promise<void> {
-    try {
-      const response = await fetch('/assets/config/legal-info.json');
-      if (response.ok) {
-        const data = await response.json();
-        this.info.set(data);
-      }
-    } catch {
-      // Config file not available, keep defaults
+    const response = await this.api.read<LegalInfo>('/legal-info');
+    if (!response.isError) {
+      this.info.set(response.result);
     }
     this.loaded.set(true);
   }
