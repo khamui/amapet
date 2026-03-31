@@ -107,8 +107,8 @@ jobs:
             cd ../..
           fi
 
-          # Use sudo to remove root-owned files from Docker bind mounts
-          sudo rm -rf amapet
+          # Use docker to remove root-owned files from bind mounts (avoids sudo password prompt)
+          docker run --rm -v /home/${{ secrets.VPS_USER }}/containers:/containers alpine rm -rf /containers/amapet
           mv amapet-temp amapet
           cd amapet/deployment
 
