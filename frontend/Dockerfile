@@ -13,6 +13,7 @@ RUN npm run build --prod
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
 COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
+RUN mkdir -p /usr/share/nginx/html/assets/config
 
 # Optional: copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf

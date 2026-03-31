@@ -100,7 +100,15 @@ jobs:
 
           cd /home/${{ secrets.VPS_USER }}/containers
 
-          rm -rf amapet
+          # Stop containers first to release bind mounts
+          if [ -d "amapet/deployment" ]; then
+            cd amapet/deployment
+            docker compose down
+            cd ../..
+          fi
+
+          # Use sudo to remove root-owned files from Docker bind mounts
+          sudo rm -rf amapet
           mv amapet-temp amapet
           cd amapet/deployment
 
@@ -109,12 +117,6 @@ jobs:
           # Workflows changed warning
           if [ "${{ steps.changes.outputs.workflows }}" = "true" ]; then
             echo "::warning::Workflow files changed - changes will apply on next run"
-          fi
-
-          # If deployment config changed, restart entire stack
-          if [ "${{ steps.changes.outputs.deployment }}" = "true" ]; then
-            echo "Deployment config changed - restarting entire stack"
-            docker compose down
           fi
 
           # If frontend changed, stop and rebuild
