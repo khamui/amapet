@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@angular/build": "^20.3.2",
-    "@angular/cli": "20.3.18",
+    "@angular/cli": "20.3.22",
     "@angular/compiler-cli": "20.3.17",
     "postcss": "^8.5.3",
     "typescript": "5.9.3"
