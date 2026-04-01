@@ -2,31 +2,22 @@ import mongoose from 'mongoose';
 import { Circle } from '../models/circle.js';
 import { Answer } from '../models/answer.js';
 import { User } from '../models/user.js';
+import { generateSlug } from '../../utils/slug.utils.js';
 
 // ============================================================================
-// SEED USERS (20 users with c3d01_ to c3d20_ prefix)
+// SEED USERS (10 users with c3d01_ to c3d10_ prefix + pseudo-words)
 // ============================================================================
 const SEED_USERS = [
-  { prefix: 'c3d01', suffix: 'fluffypal' },
-  { prefix: 'c3d02', suffix: 'barkster' },
-  { prefix: 'c3d03', suffix: 'meowmix' },
-  { prefix: 'c3d04', suffix: 'pawprint' },
-  { prefix: 'c3d05', suffix: 'whiskers' },
-  { prefix: 'c3d06', suffix: 'tailwag' },
-  { prefix: 'c3d07', suffix: 'furrball' },
-  { prefix: 'c3d08', suffix: 'snoutdog' },
-  { prefix: 'c3d09', suffix: 'catpurr' },
-  { prefix: 'c3d10', suffix: 'birdnest' },
-  { prefix: 'c3d11', suffix: 'scalefin' },
-  { prefix: 'c3d12', suffix: 'hopbun' },
-  { prefix: 'c3d13', suffix: 'shelltur' },
-  { prefix: 'c3d14', suffix: 'feathfan' },
-  { prefix: 'c3d15', suffix: 'pawsup' },
-  { prefix: 'c3d16', suffix: 'woofwoof' },
-  { prefix: 'c3d17', suffix: 'kittycat' },
-  { prefix: 'c3d18', suffix: 'petpal' },
-  { prefix: 'c3d19', suffix: 'critter' },
-  { prefix: 'c3d20', suffix: 'animalfr' },
+  { prefix: 'c3d01', word1: 'brait', word2: 'shoun' },
+  { prefix: 'c3d02', word1: 'glean', word2: 'tost' },
+  { prefix: 'c3d03', word1: 'flair', word2: 'kend' },
+  { prefix: 'c3d04', word1: 'thump', word2: 'slem' },
+  { prefix: 'c3d05', word1: 'choud', word2: 'prant' },
+  { prefix: 'c3d06', word1: 'skait', word2: 'vorn' },
+  { prefix: 'c3d07', word1: 'drent', word2: 'mouk' },
+  { prefix: 'c3d08', word1: 'ploud', word2: 'fent' },
+  { prefix: 'c3d09', word1: 'grail', word2: 'teck' },
+  { prefix: 'c3d10', word1: 'stour', word2: 'nald' },
 ];
 
 // ============================================================================
@@ -62,258 +53,344 @@ function randomDaysAgo(minDays: number, maxDays: number): number {
 }
 
 // ============================================================================
-// CIRCLES DATA (10 pet/animal themed circles)
+// CIRCLES DATA (5 circles: 2 EN, 2 DE, 1 FR)
 // ============================================================================
 const CIRCLES_DATA = [
+  // ENGLISH CIRCLES
   {
-    name: 'c/DogLovers',
-    about: 'Everything about dogs - breeds, training, health, and cute puppy pics!',
+    name: 'c/pets',
+    about: 'general pet talk, questions, cute pics, whatever really',
+    ownerIndex: 0, // c3d01
     questions: [
       {
-        title: 'My golden retriever won\'t stop barking at the mailman',
-        body: 'Every day around 2pm when the mail arrives, my 3-year-old golden goes absolutely crazy. I\'ve tried treats, distraction, nothing works. Any tips from experienced dog owners?',
+        title: 'my cat wont stop meowing at 3am help',
+        body: 'so basically every night around 3am my 2yo tabby goes CRAZY meowing. tried everything, vet says shes healthy. anyone else deal with this?? im losing my mind here',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'Best dog food brands for sensitive stomachs?',
-        body: 'My German Shepherd has been having digestive issues lately. The vet suggested switching to a sensitive stomach formula. What brands have worked well for your dogs?',
-        intentionId: 'question',
-        hasSolution: true,
-      },
-      {
-        title: 'Just adopted my first rescue dog!',
-        body: 'After months of waiting, I finally brought home a 2-year-old lab mix from the shelter. She\'s a bit shy but already warming up. Would love to hear your rescue stories!',
+        title: 'Just found out my dog has diabetes',
+        body: 'devastated rn. hes only 7. vet says its manageable but im scared. anyone have experience with diabetic dogs? what should I expect?',
         intentionId: 'discussion',
         hasSolution: false,
       },
       {
-        title: 'Guide: How to introduce a new puppy to your older dog',
-        body: 'I\'ve successfully introduced several puppies to my household over the years. Here\'s what works:\n\n1. Keep them separated initially\n2. Exchange scents before meeting\n3. First meeting on neutral ground\n4. Supervise all interactions for the first few weeks\n5. Give the older dog their own space\n\nPatience is key!',
+        title: 'how do u get ur cat to drink more water',
+        body: 'my cat barely drinks anything and im worried about her kidneys. she eats wet food already but still. any tricks?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'dog ate chocolate what do i do',
+        body: 'UPDATE: called vet, hes fine it was only a small piece of milk chocolate. leaving this up for others who might panic like i did lol',
         intentionId: 'information',
         hasSolution: false,
       },
-    ],
-  },
-  {
-    name: 'c/CatLife',
-    about: 'Cats, kittens, feline behavior and care. Meow!',
-    questions: [
       {
-        title: 'Why does my cat knock things off tables?',
-        body: 'My 4-year-old tabby has made it her mission to push every single item off any flat surface. Is this normal cat behavior or is she just being a jerk?',
+        title: 'moving to a new apartment with my cat',
+        body: 'first time moving with a pet. any tips? shes super anxious already and im worried the move will stress her out even more',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'Indoor vs outdoor cats - what\'s your take?',
-        body: 'I\'ve always kept my cats indoors but my neighbor says it\'s cruel. My cats seem perfectly happy with their cat tree and window perches. What does everyone here think?',
+        title: 'pet insurance worth it or nah?',
+        body: 'my friends say its a waste of money but then I see ppl with 5k vet bills... what do u guys think? any recommendations?',
         intentionId: 'discussion',
         hasSolution: false,
       },
       {
-        title: 'Cat not using litter box anymore',
-        body: 'My 6-year-old Maine Coon suddenly stopped using his litter box about a week ago. Nothing has changed in our household. Vet says he\'s healthy. Any ideas?',
+        title: 'why does my dog eat grass',
+        body: 'every time we go outside he eats grass like hes a cow lol. is this normal? should i stop him?',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'Share your cat\'s weird sleeping positions!',
-        body: 'My cat sleeps in the most ridiculous positions. Currently she\'s pretzel-shaped on top of the refrigerator. I can\'t be the only one with a contortionist cat!',
-        intentionId: 'discussion',
+        title: 'best toys for a bored indoor cat?',
+        body: 'my cat is destroying everything cause shes bored i think. whats worked for ur cats? already have a cat tree',
+        intentionId: 'question',
         hasSolution: false,
       },
-    ],
-  },
-  {
-    name: 'c/Aquariums',
-    about: 'Fishkeeping, tanks, aquascaping, and everything aquatic',
-    questions: [
       {
-        title: 'Beginner 20 gallon tank stocking ideas?',
-        body: 'Just finished cycling my first 20 gallon freshwater tank. Looking for compatible fish that are relatively easy to care for. Was thinking some tetras and corydoras?',
+        title: 'introducing new kitten to resident cat',
+        body: 'getting a kitten next week and my current cat (3yo) has never been around other cats. how do i do this without them killing each other',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'My betta fish has fin rot - help!',
-        body: 'Noticed my betta\'s fins looking ragged yesterday. Water parameters are 0 ammonia, 0 nitrite, 10 nitrate. Temperature is 78F. What treatments do you recommend?',
-        intentionId: 'question',
-        hasSolution: true,
-      },
-      {
-        title: 'Show off your aquascapes!',
-        body: 'I\'m looking for inspiration for my new planted tank. Would love to see everyone\'s setups and hear about your plant choices!',
+        title: 'unpopular opinion: dogs are easier than cats',
+        body: 'everyone says cats are low maintenance but my cat is way more demanding than any dog ive had. she wants attention 24/7. anyone else?',
         intentionId: 'discussion',
         hasSolution: false,
       },
     ],
   },
   {
-    name: 'c/ExoticPets',
-    about: 'Reptiles, amphibians, and unusual pets',
+    name: 'c/rescue',
+    about: 'adoption stories, fostering tips, rescue animals need homes',
+    ownerIndex: 1, // c3d02
     questions: [
       {
-        title: 'Ball python not eating for 2 months',
-        body: 'My ball python hasn\'t eaten since I got her 2 months ago. She\'s active and healthy looking otherwise. Tried live, frozen/thawed, different prey sizes. Any suggestions?',
+        title: 'fostering my first dog next week any tips?',
+        body: 'signed up to foster and im getting a 4yo pit mix. never fostered before. what should i know??',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'Leopard gecko vs crested gecko for beginners?',
-        body: 'Want to get my first reptile. Can\'t decide between these two. What are the pros and cons of each? Which is easier for a complete beginner?',
+        title: 'adopted a street cat and shes hiding under the bed',
+        body: 'got her 3 days ago and she hasnt come out except to eat at night. is this normal? when will she trust me',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'rescue dog reactive to other dogs',
+        body: 'adopted my boy 2 months ago and hes great with people but loses it when he sees other dogs. any training advice?',
         intentionId: 'question',
         hasSolution: false,
       },
       {
-        title: 'My bearded dragon is brumating - is this normal?',
-        body: 'My 3-year-old beardie has been sleeping a lot and barely eating for the past week. Temperature and lighting are correct. Is this brumation? When should I be concerned?',
-        intentionId: 'question',
-        hasSolution: true,
-      },
-    ],
-  },
-  {
-    name: 'c/BirdWatching',
-    about: 'Pet birds and wild bird observation',
-    questions: [
-      {
-        title: 'Best seeds to attract cardinals?',
-        body: 'I\'ve been putting out black sunflower seeds but mostly get sparrows. What do cardinals prefer? Any feeder recommendations?',
+        title: 'how to help local shelter without adopting',
+        body: 'cant have pets in my apartment but want to help. what can i do? they said they need volunteers but idk what that involves',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'My cockatiel won\'t stop screaming',
-        body: 'Every morning at 6am my cockatiel starts screaming. I\'ve tried covering the cage, ignoring it, nothing works. My neighbors are starting to complain. Help!',
-        intentionId: 'question',
-        hasSolution: false,
-      },
-      {
-        title: 'Interesting birds spotted this week',
-        body: 'Saw a pileated woodpecker in my backyard yesterday! First time seeing one in 10 years of birdwatching here. What interesting sightings have you had recently?',
-        intentionId: 'discussion',
-        hasSolution: false,
-      },
-    ],
-  },
-  {
-    name: 'c/SmallPets',
-    about: 'Hamsters, guinea pigs, rabbits, ferrets and other small furry friends',
-    questions: [
-      {
-        title: 'Guinea pig making weird noises - should I worry?',
-        body: 'My guinea pig makes this rumbling purring sound when I pet her. Is this good or bad? Also sometimes she does these little hops. New to guinea pigs so not sure what\'s normal!',
-        intentionId: 'question',
-        hasSolution: true,
-      },
-      {
-        title: 'Rabbit suddenly aggressive',
-        body: 'My usually sweet Holland Lop has started lunging and biting when I try to pick him up. He\'s about 6 months old. Is this a hormonal thing? Should I get him neutered?',
-        intentionId: 'question',
-        hasSolution: true,
-      },
-      {
-        title: 'Best bedding for hamsters?',
-        body: 'I\'ve been using wood shavings but heard they might not be safe. What bedding do you use for your hamsters? Looking for something absorbent and dust-free.',
-        intentionId: 'question',
-        hasSolution: false,
-      },
-    ],
-  },
-  {
-    name: 'c/PetHealth',
-    about: 'Veterinary advice, pet wellness, and health discussions',
-    questions: [
-      {
-        title: 'Pet insurance - worth it or waste of money?',
-        body: 'My vet suggested I get pet insurance for my new puppy. The monthly premiums seem high though. Has anyone actually had insurance pay off? What companies do you recommend?',
+        title: 'my foster fail story lol',
+        body: 'was supposed to foster this senior dog for 2 weeks... its been 6 months and shes officially mine now. anyone else fail at fostering?',
         intentionId: 'discussion',
         hasSolution: false,
       },
       {
-        title: 'How often should I take my cat to the vet?',
-        body: 'My indoor cat is 5 years old and seems perfectly healthy. Do I really need annual checkups? Vet visits stress her out so much.',
-        intentionId: 'question',
-        hasSolution: true,
+        title: 'adopting a bonded pair worth it?',
+        body: 'shelter has 2 cats that have to go together. double the food, double the vet bills... but they look so cute together. thoughts?',
+        intentionId: 'discussion',
+        hasSolution: false,
       },
       {
-        title: 'Signs of pain in pets that are easy to miss',
-        body: 'As a vet tech, I see many owners miss subtle signs their pet is in pain. Here are some often overlooked indicators:\n\n- Decreased grooming\n- Changes in sleeping positions\n- Reluctance to jump or climb stairs\n- Subtle changes in facial expressions\n- Decreased appetite\n- Hiding more than usual\n\nWhen in doubt, consult your vet!',
+        title: 'senior pets need love too',
+        body: 'adopted my 11yo cat last year everyone thought i was crazy but honestly best decision ever. hes so chill and grateful. consider seniors!!',
         intentionId: 'information',
         hasSolution: false,
       },
-    ],
-  },
-  {
-    name: 'c/PetTraining',
-    about: 'Training tips for all animals',
-    questions: [
       {
-        title: 'Clicker training basics for dogs',
-        body: 'Keep hearing about clicker training but not sure how to start. Do I need a special clicker? How do I teach my dog what the click means?',
+        title: 'rescue dog wont eat',
+        body: 'brought him home yesterday and he hasnt touched his food. tried different brands. is he just stressed?',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'How to teach a cat to come when called?',
-        body: 'I know cats have a reputation for ignoring us, but I\'ve heard it\'s possible to train them to come. Has anyone successfully done this? What method did you use?',
+        title: 'how long before rescue cat shows personality',
+        body: 'adopted a cat 2 weeks ago and shes just... there. doesnt play doesnt really react to anything. is this normal?',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'Potty training regression in adult dog',
-        body: 'My 4-year-old dog was perfectly house trained but started having accidents inside again. No medical issues according to vet. Any ideas what could cause this?',
-        intentionId: 'question',
-        hasSolution: false,
-      },
-    ],
-  },
-  {
-    name: 'c/PetPhotos',
-    about: 'Share cute pet pictures and videos',
-    questions: [
-      {
-        title: 'My cat discovered the printer today',
-        body: 'Came home to find my cat sitting ON the printer, having clearly pressed every button. The look on his face was priceless - zero regrets. Anyone else have cats that love electronics?',
-        intentionId: 'discussion',
-        hasSolution: false,
-      },
-      {
-        title: 'Before and after adoption photos',
-        body: 'Adopted this skinny, scared shelter dog 6 months ago. Now look at him! Would love to see everyone\'s pet transformations!',
-        intentionId: 'discussion',
-        hasSolution: false,
-      },
-      {
-        title: 'Pets being derpy - share your funniest moments',
-        body: 'My dog just ran full speed into a glass door. He\'s fine but I\'m still laughing. Share your pets\' most ridiculous moments!',
+        title: 'anyone else cry when their foster gets adopted',
+        body: 'just said goodbye to my foster kitten and im a mess. happy hes going to a good home but still 😭',
         intentionId: 'discussion',
         hasSolution: false,
       },
     ],
   },
+  // GERMAN CIRCLES
   {
-    name: 'c/RescueAndAdopt',
-    about: 'Pet adoption, rescue stories, and fostering experiences',
+    name: 'c/haustiere',
+    about: 'Alles rund um Haustiere - Fragen, Tipps, Diskussionen',
+    ownerIndex: 2, // c3d03
     questions: [
       {
-        title: 'Tips for first-time foster parents?',
-        body: 'My local shelter is desperate for foster homes and I finally have the space. What should I know before bringing in my first foster pet?',
+        title: 'Katze frisst seit 2 Tagen nicht mehr',
+        body: 'Meine Katze (4J) will seit Montag nix mehr fressen. Trinkt normal, spielt auch noch aber ignoriert das Futter komplett. Tierarzt erst am Donnerstag frei... soll ich in die Notaufnahme?',
         intentionId: 'question',
         hasSolution: true,
       },
       {
-        title: 'Adopting a senior pet - my experience',
-        body: 'Everyone told me not to adopt a 10-year-old dog because "you won\'t have much time with them." That was 4 years ago and my old man is still going strong. Senior pets deserve love too! Share your senior pet adoption stories!',
+        title: 'Empfehlungen für gutes Katzenfutter?',
+        body: 'bin grad am umstellen von trockenfutter auf nassfutter. was füttert ihr so? preislich sollte es im rahmen bleiben aber qualität ist mir wichtig',
         intentionId: 'discussion',
         hasSolution: false,
       },
       {
-        title: 'How to help local shelters if you can\'t adopt',
-        body: 'Want to help but can\'t have pets in my apartment. What are other ways to support local rescues? I was thinking of volunteering on weekends.',
+        title: 'Hund hat angst vor gewitter',
+        body: 'jedes mal wenn es donnert versteckt er sich unterm bett und zittert. tut mir so leid :( gibts da irgendwas was hilft?',
         intentionId: 'question',
         hasSolution: true,
+      },
+      {
+        title: 'wie oft muss man katzen impfen lassen',
+        body: 'mein ta sagt jedes jahr aber im internet steht alle 3 jahre reicht? was stimmt jetzt',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'hund bellt wenn jemand an der tür klingelt',
+        body: 'egal was ich mache er rastet jedes mal komplett aus. ist ein labrador 2 jahre alt. training?',
+        intentionId: 'question',
+        hasSolution: false,
+      },
+      {
+        title: 'katze pinkelt neben katzenklo',
+        body: 'seit ner woche macht sie immer daneben. klo ist sauber, nix hat sich verandert. was soll ich tun??',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'welches haustier für kinder geeignet',
+        body: 'unsere kids (6 und 8) wollen unbedingt ein haustier. hund ist uns zu viel arbeit ehrlich gesagt. was wäre gut?',
+        intentionId: 'question',
+        hasSolution: false,
+      },
+      {
+        title: 'kosten für einen hund pro monat?',
+        body: 'überlegen uns einen hund anzuschaffen. was zahlt ihr so im monat alles zusammen? futter versicherung usw',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'katze kratzt an möbeln trotz kratzbaum',
+        body: 'haben extra nen teuren kratzbaum gekauft aber sie benutzt lieber unser sofa. wie bring ich ihr bei den kratzbaum zu nehmen',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'haustier in mietwohnung erlaubt?',
+        body: 'im mietvertrag steht nichts dazu. darf ich mir ne katze holen oder muss ich den vermieter fragen?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+    ],
+  },
+  {
+    name: 'c/hunde',
+    about: 'Für alle Hundefreunde - Training, Gesundheit, Erfahrungen',
+    ownerIndex: 3, // c3d04
+    questions: [
+      {
+        title: 'Welpe beißt ständig in die Leine',
+        body: 'unser kleiner (12 wochen golden retriever) zerkaut jede leine die wir kaufen. haben schon 3 durch... hat jemand tipps? oder hört das von selbst auf?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'ab wann darf welpe treppen laufen',
+        body: 'wohnen im 2. stock und tragen ihn immer hoch. ab welchem alter ist es ok wenn er selbst läuft?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'hund zieht an der leine was tun',
+        body: 'gassi gehen ist echt anstrengend mit ihm. er zieht wie verrückt besonders wenn er andere hunde sieht. wie krieg ich das weg?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'barfen ja oder nein?',
+        body: 'freundin schwört drauf aber klingt kompliziert und teuer. lohnt sich das? was sind eure erfahrungen',
+        intentionId: 'discussion',
+        hasSolution: false,
+      },
+      {
+        title: 'hund alleine lassen wie lange',
+        body: 'fange bald neuen job an und muss 6 std weg sein. ist das ok für nen 3 jährigen hund? er ist das nicht gewohnt',
+        intentionId: 'question',
+        hasSolution: false,
+      },
+      {
+        title: 'welcher hund für anfänger',
+        body: 'erstes mal hundebesitzer. welche rassen sind einfacher? wohnung ist klein aber park ist direkt nebenan',
+        intentionId: 'question',
+        hasSolution: false,
+      },
+      {
+        title: 'hund frisst kot von anderen hunden hilfe',
+        body: 'so eklig sorry aber er macht das andauernd. ist das gefährlich? wie hör ich das auf',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'hundeschule empfehlung berlin',
+        body: 'suche gute hundeschule in berlin, am besten kreuzberg oder neukölln. hat jemand tipps?',
+        intentionId: 'question',
+        hasSolution: false,
+      },
+      {
+        title: 'hund hat durchfall seit 3 tagen',
+        body: 'frisst normal trinkt normal aber halt durchfall. kein blut oder so. ab wann zum tierarzt?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'eure hunde und silvester',
+        body: 'letztes jahr war katastrophe mit dem ganzen geböller. was macht ihr dieses jahr? habt ihr tricks?',
+        intentionId: 'discussion',
+        hasSolution: false,
+      },
+    ],
+  },
+  // FRENCH CIRCLE
+  {
+    name: 'c/animaux',
+    about: 'Discussion sur les animaux de compagnie - chats, chiens, et plus',
+    ownerIndex: 4, // c3d05
+    questions: [
+      {
+        title: 'Mon chat refuse sa nouvelle litiere',
+        body: 'jai change de marque de litiere (moins chere) et maintenant il fait ses besoins a cote... est-ce que cest normal? dois je revenir a lancienne?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'Premier chien - conseils pour debutant?',
+        body: 'je vais adopter un chien bientot (un berger australien de 2 ans). jamais eu de chien avant. quest-ce que jaurais du savoir avant??',
+        intentionId: 'question',
+        hasSolution: false,
+      },
+      {
+        title: 'chat qui miaule la nuit sans arret',
+        body: 'mon chat de 5 ans miaule toute la nuit depuis 2 semaines. le veto dit quil est en bonne sante. cest quoi le probleme?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'meilleure nourriture pour chat?',
+        body: 'actuellement je donne du whiskas mais on ma dit que cest pas terrible. vous donnez quoi a vos chats?',
+        intentionId: 'discussion',
+        hasSolution: false,
+      },
+      {
+        title: 'mon chien a peur des autres chiens',
+        body: 'des quil voit un autre chien il tire pour fuir ou il aboie comme un fou. ca rend les promenades tres stressantes. comment je peux laider?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'combien coute un chat par mois',
+        body: 'je veux adopter un chat mais je suis etudiant. cest combien par mois en moyenne? nourriture litiere veto etc',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'chat dexterieur ou dinterieur',
+        body: 'jhabite en ville avec un balcon. est-ce cruel de garder un chat a linterieur? il aura jamais connu lexterieur',
+        intentionId: 'discussion',
+        hasSolution: false,
+      },
+      {
+        title: 'mon chien mange trop vite',
+        body: 'il avale sa gamelle en 30 secondes et apres il vomit parfois. jai essaye de donner moins mais il a encore faim. des solutions?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'voyager avec son chat en train',
+        body: 'je dois prendre le tgv avec mon chat le mois prochain. cest comment? il va stresser? des conseils?',
+        intentionId: 'question',
+        hasSolution: true,
+      },
+      {
+        title: 'adoption en refuge vs eleveur',
+        body: 'on hesite entre adopter en refuge ou acheter chez un éleveur. quels sont les avantages et inconvenients de chaque?',
+        intentionId: 'discussion',
+        hasSolution: false,
       },
     ],
   },
@@ -329,197 +406,582 @@ interface AnswerTemplate {
 }
 
 const ANSWERS_DATA: Record<string, AnswerTemplate[]> = {
-  'My golden retriever won\'t stop barking at the mailman': [
+  // ==================== c/pets ANSWERS ====================
+  'my cat wont stop meowing at 3am help': [
     {
-      text: 'Have you tried desensitization training? The key is to start before the mailman arrives and reward calm behavior.',
+      text: 'have you tried feeding her right before bed? sometimes they meow cause theyre hungry',
       replies: [
-        { text: 'This worked for my lab! Took about 2 weeks of consistent training.' },
-        {
-          text: 'How long should each session be?',
-          replies: [{ text: 'I did 10-15 minute sessions, twice a day. Short but consistent worked better for us.' }],
-        },
-      ],
-    },
-    { text: 'Check out the "engage-disengage" game. It\'s designed exactly for this kind of reactivity.' },
-    {
-      text: 'The key is to redirect BEFORE the trigger, not after. Try giving a high-value treat the moment you hear the mail truck, before your dog even reacts. Eventually they\'ll associate mail time with treats instead of barking.',
-      isSolution: true,
-    },
-    { text: 'We had the same issue. Ended up asking our mailman to give our dog a treat each day. Now she loves him!' },
-  ],
-  'Best dog food brands for sensitive stomachs?': [
-    {
-      text: 'Hill\'s Science Diet Sensitive Stomach worked wonders for my GSD. A bit pricey but worth it.',
-      replies: [{ text: 'Second this! My vet specifically recommended Hill\'s.' }],
-    },
-    { text: 'Try a limited ingredient diet first to rule out allergies. Might not be sensitivity but an actual allergy.' },
-    {
-      text: 'We switched to Purina Pro Plan Sensitive Skin & Stomach and saw improvement within a week. The salmon formula seems to be the gentlest. Make sure to transition slowly over 7-10 days.',
-      isSolution: true,
-    },
-    { text: 'Have you considered raw feeding? Completely fixed my dog\'s digestive issues.' },
-  ],
-  'Just adopted my first rescue dog!': [
-    { text: 'Congratulations! The first few weeks can be challenging but so rewarding. Look up the "3-3-3 rule" for rescue dogs.' },
-    {
-      text: 'Give her time and space. My rescue didn\'t show his true personality for about 3 months!',
-      replies: [
-        { text: 'Same here! Thought my dog was super chill, turns out he was just scared. Now he\'s a total goofball.' },
-      ],
-    },
-    { text: 'Best decision I ever made was adopting. You\'re going to love the journey!' },
-    { text: 'Make sure to establish a routine quickly. Rescues thrive on predictability.' },
-  ],
-  'Why does my cat knock things off tables?': [
-    { text: 'It\'s actually hunting behavior! They\'re testing if the "prey" will move.' },
-    {
-      text: 'Cats do this for attention. Even negative attention is still attention. Try ignoring it completely.',
-      replies: [
-        { text: 'Can confirm. The moment I stopped reacting, my cat lost interest in knocking stuff over.' },
-        { text: 'Mine just does it more aggressively if I ignore it lol' },
+        { text: 'this actually worked for my cat! worth a shot' },
       ],
     },
     {
-      text: 'It\'s a combination of curiosity, hunting instinct, and yes, sometimes seeking attention. Cats are curious about how objects move and fall. Provide interactive toys that satisfy this curiosity in less destructive ways.',
+      text: 'play with her for like 30min before bedtime to tire her out. the meowing is probably boredom/excess energy. also make sure shes not in heat lol',
       isSolution: true,
     },
-    { text: 'Welcome to cat ownership! This is just what they do. I\'ve learned to not leave anything breakable on surfaces.' },
-  ],
-  'Cat not using litter box anymore': [
     {
-      text: 'Even if vet says healthy, I\'d push for a urinalysis. UTIs can be sneaky.',
-      replies: [{ text: 'Agreed. My cat tested "healthy" initially but a second opinion found crystals.' }],
-    },
-    { text: 'Could be stress. Any changes outside the house? New neighbors? Construction nearby?' },
-    {
-      text: 'Try adding a second litter box in a different location. The rule is one box per cat plus one. Also experiment with different litter types - cats can suddenly develop preferences. Finally, make sure the box is in a quiet, private location.',
-      isSolution: true,
-    },
-    { text: 'How often are you cleaning it? Some cats are very particular about cleanliness.' },
-    { text: 'Is the box big enough? Maine Coons are huge and need larger boxes than standard ones.' },
-  ],
-  'Beginner 20 gallon tank stocking ideas?': [
-    {
-      text: 'Tetras and corys are a great choice! Maybe 8-10 neon tetras and 6 corydoras.',
-      replies: [{ text: 'I\'d suggest pandas or bronze corys for beginners. Very hardy!' }],
-    },
-    {
-      text: 'For a 20 gallon, you could do: 10 neon tetras, 6 corydoras, and a small school of cherry shrimp for cleanup. Make sure to add fish slowly - 3-4 at a time with a week in between. This gives your beneficial bacteria time to adjust.',
-      isSolution: true,
-    },
-    { text: 'Whatever you do, avoid common plecos! They get way too big for a 20 gallon.' },
-    { text: 'Consider a centerpiece fish too - a honey gourami would be perfect and very peaceful.' },
-  ],
-  'My betta fish has fin rot - help!': [
-    { text: 'Start with clean, warm water and frequent water changes. Sometimes that\'s enough for mild cases.' },
-    {
-      text: 'For mild fin rot, daily 25% water changes with Indian almond leaves works well. For moderate cases, Kanaplex is effective and betta-safe. Keep the water extra warm (80F) to boost healing. Remove any plastic plants that could snag fins.',
-      isSolution: true,
-    },
-    { text: 'API Fin & Body Cure worked for my betta. Follow the instructions exactly.' },
-  ],
-  'Ball python not eating for 2 months': [
-    {
-      text: 'Ball pythons are notorious for going off food. Check your temps and humidity first.',
+      text: 'lol welcome to cat ownership. mine did this for years. eventually just got earplugs tbh',
       replies: [
-        { text: 'What are your current temps? Hot side should be 88-92F.' },
-        { text: 'Humidity should be 60-70%. Low humidity causes feeding issues.' },
+        { text: 'same 😂 you get used to it' },
+        { text: 'thats not really a solution tho' },
+      ],
+    },
+    { text: 'could be cognitive issues if shes older? my senior cat started doing this' },
+  ],
+  'Just found out my dog has diabetes': [
+    {
+      text: 'my dog was diagnosed 3 years ago and hes doing great now! the insulin shots seem scary at first but you get used to it. hang in there',
+      replies: [
+        { text: 'how much does the insulin cost per month if you dont mind me asking' },
+        { text: 'thanks for sharing this gives me hope' },
+      ],
+    },
+    { text: 'its definitely manageable. biggest thing is keeping a consistent feeding schedule. same time every day' },
+    { text: 'sorry to hear that :( sending good vibes to you and your pup' },
+    { text: 'join a facebook group for diabetic dog owners, theyve been super helpful for us' },
+  ],
+  'how do u get ur cat to drink more water': [
+    {
+      text: 'cat fountain changed everything for us. they like running water apparently',
+      isSolution: true,
+      replies: [
+        { text: 'seconding this!! my cat drinks so much more now' },
+        { text: 'which brand do u have? some are super loud' },
+      ],
+    },
+    { text: 'put water bowls in different rooms. cats dont like water near their food for some reason' },
+    { text: 'add a tiny bit of tuna water to her water bowl. not too much tho cause sodium' },
+  ],
+  'dog ate chocolate what do i do': [
+    { text: 'glad hes ok! for others reading - dark chocolate is way more dangerous than milk chocolate' },
+    {
+      text: 'good to know! i always panic when my dog gets into stuff. saved the vet number on speed dial lol',
+      replies: [
+        { text: 'same here 😅' },
+      ],
+    },
+    { text: 'theres a chocolate toxicity calculator online btw. depends on weight and type of chocolate' },
+  ],
+  'moving to a new apartment with my cat': [
+    {
+      text: 'keep her in one room first with all her stuff (litter food bed). let her get used to that room before exploring the rest',
+      isSolution: true,
+    },
+    {
+      text: 'feliway diffuser helped my anxious cat SO much during our move. plug it in a few days before',
+      replies: [
+        { text: 'does that stuff actually work? always thought it was a scam' },
+        { text: 'worked for us but ymmv i guess' },
+      ],
+    },
+    { text: 'dont wash her blankets before the move. familiar smells help' },
+  ],
+  'pet insurance worth it or nah?': [
+    { text: 'saved my ass when my dog needed emergency surgery. 6k bill and insurance covered 80%' },
+    {
+      text: 'honestly just put money aside each month into a savings account. insurance has so many exclusions',
+      replies: [
+        { text: 'this is what i do. works better imo' },
+        { text: 'yeah but if something happens early on you dont have enough saved yet' },
+      ],
+    },
+    { text: 'depends on the breed. some breeds have known health issues so insurance makes more sense' },
+    { text: 'i have lemonade and theyre pretty good. cheap and easy claims' },
+  ],
+  'why does my dog eat grass': [
+    {
+      text: 'totally normal! some dogs just like the taste. as long as the grass isnt treated with chemicals its fine',
+      isSolution: true,
+    },
+    { text: 'old myth says they do it when their stomach is upset but thats not really proven' },
+    {
+      text: 'mine does it too lol. i call him my little cow 🐄',
+      replies: [
+        { text: 'haha same!!' },
+      ],
+    },
+  ],
+  'best toys for a bored indoor cat?': [
+    { text: 'puzzle feeders are great! makes them work for their food' },
+    {
+      text: 'da bird wand toy. seriously every cat goes crazy for it. also try cardboard boxes lol free and they love em',
+      replies: [
+        { text: 'can confirm da bird is the best cat toy ever made' },
+      ],
+    },
+    { text: 'rotate toys. put some away for a week then bring them back. theyll seem new again' },
+    { text: 'catnip toys if she responds to catnip. not all cats do' },
+  ],
+  'introducing new kitten to resident cat': [
+    {
+      text: 'go SLOW. like really slow. separate rooms for at least a week, swap scents, then supervised visits',
+      isSolution: true,
+      replies: [
+        { text: 'this. we rushed it and it took months for them to get along' },
+      ],
+    },
+    { text: 'jackson galaxy has great videos on this. look up his site' },
+    { text: 'make sure each cat has their own resources. 2 litter boxes, 2 food spots, etc' },
+  ],
+  'unpopular opinion: dogs are easier than cats': [
+    {
+      text: 'disagree lol dogs need walks multiple times a day. cats just need food water and a clean litter box',
+      replies: [
+        { text: 'yeah but at least dogs are predictable. cats are chaos agents' },
+        { text: 'my cat is super low maintenance idk what youre talking about' },
+      ],
+    },
+    { text: 'depends on the individual animal honestly. ive had easy dogs and demanding cats and vice versa' },
+    { text: 'sounds like you got a velcro cat lol. some breeds are like that' },
+  ],
+
+  // ==================== c/rescue ANSWERS ====================
+  'fostering my first dog next week any tips?': [
+    {
+      text: 'decompression is key! let them settle in, dont overwhelm with attention right away. 3-3-3 rule: 3 days to decompress, 3 weeks to learn routine, 3 months to feel at home',
+      isSolution: true,
+    },
+    {
+      text: 'have a safe quiet space ready for them. crate with blanket over it works great',
+      replies: [
+        { text: 'this! our foster hid in his crate the first few days and thats totally normal' },
+      ],
+    },
+    { text: 'dont judge their personality the first week. theyre stressed and wont show their true self yet' },
+    { text: 'take lots of pics for the adoption page! good photos help them get adopted faster' },
+  ],
+  'adopted a street cat and shes hiding under the bed': [
+    {
+      text: 'completely normal! some cats take weeks to come out. just leave food water and litter accessible and give her space',
+      isSolution: true,
+      replies: [
+        { text: 'took my rescue cat 3 weeks. now shes a total lovebug' },
+      ],
+    },
+    { text: 'sit in the room and just read or be on your phone. let her get used to your presence without pressure' },
+    { text: 'try putting a worn tshirt near her hiding spot. your scent will become familiar' },
+  ],
+  'rescue dog reactive to other dogs': [
+    { text: 'look into BAT training (behavior adjustment training). its specifically for reactive dogs' },
+    {
+      text: 'distance is your friend. find his threshold distance and work from there. reward calm behavior',
+      replies: [
+        { text: 'whats threshold distance?' },
+        { text: 'basically how far he needs to be from other dogs to not react. could be 50 feet, could be more' },
+      ],
+    },
+    { text: 'hire a trainer who specializes in reactivity. its really hard to fix on your own tbh' },
+  ],
+  'how to help local shelter without adopting': [
+    {
+      text: 'volunteering is huge! dog walking, cat socializing, laundry, cleaning... shelters always need help',
+      isSolution: true,
+    },
+    { text: 'donations! check their amazon wishlist. they always need towels, bleach, food' },
+    {
+      text: 'fostering temporarily is amazing. frees up a kennel for another animal',
+      replies: [
+        { text: 'second this. even fostering for a weekend helps' },
+      ],
+    },
+    { text: 'share their social media posts! exposure = adoptions' },
+  ],
+  'my foster fail story lol': [
+    {
+      text: 'haha foster fail club!! i failed on my second foster. no regrets',
+      replies: [
+        { text: 'same. was supposed to foster for a week... 3 years later...' },
+      ],
+    },
+    { text: 'this is the best kind of fail tbh. happy for you both!' },
+    { text: 'they call it failing but its really winning' },
+  ],
+  'adopting a bonded pair worth it?': [
+    { text: 'did it and no regrets. they keep each other company when im at work' },
+    {
+      text: 'honestly 2 cats isnt that much more work than 1. food is like $20 more per month. do it!',
+      replies: [
+        { text: 'vet bills might be more tho' },
+        { text: 'true but you can get insurance' },
+      ],
+    },
+    { text: 'if they have to go together itd be sad to separate them. go for it if you can afford it' },
+  ],
+  'senior pets need love too': [
+    { text: 'yes!! adopted my 9yo dog and he was the best dog ever. so chill and grateful' },
+    {
+      text: 'senior cats are amazing. already past the crazy kitten phase lol',
+      replies: [
+        { text: 'this. my senior boy just wants to nap and cuddle. perfect' },
+      ],
+    },
+    { text: 'the shelter near me does reduced adoption fees for seniors. worth asking about' },
+  ],
+  'rescue dog wont eat': [
+    {
+      text: 'super normal for the first few days. stress kills appetite. just keep offering and dont hover',
+      isSolution: true,
+    },
+    { text: 'try hand feeding! sometimes it helps them trust you' },
+    {
+      text: 'add some warm water to kibble or a little plain chicken. make it more appealing',
+      replies: [
+        { text: 'this worked for our rescue. now he eats normally' },
+      ],
+    },
+  ],
+  'how long before rescue cat shows personality': [
+    {
+      text: '3-3-3 rule applies to cats too. 3 days to decompress, 3 weeks to settle, 3 months to fully open up',
+      isSolution: true,
+    },
+    { text: 'my rescue was a completely different cat after 2 months. went from hiding to following me everywhere' },
+    { text: 'some cats are just calm/quiet. might be her personality! but give it time' },
+  ],
+  'anyone else cry when their foster gets adopted': [
+    { text: 'every. single. time. but then i remember i helped save their life and that helps' },
+    {
+      text: 'happy tears! its bittersweet but youre making room to help another one',
+      replies: [
+        { text: 'this is how i cope too' },
+      ],
+    },
+    { text: 'totally normal. you loved them! but youre doing an amazing thing by fostering' },
+    { text: 'i make the adopters send me pics lol. helps to see theyre happy' },
+  ],
+
+  // ==================== c/haustiere ANSWERS ====================
+  'Katze frisst seit 2 Tagen nicht mehr': [
+    {
+      text: '2 tage ohne fressen ist bei katzen schon kritisch... würde nicht bis donnerstag warten ehrlich gesagt',
+      replies: [
+        { text: 'stimmt, katzen können schnell leberschäden bekommen wenn sie zu lange nix fressen' },
       ],
     },
     {
-      text: 'Try these in order: 1) Ensure hot side is 88-92F and humidity is 60-70%, 2) Offer food at night in a dark room, 3) Try leaving the prey item overnight, 4) Some BPs prefer rats over mice or vice versa. Two months isn\'t dangerous for an adult BP - they can go 6+ months safely.',
+      text: 'Probier mal ein anderes Futter oder wärm es leicht an. Manchmal sind sie einfach wählerisch. Aber wenn sie morgen immer noch nix frisst ab zum notdienst',
       isSolution: true,
     },
-    { text: 'Is she in a tub or tank? Tanks with screen tops can stress ball pythons and cause hunger strikes.' },
-    { text: 'Have you tried braining the prey? Sounds gross but it works for picky eaters.' },
+    { text: 'hat sie vielleicht draussen was gefangen und gefressen? passiert bei meiner manchmal' },
   ],
-  'My bearded dragon is brumating - is this normal?': [
-    { text: 'Yes, completely normal! Even captive beardies can brumate. Let him sleep but keep water available.' },
+  'Empfehlungen für gutes Katzenfutter?': [
     {
-      text: 'Brumation is normal for beardies over 1 year old. Signs include: lots of sleeping, hiding, reduced appetite. Keep the basking light on normal schedule but don\'t force food. Offer water by dripping on snout. Only be concerned if they lose significant weight or show signs of illness.',
-      isSolution: true,
-    },
-    { text: 'My beardie brumated for 3 months last year. Totally normal but I was worried too at first!' },
-  ],
-  'Best seeds to attract cardinals?': [
-    { text: 'Black oil sunflower seeds are actually great for cardinals. Try a platform feeder instead of tube.' },
-    {
-      text: 'Cardinals love safflower seeds! Bonus: squirrels and most other birds don\'t like them, so you get fewer unwanted visitors. Use a hopper or platform feeder as cardinals prefer not to cling.',
-      isSolution: true,
-    },
-    { text: 'Mix of sunflower and safflower works well. Also make sure you have nearby shrubs for cover - cardinals like to feel safe.' },
-  ],
-  'Guinea pig making weird noises - should I worry?': [
-    { text: 'The rumbling is called "purring" and means she\'s content! The hops are "popcorning" - a sign of happiness!' },
-    {
-      text: 'Congrats, your guinea pig is happy! The rumble-purr when petted means contentment. The little hops are called "popcorning" and it\'s basically the guinea pig version of jumping for joy. These are both great signs that your piggy is comfortable with you!',
-      isSolution: true,
-    },
-    { text: 'Guinea pigs are actually very vocal! Learn all their sounds - wheeks, purrs, rumbles. It\'s like learning a new language!' },
-  ],
-  'Rabbit suddenly aggressive': [
-    {
-      text: 'At 6 months, this is almost certainly hormonal. Neutering will likely help significantly.',
+      text: 'animonda carny ist gut und nicht zu teuer. gibts im dm',
       replies: [
-        { text: 'Neutered my bun at 6 months and it was night and day difference within a few weeks.' },
-        { text: 'How long after neutering did you see improvement?' },
+        { text: 'kann ich bestätigen, meine katzen mögen das' },
+      ],
+    },
+    { text: 'macs ist auch empfehlenswert. hoher fleischanteil' },
+    { text: 'schau mal auf katzenfutter-tests.net da gibts gute vergleiche' },
+    { text: 'hauptsache kein supermarktfutter wie whiskas oder felix. zu viel zucker und getreide' },
+  ],
+  'Hund hat angst vor gewitter': [
+    {
+      text: 'adaptil diffuser kann helfen. und während gewitter einfach normal verhalten, nicht zu viel trösten sonst bestätigst du die angst',
+      isSolution: true,
+    },
+    {
+      text: 'mein hund hat ne thundershirt weste. hilft tatsächlich bisschen',
+      replies: [
+        { text: 'wo gibts die?' },
+        { text: 'amazon oder zooplus' },
+      ],
+    },
+    { text: 'eventuell mal mit tierarzt über medikamente reden wenn es sehr schlimm ist' },
+  ],
+  'wie oft muss man katzen impfen lassen': [
+    {
+      text: 'grundimmunisierung als kitten, dann auffrischung nach 1 jahr, danach reicht alle 3 jahre für reine wohnungskatzen. freigänger sollten öfter gegen tollwut etc',
+      isSolution: true,
+    },
+    { text: 'kommt auf die impfung an. katzenschnupfen/seuche alle 3 jahre, tollwut jährlich bei freigängern' },
+    { text: 'dein ta will halt geld verdienen lol. jedes jahr ist übertrieben' },
+  ],
+  'hund bellt wenn jemand an der tür klingelt': [
+    { text: 'ignorieren bringt nix. trainier ein alternatives verhalten. zb auf seinen platz gehen bei klingeln' },
+    {
+      text: 'übe erstmal ohne echten besuch. klingel selbst, belohn ruhe. dauert aber',
+      replies: [
+        { text: 'machen wir grad mit unserem. wird langsam besser' },
+      ],
+    },
+    { text: 'bei nem 2 jährigen labrador wirst du das ohne trainer kaum hinkriegen sorry. such dir hilfe' },
+  ],
+  'katze pinkelt neben katzenklo': [
+    {
+      text: 'erstmal: wie viele klos hast du? faustregel ist anzahl katzen + 1',
+      replies: [
+        { text: 'hab nur eins für eine katze... muss ich echt 2 haben?' },
+        { text: 'wäre besser ja' },
       ],
     },
     {
-      text: 'This is classic teenage rabbit behavior! At 6 months they hit puberty and can become territorial and aggressive. Neutering will help both with aggression and also prevent certain cancers. In the meantime, approach at his level rather than reaching down from above, which feels predatory to rabbits.',
+      text: 'kann auch ne blasenentzündung sein. nochmal zum ta und urinprobe machen lassen',
       isSolution: true,
     },
-    { text: 'Until you get him fixed, try approaching him differently. Get down on his level and let him come to you.' },
+    { text: 'hast du die streu gewechselt? oder den standort? katzen sind da sehr empfindlich' },
   ],
-  'How often should I take my cat to the vet?': [
-    { text: 'Annual checkups are important even for healthy cats. They hide illness really well.' },
+  'welches haustier für kinder geeignet': [
+    { text: 'meerschweinchen! die sind robust und tagaktiv. aber mindestens 2 halten!' },
     {
-      text: 'For adult cats 1-10 years old, annual wellness exams are recommended. Cats are masters at hiding illness, and early detection is key. Twice yearly is recommended for seniors (10+). The stress of the visit is worth it for catching issues early.',
-      isSolution: true,
+      text: 'kaninchen sind NICHT pflegeleicht btw. viele unterschätzen das',
+      replies: [
+        { text: 'ja stimmt. und sie wollen auch nicht unbedingt kuscheln' },
+      ],
     },
-    { text: 'Ask your vet about fear-free handling techniques. Can make visits much less stressful!' },
-    { text: 'My vet does house calls now. Game changer for my anxious kitty.' },
+    { text: 'katze wäre auch ne option wenn ihr eine erwachsene adoptiert die bereits mit kindern war' },
   ],
-  'Clicker training basics for dogs': [
+  'kosten für einen hund pro monat?': [
     {
-      text: 'Any consistent clicking sound works - even a ballpoint pen! The key is the sound is always the same.',
-      replies: [{ text: 'I use a retractable pen and it works perfectly!' }],
-    },
-    {
-      text: 'To start clicker training: 1) "Charge" the clicker by clicking and immediately giving a treat, repeat 10-20 times, 2) Your dog will start to associate click = treat, 3) Now use it to mark desired behaviors - click the MOMENT they do something right, then treat. Timing is everything!',
+      text: 'bei uns so 150-200€ im monat. futter ~80, versicherung 30, hundeschule/sonstiges der rest. tierarzt kommt extra',
       isSolution: true,
     },
-    { text: 'Karen Pryor\'s "Don\'t Shoot the Dog" is the bible of clicker training. Highly recommend!' },
+    { text: 'vergiss die anschaffungskosten nicht. erstausstattung kostet auch schnell 300-500€' },
+    { text: 'hundesteuer nicht vergessen! je nach stadt 50-200€ pro JAHR' },
   ],
-  'How to teach a cat to come when called?': [
-    { text: 'Use treats! Call their name, shake the treat bag, reward when they come. Consistency is key.' },
+  'katze kratzt an möbeln trotz kratzbaum': [
     {
-      text: 'It\'s definitely possible! Start by saying their name or a cue word right before meal times. They\'ll learn to associate the word with good things. Gradually use it at random times with high-value treats. Never use the recall word for anything negative like vet visits or nail trims.',
+      text: 'stell den kratzbaum direkt neben die möbel die sie kratzt. dann langsam verschieben wenn sie ihn benutzt',
       isSolution: true,
     },
-    { text: 'My cat comes running when I whistle. Started with treats, now she does it just for pets.' },
-    { text: 'Takes patience but totally works. My cat responds better than my dog honestly!' },
+    { text: 'katzenminze am kratzbaum reiben. macht ihn attraktiver' },
+    {
+      text: 'plastikfolie oder alufolie an die möbel. mögen katzen nicht',
+      replies: [
+        { text: 'das hat bei uns funktioniert!' },
+      ],
+    },
   ],
-  'Tips for first-time foster parents?': [
+  'haustier in mietwohnung erlaubt?': [
     {
-      text: 'Have a separate room ready for the foster. Helps with adjustment and keeps your own pets safe.',
-      replies: [{ text: 'This! Also makes the goodbye easier if they have their own space.' }],
-    },
-    {
-      text: 'Best tips from an experienced foster: 1) Set up a quiet room just for them, 2) Keep foster separate from your pets initially, 3) Take lots of photos for adoption profiles, 4) The first 3 days are hardest - they\'re adjusting, 5) Prepare emotionally for saying goodbye - it\'s hard but you\'re saving lives!',
+      text: 'kleintiere (katzen, kleinhunde) kann man nicht generell verbieten. aber frag trotzdem den vermieter zur sicherheit',
       isSolution: true,
     },
-    { text: 'Take photos! Good pics dramatically increase adoption chances.' },
-    { text: 'It\'s called "foster fail" when you keep them... and it\'s okay if that happens! I\'ve failed three times.' },
+    { text: 'wenns nicht im mietvertrag steht kannst du eigentlich. aber nachbarschaft solltest du auch bedenken' },
+    { text: 'im zweifel schriftlich beim vermieter anfragen. dann hast du es schwarz auf weiß' },
   ],
-  'How to help local shelters if you can\'t adopt': [
-    { text: 'Donations are always needed! Old towels, blankets, food, toys all help.' },
+
+  // ==================== c/hunde ANSWERS ====================
+  'Welpe beißt ständig in die Leine': [
     {
-      text: 'So many ways to help! 1) Volunteer to walk dogs or socialize cats, 2) Donate supplies (check their wishlist), 3) Share their posts on social media, 4) Foster temporarily, 5) Transport animals to vet appointments or adoption events, 6) Help with administrative tasks. Call your local shelter and ask what they need most!',
+      text: 'völlig normal in dem alter! hört meistens beim zahnwechsel auf. bis dahin: leine aus metall oder kette probieren',
       isSolution: true,
     },
-    { text: 'Volunteering is amazing. I walk dogs on Saturday mornings and it\'s the best part of my week.' },
-    { text: 'Even sharing their social media posts helps! Exposure leads to adoptions.' },
+    {
+      text: 'wenn er anfängt stehen bleiben und ignorieren. laufen erst wenn er aufhört',
+      replies: [
+        { text: 'dauert aber ewig bis der das kapiert' },
+      ],
+    },
+    { text: 'bitterapple spray auf die leine. schmeckt scheisse also lässt er es' },
+  ],
+  'ab wann darf welpe treppen laufen': [
+    {
+      text: 'faustregel: bis die gelenke ausgewachsen sind ca 12-18 monate. bei großen rassen länger. tragen ist besser',
+      isSolution: true,
+    },
+    { text: 'frag deinen tierarzt der kann es am besten einschätzen. hängt von der rasse ab' },
+    { text: 'runterlaufen ist schlimmer als hochlaufen btw. wegen der belastung' },
+  ],
+  'hund zieht an der leine was tun': [
+    {
+      text: 'sobald er zieht: stehen bleiben. nur weitergehen wenn leine locker. ist nervig aber funktioniert',
+      isSolution: true,
+    },
+    { text: 'richtungswechsel helfen auch. immer wenn er zieht andere richtung gehen' },
+    {
+      text: 'ein geschirr mit brustbügel kann helfen. dann dreht er sich zu dir wenns zieht',
+      replies: [
+        { text: 'easy walk heisst das glaub ich' },
+      ],
+    },
+  ],
+  'barfen ja oder nein?': [
+    {
+      text: 'machen es seit 5 jahren und unser hund ist topfit. aber du musst dich echt einlesen sonst fehlen nährstoffe',
+      replies: [
+        { text: 'wo hast du dich informiert?' },
+        { text: 'es gibt gute facebook gruppen und ein buch von swanie simon' },
+      ],
+    },
+    { text: 'gutes fertigfutter ist genauso gut und viel einfacher. muss nicht barf sein' },
+    { text: 'halb halb geht auch. wir machen morgens barf abends trockenfutter' },
+  ],
+  'hund alleine lassen wie lange': [
+    { text: '6 std ist schon lang wenn ers nicht gewohnt ist. fang mit kurzen zeiten an und steiger langsam' },
+    {
+      text: 'hol dir nen dogsitter oder gassiservice für mittags. dann sind es nur 2x 3 std',
+      replies: [
+        { text: 'das machen wir auch so. funktioniert gut' },
+      ],
+    },
+    { text: 'kamera aufstellen damit du siehst wie er reagiert. manche hunde pennen einfach die ganze zeit' },
+  ],
+  'welcher hund für anfänger': [
+    { text: 'labrador oder golden retriever sind klassiker. gutmütig und leicht zu trainieren' },
+    {
+      text: 'cavalier king charles spaniel für kleine wohnung. super lieb und anpassungsfähig',
+      replies: [
+        { text: 'aber vorsicht die haben öfter herzprobleme' },
+      ],
+    },
+    { text: 'adopt dont shop! im tierheim gibts tolle mischlingshunde die anfängerfreundlich sind' },
+  ],
+  'hund frisst kot von anderen hunden hilfe': [
+    {
+      text: 'nennt sich koprophagie. kann nährstoffmangel sein oder einfach ne schlechte angewohnheit. tierarzt mal drauf ansprechen',
+      isSolution: true,
+    },
+    { text: 'gibts pulver fürs futter das den kot unattraktiv macht. frag in der tierhandlung' },
+    { text: 'abruf trainieren! vor dem kot stoppen und belohnen wenn er davon ablässt' },
+  ],
+  'hundeschule empfehlung berlin': [
+    { text: 'martin rütter dogs in lichtenberg ist gut aber teuer' },
+    { text: 'guck mal bei stadthunde berlin. die machen auch einzeltraining' },
+    { text: 'haben gute erfahrungen mit hundeschule neukölln gemacht. nette trainer' },
+  ],
+  'hund hat durchfall seit 3 tagen': [
+    {
+      text: '3 tage würd ich nicht länger warten. kann austrocknen. morgen zum ta wenn nicht besser',
+      isSolution: true,
+    },
+    { text: 'schonkost geben. gekochtes huhn mit reis. kein normales futter' },
+    {
+      text: 'hat er vielleicht was falsches gefressen beim spaziergang?',
+      replies: [
+        { text: 'gute frage. manche hunde fressen alles was rumliegt' },
+      ],
+    },
+  ],
+  'eure hunde und silvester': [
+    { text: 'wir fahren aufs land wo weniger geböllert wird. das hilft am meisten' },
+    {
+      text: 'adaptil spray auf die decke und musik laut aufdrehen. fenster zu, rollläden runter',
+      replies: [
+        { text: 'dies. und nicht trösten, normal verhalten' },
+      ],
+    },
+    { text: 'unser ta hat letztes jahr was leichtes zum beruhigen verschrieben. war gold wert' },
+    { text: 'gibts auch spezielle silvester cds zum desensibilisieren. monate vorher anfangen damit' },
+  ],
+
+  // ==================== c/animaux ANSWERS ====================
+  'Mon chat refuse sa nouvelle litiere': [
+    {
+      text: 'oui cest normal les chats sont tres difficiles. reviens a lancienne litiere et ensuite melange petit a petit si tu veux changer',
+      isSolution: true,
+    },
+    {
+      text: 'quelle litiere tu as prise? certaines sentent trop fort pour eux',
+      replies: [
+        { text: 'probablement ca. celle pas chere sent souvent le parfum' },
+      ],
+    },
+    { text: 'nettoie bien lendroit ou il a fait a cote sinon il va continuer au meme endroit' },
+  ],
+  'Premier chien - conseils pour debutant?': [
+    { text: 'le berger australien cest pas le plus facile pour un premier chien hein... ils ont besoin de beaucoup dactivite' },
+    {
+      text: 'inscris toi a un cours deducation canine des le debut. ca aide enormement',
+      replies: [
+        { text: 'oui ca vaut vraiment le coup' },
+      ],
+    },
+    { text: 'patience patience patience. les premiers mois sont durs mais ca vaut le coup' },
+    { text: 'achete un bon livre sur leducation positive. evite les methodes punitives' },
+  ],
+  'chat qui miaule la nuit sans arret': [
+    { text: 'il est castre? sinon ca pourrait etre ca' },
+    {
+      text: 'joue avec lui le soir pour le fatiguer. et donne a manger juste avant de dormir',
+      isSolution: true,
+    },
+    {
+      text: 'des fois cest lennui. essaie des jouets interactifs pour la nuit',
+      replies: [
+        { text: 'genre quoi comme jouet?' },
+        { text: 'des balles avec friandises ou des circuits a balles' },
+      ],
+    },
+  ],
+  'meilleure nourriture pour chat?': [
+    { text: 'whiskas cest vraiment pas terrible. trop de cereales pas assez de viande' },
+    {
+      text: 'essaie applaws ou almo nature. plus cher mais meilleure qualite',
+      replies: [
+        { text: 'on trouve ca ou?' },
+        { text: 'animalerie ou internet' },
+      ],
+    },
+    { text: 'regarde la composition. le premier ingredient doit etre de la viande pas des cereales' },
+  ],
+  'mon chien a peur des autres chiens': [
+    {
+      text: 'desensibilisation progressive. commence de loin et recompense le calme. rapproche toi tres lentement sur plusieurs semaines',
+      isSolution: true,
+    },
+    { text: 'ca vient souvent dune mauvaise socialisation chiot. un educateur peut aider' },
+    { text: 'evite de le forcer a rencontrer des chiens. ca empire la peur' },
+  ],
+  'combien coute un chat par mois': [
+    {
+      text: 'compte environ 30-50€ par mois. nourriture 20€, litiere 10€, et mets de cote pour le veto',
+      isSolution: true,
+    },
+    {
+      text: 'le plus cher cest le veterinaire. prevois un budget annuel de 100-200€ minimum',
+      replies: [
+        { text: 'et les urgences peuvent couter tres cher' },
+      ],
+    },
+    { text: 'cest raisonnable pour un etudiant si tu fais attention aux depenses' },
+  ],
+  'chat dexterieur ou dinterieur': [
+    { text: 'en ville interieur cest plus sur. les voitures sont dangereuses' },
+    {
+      text: 'si il a jamais connu lexterieur il sera tres bien a linterieur. cest pas cruel',
+      replies: [
+        { text: 'tout a fait. le mien est tres heureux en appartement' },
+      ],
+    },
+    { text: 'tu peux amenager le balcon avec un filet de securite. comme ca il a lair frais' },
+  ],
+  'mon chien mange trop vite': [
+    {
+      text: 'achete une gamelle anti-glouton. ca le force a manger lentement',
+      isSolution: true,
+    },
+    {
+      text: 'ou etale la nourriture sur un tapis de lechage. meme effet',
+      replies: [
+        { text: 'bonne idee ca!' },
+      ],
+    },
+    { text: 'divise la portion en 2-3 repas dans la journee. moins a chaque fois' },
+  ],
+  'voyager avec son chat en train': [
+    {
+      text: 'prends une caisse de transport solide et couvre la avec une couverture. ca le rassure',
+      isSolution: true,
+    },
+    { text: 'pas de nourriture avant le voyage pour eviter quil vomisse' },
+    {
+      text: 'spray feliway dans la caisse 15min avant. ca calme',
+      replies: [
+        { text: 'ca marche vraiment ce truc?' },
+        { text: 'pour certains chats oui' },
+      ],
+    },
+    { text: 'reserve un billet avec espace pour animaux. cest obligatoire en tgv' },
+  ],
+  'adoption en refuge vs eleveur': [
+    {
+      text: 'refuge: tu sauves une vie, moins cher, mais tu connais pas toujours lhistoire de lanimal',
+      replies: [
+        { text: 'par contre les benevoles connaissent souvent bien le caractere' },
+      ],
+    },
+    { text: 'eleveur: tu sais do vient lanimal, race pure, mais beaucoup plus cher et ethiquement discutable' },
+    { text: 'franchement les refuges sont pleins... si tu peux adopter cest mieux' },
   ],
 };
 
@@ -534,7 +996,7 @@ export async function seedDevelopmentData(): Promise<void> {
   const createdUsers: SeedUser[] = [];
 
   for (const userData of SEED_USERS) {
-    const username = `${userData.prefix}_${userData.suffix}`;
+    const username = `${userData.prefix}_${userData.word1}_${userData.word2}`;
     const user = await User.findOneAndUpdate(
       { username },
       {
@@ -543,7 +1005,7 @@ export async function seedDevelopmentData(): Promise<void> {
         authProvider: 'google',
         followedCircles: [],
         followedQuestions: [],
-        respectPoints: Math.floor(Math.random() * 500),
+        aura: Math.floor(Math.random() * 500),
       },
       { upsert: true, new: true }
     );
@@ -580,11 +1042,13 @@ export async function seedDevelopmentData(): Promise<void> {
       continue;
     }
 
-    const owner = randomUser(createdUsers);
+    // Use specific owner based on ownerIndex
+    const owner = createdUsers[circleData.ownerIndex];
     const questions = circleData.questions.map((q, idx) => {
       const questionOwner = randomUser(createdUsers);
       return {
         _id: new mongoose.Types.ObjectId(),
+        slug: generateSlug(q.title),
         circleId: '', // Set after creation
         ownerId: questionOwner._id.toString(),
         ownerName: questionOwner.username,
