@@ -4,7 +4,8 @@ import {
   MicrosoftLoginProvider,
 } from '@abacritt/angularx-social-login';
 import { Token } from '../typedefs/Token.typedef';
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ApiService } from './api.service';
 import { firstValueFrom } from 'rxjs';
 import { jwtDecode as decode } from 'jwt-decode';
@@ -19,6 +20,7 @@ const TOKEN_NAME = 'amapet_token';
   providedIn: 'root',
 })
 export class AuthService {
+  private platformId = inject(PLATFORM_ID);
   private sas = inject(SocialAuthService);
   private api = inject(ApiService<Token>);
   private router = inject(Router);
@@ -36,6 +38,10 @@ export class AuthService {
    *
    ***/
   public subscribeLogin = async () => {
+    if (!isPlatformBrowser(this.platformId)) {
+      return; // Skip on server
+    }
+
     const storedToken = localStorage.getItem(TOKEN_NAME);
 
     // Always set up auth state subscription to handle login attempts
@@ -64,7 +70,9 @@ export class AuthService {
   };
 
   public logout = async () => {
-    localStorage.removeItem(TOKEN_NAME);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(TOKEN_NAME);
+    }
     this.isLoggedIn.set(false);
     this.user.set(undefined);
     this.router.navigate(['/'], { replaceUrl: true });
@@ -77,7 +85,9 @@ export class AuthService {
     if (diff < 0) {
       this.isLoggedIn.set(false);
       this.user.set(undefined);
-      localStorage.removeItem(TOKEN_NAME);
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.removeItem(TOKEN_NAME);
+      }
       this.ms.add({
         severity: 'warn',
         summary: 'Session Expired',
@@ -166,7 +176,9 @@ export class AuthService {
    *
    ***/
   private setToken = (token: string) => {
-    localStorage.setItem(TOKEN_NAME, token);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(TOKEN_NAME, token);
+    }
   };
 
   /***
@@ -175,6 +187,9 @@ export class AuthService {
    *
    ***/
   public getToken = () => {
+    if (!isPlatformBrowser(this.platformId)) {
+      return null;
+    }
     return localStorage.getItem(TOKEN_NAME);
   };
 
@@ -184,6 +199,9 @@ export class AuthService {
    *
    ***/
   public getUser = (): User => {
+    if (!isPlatformBrowser(this.platformId)) {
+      return {} as User;
+    }
     const jwtToken = localStorage.getItem(TOKEN_NAME);
     const userPayload = jwtToken && decode(jwtToken);
     return userPayload as User;
@@ -205,6 +223,9 @@ export class AuthService {
    *
    ***/
   public getUserId = () => {
+    if (!isPlatformBrowser(this.platformId)) {
+      return undefined;
+    }
     const jwtToken = localStorage.getItem(TOKEN_NAME);
     const payload = jwtToken && decode(jwtToken);
     return (payload as any)?._id;
@@ -226,6 +247,9 @@ export class AuthService {
    *
    ***/
   public getPermLevel = () => {
+    if (!isPlatformBrowser(this.platformId)) {
+      return undefined;
+    }
     const jwtToken = localStorage.getItem(TOKEN_NAME);
     const payload = jwtToken && decode(jwtToken);
     return (payload as any)?.permLevel;

@@ -17,6 +17,7 @@ import { TermsComponent } from './containers/legal/terms/terms.component';
 import { permLevelGuard } from './guards/perm-level.guard';
 import { appAvailableGuard } from './guards/app-available.guard';
 import { moderationGuard } from './guards/moderation.guard';
+import { questionResolver } from './resolvers/question.resolver';
 
 const routes: Routes = [
   {
@@ -43,6 +44,7 @@ const routes: Routes = [
     path: 'c/:name/questions/:qid',
     component: QuestionDetailComponent,
     canActivate: [appAvailableGuard],
+    resolve: { data: questionResolver },
   },
   {
     path: 'profile',

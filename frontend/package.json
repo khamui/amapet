@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "clean": "rm -rf node_modules",
-    "cstart": "npm run clean && npm cache clean --force && npm ci && npm start"
+    "cstart": "npm run clean && npm cache clean --force && npm ci && npm start",
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -22,9 +23,11 @@
     "@angular/platform-browser-dynamic": "20.3.17",
     "@angular/platform-server": "20.3.17",
     "@angular/router": "20.3.17",
+    "@angular/ssr": "^20.3.22",
     "@primeng/themes": "20.1.2",
     "@primeuix/themes": "^2.0.2",
     "@tailwindcss/postcss": "^4.1.11",
+    "express": "^5.1.0",
     "jwt-decode": "4.0.0",
     "postcss": "^8.5.6",
     "primeicons": "7.0.0",
@@ -39,6 +42,8 @@
     "@angular/build": "^20.3.2",
     "@angular/cli": "20.3.22",
     "@angular/compiler-cli": "20.3.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^20.17.19",
     "postcss": "^8.5.3",
     "typescript": "5.9.3"
   }

@@ -50,7 +50,15 @@
             ],
             "scripts": [
               "node_modules/quill/dist/quill.js"
-            ]
+            ],
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "security": {
+              "allowedHosts": ["localhost", "127.0.0.1", "helpa.ws", "www.helpa.ws", "api.helpa.ws"]
+            },
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {

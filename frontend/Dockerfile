@@ -1,4 +1,4 @@
-# Stage 1: Build Angular app
+# Stage 1: Build Angular SSR app
 FROM node:20-slim AS build
 WORKDIR /app
 
@@ -8,15 +8,15 @@ RUN npm ci
 
 # Copy the source code and build
 COPY . .
-RUN npm run build --prod
+RUN npm run build
 
-# Stage 2: Serve with Nginx
-FROM nginx:alpine
-COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
+# Stage 2: Run Node.js SSR server
+FROM node:20-alpine
+WORKDIR /app
 
-# Optional: copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy built files
+COPY --from=build /app/dist/frontend/browser ./browser
+COPY --from=build /app/dist/frontend/server ./server
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-
+EXPOSE 4000
+CMD ["node", "server/server.mjs"]
