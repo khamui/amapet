@@ -72,6 +72,7 @@ export class AppComponent implements OnInit {
   private setCircleBox = () => {
     const url = this.router.url;
     const knownRoutes = [
+      '/',
       '/explore',
       '/c/',
       '/profile',
