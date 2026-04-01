@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -13,13 +14,20 @@ const API = environment.apiUrl;
   providedIn: 'root',
 })
 export class ApiService<T> {
+  private platformId = inject(PLATFORM_ID);
+
   constructor(private http: HttpClient) {}
 
-  private getHeaders = () => ({
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('amapet_token')}`,
-    },
-  });
+  private getHeaders = () => {
+    const token = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('amapet_token')
+      : null;
+    return {
+      headers: {
+        Authorization: `Bearer ${token || ''}`,
+      },
+    };
+  };
 
   // create as promise
   create = async (resource: string, payload: T, withAuth = true) => {

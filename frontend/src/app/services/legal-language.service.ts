@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export type LegalLanguage = 'de' | 'en';
 
@@ -8,12 +9,15 @@ const STORAGE_KEY = 'amapet_legal_lang';
   providedIn: 'root',
 })
 export class LegalLanguageService {
+  private platformId = inject(PLATFORM_ID);
   private readonly lang = signal<LegalLanguage>(this.loadLanguage());
 
   public readonly language = this.lang.asReadonly();
 
   public setLanguage(language: LegalLanguage): void {
-    localStorage.setItem(STORAGE_KEY, language);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(STORAGE_KEY, language);
+    }
     this.lang.set(language);
   }
 
@@ -23,6 +27,9 @@ export class LegalLanguageService {
   }
 
   private loadLanguage(): LegalLanguage {
+    if (!isPlatformBrowser(this.platformId)) {
+      return 'en'; // Default for SSR
+    }
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'de' || stored === 'en') {
       return stored;

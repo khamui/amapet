@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AnswerService } from 'src/app/services/answer.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { ModerationStore } from 'src/app/stores/moderation.store';
+import { QuestionResolverData } from 'src/app/resolvers/question.resolver';
 import { Answer } from 'src/app/typedefs/Answer.typedef';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
@@ -79,38 +80,12 @@ export class QuestionDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /* observes params */
-    /* get circle id by circle name */
-    /* fetch get question */
-    const params$ = this.ar.paramMap;
-    params$.subscribe(async (paramMap: any) => {
-      const questionId = paramMap.get('qid');
-      const circleName = paramMap.get('name');
+    // Get resolved data from route (SSR-compatible)
+    const resolvedData = this.ar.snapshot.data['data'] as QuestionResolverData | null;
 
-      this.circle = await this.getCircle(circleName);
-
-      // Try to find question in circle.questions first (by slug or _id)
-      this.question = this.circle.questions.find(
-        (q) => q.slug === questionId || q._id === questionId,
-      ) as Question;
-
-      // If not found, check if user is moderator and look in moderated circles
-      if (!this.question) {
-        const moderatedCircles = this.moderationStore.moderatedCircles$();
-        const moderatedCircle = moderatedCircles.find(
-          (c) => c.name === `c/${circleName}`,
-        );
-        if (moderatedCircle) {
-          this.question = moderatedCircle.questions.find(
-            (q) => q.slug === questionId || q._id === questionId,
-          ) as Question;
-        }
-      }
-
-      // Fallback: fetch question directly if still not found
-      if (!this.question) {
-        this.question = await this.getQuestion(circleName, questionId);
-      }
+    if (resolvedData) {
+      this.circle = resolvedData.circle;
+      this.question = resolvedData.question;
 
       if (this.currentUserId === this.question?.ownerId) {
         this.isOwner = true;
@@ -119,7 +94,7 @@ export class QuestionDetailComponent implements OnInit {
       if (this.question) {
         this.ans.readAnswers(this.question._id as string);
       }
-    });
+    }
   }
 
   private getCircle = async (circleName: string) => {
