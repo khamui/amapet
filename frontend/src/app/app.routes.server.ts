@@ -1,7 +1,8 @@
 import { RenderMode, ServerRoute } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
-  // All routes use SSR - rendered on each request
-  // Prerendering disabled due to localStorage usage in app initialization
+  // Root path - redirect handled client-side
+  { path: '', renderMode: RenderMode.Client },
+  // All other routes use SSR
   { path: '**', renderMode: RenderMode.Server },
 ];
