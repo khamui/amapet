@@ -43,7 +43,7 @@ export const middlewareNotifications = {
         unread: true,
         originCircleId: circleId,
         originCircleName: foundCircle[0].name,
-        originQuestionId: questionId,
+        originQuestionId: foundQuestion.slug || questionId,
         created_at: Date.now(),
       };
 
@@ -69,6 +69,7 @@ export const middlewareNotifications = {
 
     const foundCircle = (await retrieveModel(Circle, circleFilter)) as ICircleDocument[];
     const foundAnswer = (await retrieveModel(Answer, answerFilter)) as IAnswerDocument[];
+    const foundQuestion = foundCircle[0]?.questions.find((q) => q._id?.toString() === questionId);
     const { upvotes, downvotes } = foundAnswer[0];
     const totalVotes = upvotes.length - downvotes.length + 1;
 
@@ -79,7 +80,7 @@ export const middlewareNotifications = {
         unread: true,
         originCircleId: circleId,
         originCircleName: foundCircle[0].name,
-        originQuestionId: questionId,
+        originQuestionId: foundQuestion?.slug || questionId,
         created_at: Date.now(),
       };
 
@@ -104,9 +105,11 @@ export const middlewareNotifications = {
     const filter = { _id: circleId };
     const foundCircle = (await retrieveModel(Circle, filter)) as ICircleDocument[];
 
+    const foundQuestion = foundCircle[0]?.questions.find((q) => q._id?.toString() === questionId);
+
     let foundParent: { ownerId?: string } | undefined;
     if (parentType === 'question') {
-      foundParent = foundCircle[0].questions.find((q) => q._id?.toString() === questionId);
+      foundParent = foundQuestion;
     } else {
       const answerFilter = { _id: parentId };
       const foundAnswer = (await retrieveModel(Answer, answerFilter)) as IAnswerDocument[];
@@ -125,7 +128,7 @@ export const middlewareNotifications = {
       value: { text: answerText },
       originCircleId: circleId,
       originCircleName: foundCircle[0].name,
-      originQuestionId: questionId,
+      originQuestionId: foundQuestion?.slug || questionId,
       created_at: Date.now(),
     };
 

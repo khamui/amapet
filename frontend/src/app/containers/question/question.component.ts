@@ -61,7 +61,7 @@ export class QuestionComponent implements OnInit {
   handleQuestionClicked = (event: Event) => {
     event.preventDefault();
     event.stopPropagation();
-    this.ro.navigate([this.circle.name, 'questions', this.question._id]);
+    this.ro.navigate([this.circle.name, 'questions', this.question.slug || this.question._id]);
   };
 
   handleEdit = (event: MouseEvent) => {
@@ -94,7 +94,7 @@ export class QuestionComponent implements OnInit {
   handleModerate = (event: MouseEvent) => {
     event.stopPropagation();
     const plainCircleName = this.circle.name.replace('c/', '');
-    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question._id]);
+    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question.slug || this.question._id]);
   };
 
   public handleUpvoteQuestion = () => {

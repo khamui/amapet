@@ -29,6 +29,7 @@ export interface IUserDocument extends IUser, Document {}
 // ============ Question (embedded in Circle and standalone) ============
 export interface IQuestion {
   _id?: Types.ObjectId;
+  slug?: string;
   circleId?: string;
   ownerId?: string;
   ownerName?: string;

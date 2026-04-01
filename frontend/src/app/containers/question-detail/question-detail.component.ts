@@ -89,9 +89,9 @@ export class QuestionDetailComponent implements OnInit {
 
       this.circle = await this.getCircle(circleName);
 
-      // Try to find question in circle.questions first
+      // Try to find question in circle.questions first (by slug or _id)
       this.question = this.circle.questions.find(
-        (q) => q._id === questionId,
+        (q) => q.slug === questionId || q._id === questionId,
       ) as Question;
 
       // If not found, check if user is moderator and look in moderated circles
@@ -102,7 +102,7 @@ export class QuestionDetailComponent implements OnInit {
         );
         if (moderatedCircle) {
           this.question = moderatedCircle.questions.find(
-            (q) => q._id === questionId,
+            (q) => q.slug === questionId || q._id === questionId,
           ) as Question;
         }
       }
@@ -201,7 +201,7 @@ export class QuestionDetailComponent implements OnInit {
   handleModerate = (event: MouseEvent) => {
     event.stopPropagation();
     const plainCircleName = this.circle.name.replace('c/', '');
-    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question._id]);
+    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question.slug || this.question._id]);
   };
 
   private findAnswerById(answers: Answer[], id: string): Answer | null {

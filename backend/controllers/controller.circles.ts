@@ -7,6 +7,7 @@ import { Notification } from '../db/models/notification.js';
 import mongoose from 'mongoose';
 import type { ICircleDocument, IQuestion } from '../db/models/circle.js';
 import type { INotification } from '../types/models.js';
+import { generateUniqueSlug } from '../utils/slug.utils.js';
 
 export const controllerCircles = {
   readOne: async (req: Request, res: Response): Promise<void> => {
@@ -145,14 +146,22 @@ export const controllerCircles = {
   },
   readOneQuestion: async (req: Request, res: Response): Promise<void> => {
     const circleName = req.params.name as string;
-    const questionId = req.params.qid as string;
+    const qidOrSlug = req.params.qid as string;
     const userId = req.userPayload?._id;
 
     try {
-      const filter = {
-        name: `c/${circleName}`,
-        'questions._id': new mongoose.Types.ObjectId(questionId),
-      };
+      const isObjectId = mongoose.Types.ObjectId.isValid(qidOrSlug);
+
+      const filter = isObjectId
+        ? {
+            name: `c/${circleName}`,
+            'questions._id': new mongoose.Types.ObjectId(qidOrSlug),
+          }
+        : {
+            name: `c/${circleName}`,
+            'questions.slug': qidOrSlug,
+          };
+
       const foundCircles = (await retrieveModel(
         Circle,
         filter
@@ -164,9 +173,13 @@ export const controllerCircles = {
       }
 
       const circle = foundCircles[0];
-      const foundQuestion = Array.from(circle.questions).find(
-        (q: IQuestion) => q._id?.toString() === questionId
-      );
+      const foundQuestion = isObjectId
+        ? Array.from(circle.questions).find(
+            (q: IQuestion) => q._id?.toString() === qidOrSlug
+          )
+        : Array.from(circle.questions).find(
+            (q: IQuestion) => q.slug === qidOrSlug
+          );
 
       if (!foundQuestion) {
         res.status(404).send('Question not found');
@@ -182,21 +195,31 @@ export const controllerCircles = {
         return;
       }
 
+      // 301 redirect if accessed via ObjectId and question has a slug
+      if (isObjectId && foundQuestion.slug) {
+        res.redirect(301, `/c/${circleName}/questions/${foundQuestion.slug}`);
+        return;
+      }
+
       res.status(200).json(foundQuestion);
     } catch {
       res.status(500).send("couldn't retrieve model");
     }
   },
   createOneQuestion: async (req: Request, res: Response): Promise<void> => {
+    const circleId = req.params.id as string;
+    const slug = await generateUniqueSlug(circleId, req.body.title as string);
+
     const payload = {
       ...req.body,
       _id: new mongoose.Types.ObjectId(),
+      slug,
       created_at: Date.now(),
-      circleId: req.params.id,
+      circleId,
       upvotes: [req.body.ownerId],
       downvotes: [],
     };
-    const filter = { _id: req.params.id };
+    const filter = { _id: circleId };
     const addExpr = { $push: { questions: payload } };
     try {
       await updateModel(Circle, filter, addExpr);
@@ -209,22 +232,59 @@ export const controllerCircles = {
     const circleId = req.params.id as string;
     const questionId = req.params.qid as string;
 
-    const filter = {
-      _id: circleId,
-      'questions._id': new mongoose.Types.ObjectId(questionId),
-    };
-
-    const updateExpr = {
-      $set: {
-        'questions.$.title': req.body.title,
-        'questions.$.body': req.body.body,
-        'questions.$.modded_at': Date.now(),
-      },
-    };
-
     try {
-      const updated = await updateModel(Circle, filter, updateExpr);
-      res.status(200).json(updated);
+      // Get current question to check if title changed
+      const circle = await Circle.findById(circleId);
+      const currentQuestion = circle?.questions.find(
+        (q) => q._id?.toString() === questionId
+      );
+
+      if (!currentQuestion) {
+        res.status(404).send('Question not found');
+        return;
+      }
+
+      // Regenerate slug if title changed
+      const newSlug =
+        req.body.title !== currentQuestion.title
+          ? await generateUniqueSlug(circleId, req.body.title, questionId)
+          : currentQuestion.slug;
+
+      const filter = {
+        _id: circleId,
+        'questions._id': new mongoose.Types.ObjectId(questionId),
+      };
+
+      const updateExpr = {
+        $set: {
+          'questions.$.title': req.body.title,
+          'questions.$.body': req.body.body,
+          'questions.$.slug': newSlug,
+          'questions.$.modded_at': Date.now(),
+        },
+      };
+
+      await updateModel(Circle, filter, updateExpr);
+
+      // Return updated question
+      const updatedQuestion = {
+        _id: currentQuestion._id,
+        slug: newSlug,
+        circleId: currentQuestion.circleId,
+        ownerId: currentQuestion.ownerId,
+        ownerName: currentQuestion.ownerName,
+        created_at: currentQuestion.created_at,
+        modded_at: Date.now(),
+        title: req.body.title,
+        body: req.body.body,
+        upvotes: currentQuestion.upvotes,
+        downvotes: currentQuestion.downvotes,
+        intentionId: currentQuestion.intentionId,
+        solutionId: currentQuestion.solutionId,
+        moderationInfo: currentQuestion.moderationInfo,
+      };
+
+      res.status(200).json(updatedQuestion);
     } catch (error) {
       res.status(500).send(error instanceof Error ? error.message : 'Unknown error');
     }

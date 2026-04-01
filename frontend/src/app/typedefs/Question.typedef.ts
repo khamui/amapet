@@ -1,5 +1,6 @@
 export type Question = {
   _id?: string;
+  slug?: string;
   circleId: string;
   ownerId: string;
   ownerName: string;

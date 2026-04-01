@@ -2,6 +2,7 @@ import { isApplied, markApplied, getAppliedMigrations } from './registry.js';
 
 // Import all migrations
 import * as migration001 from './versions/001_owner-names.js';
+import * as migration002 from './versions/002_question-slugs.js';
 
 interface Migration {
   version: string;
@@ -10,7 +11,7 @@ interface Migration {
 }
 
 // Register all migrations in order
-const migrations: Migration[] = [migration001];
+const migrations: Migration[] = [migration001, migration002];
 
 export async function runPendingMigrations(): Promise<void> {
   console.log('[Migrations] Checking for pending migrations...');
