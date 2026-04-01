@@ -81,7 +81,7 @@ export class ModerationQuestionDetailComponent implements OnInit {
 
       if (this.circle) {
         this.question = this.circle.questions.find(
-          (q) => q._id === questionId,
+          (q) => q.slug === questionId || q._id === questionId,
         ) as Question;
       }
 
@@ -149,7 +149,7 @@ export class ModerationQuestionDetailComponent implements OnInit {
   }
 
   public goBack() {
-    this.ro.navigate([this.circle.name, 'questions', this.question._id]);
+    this.ro.navigate([this.circle.name, 'questions', this.question.slug || this.question._id]);
   }
 
   public toggleNoteEditor() {

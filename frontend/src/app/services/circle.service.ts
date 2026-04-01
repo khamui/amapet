@@ -120,7 +120,7 @@ export class CircleService {
     createdQuestion$.subscribe((newQuestion: Question) => {
       try {
         this.readCircles();
-        this.ro.navigate([circle.name, 'questions', newQuestion._id]);
+        this.ro.navigate([circle.name, 'questions', newQuestion.slug || newQuestion._id]);
         this.ms.add({
           severity: 'success',
           summary: 'Question created!',
@@ -151,11 +151,11 @@ export class CircleService {
       payload as Question,
     );
 
-    updatedQuestion$.subscribe(() => {
+    updatedQuestion$.subscribe((updated: Question) => {
       try {
         this.readCircles();
         this.circles$.subscribe(() => {
-          this.ro.navigate([circle.name, 'questions', question._id]);
+          this.ro.navigate([circle.name, 'questions', updated.slug || question._id]);
         });
         this.ms.add({
           severity: 'success',

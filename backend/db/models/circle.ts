@@ -24,6 +24,7 @@ const moderationInfoSubSchema = new Schema<IModerationInfo>(
 const questionSubSchema = new Schema<IQuestion>(
   {
     _id: { type: mongoose.Schema.Types.ObjectId },
+    slug: String,
     circleId: String,
     ownerId: String,
     ownerName: String,
