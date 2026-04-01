@@ -70,7 +70,7 @@ const routes: Routes = [
   { path: 'privacy', component: PrivacyComponent },
   { path: 'disclaimer', component: DisclaimerComponent },
   { path: 'terms', component: TermsComponent },
-  { path: '', redirectTo: 'explore', pathMatch: 'full' },
+  { path: '', component: ExploreComponent, canActivate: [appAvailableGuard] },
   { path: '**', component: NotFoundComponent },
 ];
 
