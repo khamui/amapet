@@ -5,6 +5,7 @@
     [severity]="isUpvoted() ? 'success' : 'secondary'"
     [text]="true"
     [disabled]="isUpvoted()"
+    [class.opacity-50]="!isLoggedIn()"
     (onClick)="handleUpvote($event)"
   ></p-button>
   <div
@@ -19,6 +20,9 @@
     [severity]="isDownvoted() ? 'danger' : 'secondary'"
     [text]="true"
     [disabled]="isDownvoted()"
+    [class.opacity-50]="!isLoggedIn()"
     (onClick)="handleDownvote($event)"
   ></p-button>
 </div>
+
+<ama-social-login-dialog [(visible)]="showLoginDialog" />
