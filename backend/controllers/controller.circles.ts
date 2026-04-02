@@ -57,15 +57,45 @@ export const controllerCircles = {
     try {
       const pipeline = [
         { $match: { name: `c/${circleName}` } },
+        { $unwind: '$questions' },
+        {
+          $lookup: {
+            from: 'answers',
+            let: { qId: { $toString: '$questions._id' } },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ['$parentId', '$$qId'] },
+                  deleted: { $ne: true },
+                },
+              },
+              { $count: 'count' },
+            ],
+            as: 'answerData',
+          },
+        },
+        {
+          $addFields: {
+            'questions.answerCount': {
+              $ifNull: [{ $arrayElemAt: ['$answerData.count', 0] }, 0],
+            },
+          },
+        },
+        { $sort: { 'questions.created_at': -1 as const } },
+        {
+          $group: {
+            _id: '$_id',
+            ownerId: { $first: '$ownerId' },
+            moderators: { $first: '$moderators' },
+            questions: { $push: '$questions' },
+          },
+        },
         {
           $project: {
-            _id: 1,
             ownerId: 1,
             moderators: 1,
             totalQuestions: { $size: '$questions' },
-            questions: {
-              $slice: [{ $reverseArray: '$questions' }, skip, limit],
-            },
+            questions: { $slice: ['$questions', skip, limit] },
           },
         },
       ];

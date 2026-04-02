@@ -8,7 +8,9 @@ import {
   ElementRef,
   ViewChild,
   OnDestroy,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
 import { ExploreService } from 'src/app/services/explore.service';
 import { ExploreQuestion, PaginatedExploreResponse } from 'src/app/typedefs/Question.typedef';
@@ -30,6 +32,7 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private es = inject(ExploreService);
   private as = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
 
   questions = signal<ExploreQuestion[]>([]);
   isLoading = signal(false);
@@ -75,6 +78,8 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setupIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !this.isLoading() && this.hasMore()) {

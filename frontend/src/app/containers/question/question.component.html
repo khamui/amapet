@@ -1,17 +1,17 @@
-<div
-  class="cursor-pointer hover:shadow-1"
-  (click)="handleQuestionClicked($event)"
+<a
+  [routerLink]="questionUrl()"
+  class="block no-underline text-inherit cursor-pointer hover:shadow-1"
 >
   <p-panel>
     <ng-template pTemplate="header">
       <div class="w-full flex items-center">
         <span class="text-xs text-bluegray-300 dark:text-surface-500">
-          Posted by <ama-username-badge [username]="question.ownerName || ''" [userId]="question.ownerId || ''"></ama-username-badge>
+          Posted by <ama-username-badge [username]="question().ownerName || ''" [userId]="question().ownerId || ''"></ama-username-badge>
         </span>
         <span class="text-xs text-bluegray-500 dark:text-surface-400 mx-1 font-semibold">
-          {{ question.created_at | dateAgo }}
+          {{ question().created_at | dateAgo }}
         </span>
-        @if (isOwner) {
+        @if (isOwner()) {
           <span class="text-xs">
             <button
               type="button"
@@ -39,13 +39,13 @@
               Moderate
             </button>
           </span>
-          @if (question.moderationInfo?.status === "approved") {
+          @if (question().moderationInfo?.status === "approved") {
             <span
               class="inline-flex items-center gap-1 px-2 py-0.5 ms-2 rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-bold"
             >
               <i class="pi pi-check text-xs"></i>Approved
             </span>
-          } @else if (question.moderationInfo?.status === "blocked") {
+          } @else if (question().moderationInfo?.status === "blocked") {
             <span
               class="inline-flex items-center gap-1 px-2 py-0.5 ms-2 rounded-full bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 text-xs font-bold"
             >
@@ -58,8 +58,8 @@
     <div class="flex jufstify-content-start">
       <div class="text-sm mr-1">
         <ama-vote
-          [upvotes]="question?.upvotes || []"
-          [downvotes]="question?.downvotes || []"
+          [upvotes]="question()?.upvotes || []"
+          [downvotes]="question()?.downvotes || []"
           (upvoteSubmit)="handleUpvoteQuestion()"
           (downvoteSubmit)="handleDownvoteQuestion()"
         ></ama-vote>
@@ -67,16 +67,16 @@
       <p-divider layout="vertical"></p-divider>
       <div class="w-full">
         <div class="ml-1">
-          <h4 class="m-0">{{ question.title }}</h4>
-          <p [innerHtml]="question.body" class="text-left text-sm my-4"></p>
+          <h4 class="m-0">{{ question().title }}</h4>
+          <p [innerHtml]="question().body" class="text-left text-sm my-4"></p>
         </div>
         <p-divider layout="horizontal"></p-divider>
         <div class="text-sm">
           <i class="pi pi-comments"></i>
-          <span> {{ answerCount }} {{ answerCount === 1 ? 'answer' : 'answers' }} </span>
+          <span> {{ answerCount() }} {{ answerCount() === 1 ? 'answer' : 'answers' }} </span>
         </div>
       </div>
     </div>
   </p-panel>
-</div>
+</a>
 <p-confirmDialog [style]="{ width: '50vw' }"></p-confirmDialog>

@@ -11,9 +11,10 @@
 >
   <div class="dialog-content">
     <p class="dialog-text">
-      Sign in with your preferred social account to continue.
+      In case it is your first time logging in, we will create a profile for
+      you!
     </p>
-    
+
     <div class="social-buttons">
       @if (ses.appIsAvailable()) {
         <div class="social-button-wrapper">
@@ -23,12 +24,7 @@
             [width]="350"
           ></asl-google-signin-button>
         </div>
-        
-        <!-- Placeholder for Apple login (coming soon) -->
-        <div class="social-button-placeholder">
-          <span class="placeholder-text">Apple Sign-In - Coming Soon</span>
-        </div>
-        
+
         <!-- Microsoft Sign-In Button -->
         <div class="social-button-wrapper">
           <button
@@ -37,10 +33,10 @@
             (click)="signInWithMicrosoft()"
           >
             <svg class="h-5 w-5" viewBox="0 0 21 21">
-              <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
-              <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
-              <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
-              <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+              <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+              <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+              <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+              <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
             </svg>
             Sign in with Microsoft
           </button>

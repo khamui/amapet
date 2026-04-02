@@ -1,5 +1,5 @@
-import { Component, computed, inject, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { ConfirmationService, SharedModule } from 'primeng/api';
 import { take } from 'rxjs';
 import { CircleService } from 'src/app/services/circle.service';
@@ -27,49 +27,60 @@ import { UsernameBadgeComponent } from 'src/app/components/username-badge/userna
     ConfirmDialogModule,
     VoteComponent,
     UsernameBadgeComponent,
+    RouterLink,
   ],
 })
-export class QuestionComponent implements OnInit {
-  @Input() question!: Question;
-  @Input() circle!: Circle;
-  @Input() currentUserId!: string;
+export class QuestionComponent {
+  questionInput = input.required<Question>({ alias: 'question' });
+  circle = input.required<Circle>();
+  currentUserId = input<string>();
 
   private moderationStore = inject(ModerationStore);
+  private ro = inject(Router);
+  private cs = inject(CircleService);
+  private cos = inject(ConfirmationService);
 
-  isOwner = false;
-  isModerator = computed(() => {
-    const moderatedIds = this.moderationStore.getModeratedCircleIds();
-    return this.circle?._id ? moderatedIds.includes(this.circle._id) : false;
+  // Local mutable state for question (for vote updates)
+  questionData = signal<Question | null>(null);
+
+  isOwner = computed(() => {
+    const q = this.questionData() ?? this.questionInput();
+    return this.currentUserId() === q.ownerId;
   });
 
-  get answerCount(): number {
-    return (this.question as ExploreQuestion).answerCount ?? 0;
+  isModerator = computed(() => {
+    const moderatedIds = this.moderationStore.getModeratedCircleIds();
+    const circleId = this.circle()?._id;
+    return circleId ? moderatedIds.includes(circleId) : false;
+  });
+
+  questionUrl = computed(() => {
+    const q = this.questionData() ?? this.questionInput();
+    const c = this.circle();
+    const plainCircleName = c.name.replace(/^c\//, '');
+    return ['/', 'c', plainCircleName, 'questions', q.slug || q._id];
+  });
+
+  question = computed(() => this.questionData() ?? this.questionInput());
+
+  answerCount = computed(() => {
+    const q = this.question();
+    return (q as ExploreQuestion).answerCount ?? 0;
+  });
+
+  constructor() {
+    // Sync input to local state
+    effect(() => {
+      this.questionData.set(this.questionInput());
+    });
   }
-
-  constructor(
-    private ro: Router,
-    private cs: CircleService,
-    private cos: ConfirmationService,
-  ) {}
-
-  ngOnInit(): void {
-    if (this.currentUserId === this.question.ownerId) {
-      this.isOwner = true;
-    }
-  }
-
-  handleQuestionClicked = (event: Event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    this.ro.navigate([this.circle.name, 'questions', this.question.slug || this.question._id]);
-  };
 
   handleEdit = (event: MouseEvent) => {
     event.stopPropagation();
     this.ro.navigate([
-      this.circle.name,
+      this.circle().name,
       'questions',
-      this.question._id,
+      this.question()._id,
       'edit',
     ]);
   };
@@ -83,8 +94,7 @@ export class QuestionComponent implements OnInit {
       header: 'Delete question?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.cs.deleteCircleQuestion(this.circle, this.question);
-        // fixme: remove without reloading
+        this.cs.deleteCircleQuestion(this.circle(), this.question());
         window.location.reload();
       },
       reject: () => {},
@@ -93,25 +103,25 @@ export class QuestionComponent implements OnInit {
 
   handleModerate = (event: MouseEvent) => {
     event.stopPropagation();
-    const plainCircleName = this.circle.name.replace('c/', '');
-    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question.slug || this.question._id]);
+    const plainCircleName = this.circle().name.replace('c/', '');
+    this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question().slug || this.question()._id]);
   };
 
-  public handleUpvoteQuestion = () => {
+  handleUpvoteQuestion = () => {
     this.cs
-      .updateQuestionUpvote(this.circle, this.question)
+      .updateQuestionUpvote(this.circle(), this.question())
       .pipe(take(1))
       .subscribe((updatedQuestion: Question) => {
-        this.question = updatedQuestion;
+        this.questionData.set(updatedQuestion);
       });
   };
 
-  public handleDownvoteQuestion = () => {
+  handleDownvoteQuestion = () => {
     this.cs
-      .updateQuestionDownvote(this.circle, this.question)
+      .updateQuestionDownvote(this.circle(), this.question())
       .pipe(take(1))
       .subscribe((updatedQuestion: Question) => {
-        this.question = updatedQuestion;
+        this.questionData.set(updatedQuestion);
       });
   };
 }
