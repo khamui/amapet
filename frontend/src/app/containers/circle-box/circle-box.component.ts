@@ -5,7 +5,9 @@ import {
   inject,
   OnInit,
   signal,
+  viewChild,
 } from '@angular/core';
+import { Popover } from 'primeng/popover';
 import { Router, RouterLink } from '@angular/router';
 import { MenuItem, SharedModule } from 'primeng/api';
 import { Subject, debounceTime } from 'rxjs';
@@ -40,6 +42,7 @@ export class CircleBoxComponent implements OnInit {
   unownedCircleMenuItems = signal<MenuItem[]>([]);
   circleNameInput = new Subject<string>();
   circleExists = false;
+  createPopup = viewChild<Popover>('createPopup');
 
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
@@ -111,4 +114,10 @@ export class CircleBoxComponent implements OnInit {
 
     return aVal - bVal;
   }
+
+  public handleCreateCircle = (name: string) => {
+    this.cs.createCircle(name).subscribe(() => {
+      this.createPopup()?.hide();
+    });
+  };
 }

@@ -43,7 +43,7 @@
             type="button"
             pButton
             icon="pi pi-check"
-            (click)="cs.createCircle(nameInput.value)"
+            (click)="handleCreateCircle(nameInput.value)"
             [disabled]="nameInput.value === '' || circleExists"
           >
             Create

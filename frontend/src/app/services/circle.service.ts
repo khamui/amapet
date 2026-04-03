@@ -4,7 +4,7 @@ import { ApiService } from './api.service';
 import { Circle } from '../typedefs/Circle.typedef';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Question, PaginatedQuestionsResponse } from '../typedefs/Question.typedef';
 import { Settings } from '../typedefs/Settings.typedef';
 
@@ -65,26 +65,28 @@ export class CircleService {
       questions: [],
     };
 
-    this.created = this.api.createAsObservable$<Circle>('/circles', payload);
-    this.created.subscribe((newCircle: Circle) => {
-      try {
-        this.readCircles();
-        this.circles$.subscribe(() => {
-          this.ro.navigate([newCircle.name]);
-        });
-        this.ms.add({
-          severity: 'success',
-          summary: 'Circle created!',
-          detail: 'Your circle has been successfully created.',
-        });
-      } catch (error: any) {
-        this.ms.add({
-          severity: 'error',
-          summary: 'Something went wrong!',
-          detail: `Could not create Circle. Error: ${error.message}`,
-        });
-      }
-    });
+    return this.api.createAsObservable$<Circle>('/circles', payload).pipe(
+      tap({
+        next: (newCircle: Circle) => {
+          this.readCircles();
+          this.circles$.subscribe(() => {
+            this.ro.navigate([newCircle.name]);
+          });
+          this.ms.add({
+            severity: 'success',
+            summary: 'Circle created!',
+            detail: 'Your circle has been successfully created.',
+          });
+        },
+        error: (error: any) => {
+          this.ms.add({
+            severity: 'error',
+            summary: 'Something went wrong!',
+            detail: `Could not create Circle. Error: ${error.message}`,
+          });
+        },
+      })
+    );
   };
   /* ########### CIRCLES ############ */
 

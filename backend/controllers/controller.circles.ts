@@ -9,6 +9,12 @@ import type { ICircleDocument, IQuestion } from '../db/models/circle.js';
 import type { INotification } from '../types/models.js';
 import { generateUniqueSlug } from '../utils/slug.utils.js';
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:4000';
+
+function invalidateSitemapCache(): void {
+  fetch(`${FRONTEND_URL}/api/sitemap/invalidate`, { method: 'POST' }).catch(() => {});
+}
+
 export const controllerCircles = {
   readOne: async (req: Request, res: Response): Promise<void> => {
     const { name: circleName } = req.params;
@@ -55,6 +61,22 @@ export const controllerCircles = {
     const userId = req.userPayload?._id;
 
     try {
+      // Check circle exists first
+      const circle = await Circle.findOne({ name: `c/${circleName}` });
+      if (!circle) {
+        res.status(404).send('Circle not found');
+        return;
+      }
+
+      // If no questions, return early with empty array
+      if (!circle.questions || circle.questions.length === 0) {
+        res.status(200).json({
+          questions: [],
+          pagination: { skip, limit, total: 0, hasMore: false },
+        });
+        return;
+      }
+
       const pipeline = [
         { $match: { name: `c/${circleName}` } },
         { $unwind: '$questions' },
@@ -101,12 +123,6 @@ export const controllerCircles = {
       ];
 
       const results = await Circle.aggregate(pipeline);
-
-      if (!results[0]) {
-        res.status(404).send('Circle not found');
-        return;
-      }
-
       const { questions, totalQuestions, ownerId, moderators } = results[0];
 
       const isModerator =
@@ -169,6 +185,8 @@ export const controllerCircles = {
       const userFilter = { _id: new mongoose.Types.ObjectId(ownerId) };
       const addExpr = { $push: { moderatedCircleIds: newCircle._id } };
       await updateModel(User, userFilter, addExpr);
+      // Invalidate sitemap cache
+      invalidateSitemapCache();
       res.status(201).json(newCircle);
     } catch (error) {
       res.status(500).send(error);
@@ -253,6 +271,8 @@ export const controllerCircles = {
     const addExpr = { $push: { questions: payload } };
     try {
       await updateModel(Circle, filter, addExpr);
+      // Invalidate sitemap cache
+      invalidateSitemapCache();
       res.status(201).json(payload);
     } catch (error) {
       res.status(500).send(error instanceof Error ? error.message : 'Unknown error');

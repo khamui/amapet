@@ -16,6 +16,7 @@ import moderationRoutes from './routes/moderation.js';
 import databaseRoutes from './routes/route.database.js';
 import exploreRoutes from './routes/explore.js';
 import legalRoutes from './routes/legal.js';
+import sitemapRoutes from './routes/sitemap.js';
 
 // env
 import * as dotenv from 'dotenv';
@@ -43,6 +44,7 @@ app.use('/', moderationRoutes);
 app.use('/', databaseRoutes);
 app.use('/', exploreRoutes);
 app.use('/', legalRoutes);
+app.use('/', sitemapRoutes);
 
 const port = PORT || '3000';
 app.set('port', port);

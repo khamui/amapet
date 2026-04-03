@@ -83,6 +83,9 @@ jobs:
           LEGAL_COUNTRY="${{ secrets.LEGAL_COUNTRY }}"
           LEGAL_EMAIL="${{ secrets.LEGAL_EMAIL }}"
           LEGAL_WEBSITE="${{ secrets.LEGAL_WEBSITE }}"
+          SITE_URL="${{ secrets.SITE_URL }}"
+          API_URL="${{ secrets.API_URL }}"
+          FRONTEND_URL="${{ secrets.FRONTEND_URL }}"
           EOF
 
       # Upload files to VPS (deployment/, frontend/, backend/)

@@ -12,6 +12,17 @@ const browserDistFolder = join(import.meta.dirname, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+const SITE_URL = process.env['SITE_URL'] || 'https://www.helpa.ws';
+const API_URL = process.env['API_URL'] || 'http://localhost:3000';
+
+/**
+ * Set Cross-Origin-Opener-Policy to allow OAuth popups to communicate back
+ */
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  next();
+});
+
 /**
  * Simple in-memory cache for SSR responses
  */
@@ -33,16 +44,81 @@ function setCachedResponse(url: string, html: string): void {
 }
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * Sitemap cache
  */
+let sitemapCache: { xml: string; timestamp: number } | null = null;
+const SITEMAP_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+interface SitemapEntry {
+  loc: string;
+  lastmod: string;
+  changefreq: string;
+  priority: number;
+}
+
+function generateSitemapXml(entries: SitemapEntry[]): string {
+  const urls = entries
+    .map(
+      (e) => `  <url>
+    <loc>${e.loc}</loc>
+    <lastmod>${e.lastmod}</lastmod>
+    <changefreq>${e.changefreq}</changefreq>
+    <priority>${e.priority}</priority>
+  </url>`
+    )
+    .join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
+}
+
+/**
+ * GET /sitemap.xml - Dynamic sitemap
+ */
+app.get('/sitemap.xml', async (_req, res) => {
+  try {
+    // Check cache
+    if (sitemapCache && Date.now() - sitemapCache.timestamp < SITEMAP_TTL_MS) {
+      res.type('application/xml').send(sitemapCache.xml);
+      return;
+    }
+
+    // Fetch data from backend
+    const response = await fetch(`${API_URL}/sitemap/data`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch sitemap data');
+    }
+
+    const entries: SitemapEntry[] = await response.json();
+    const xml = generateSitemapXml(entries);
+
+    // Cache and serve
+    sitemapCache = { xml, timestamp: Date.now() };
+    res.type('application/xml').send(xml);
+  } catch (error) {
+    console.error('Sitemap generation error:', error);
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
+/**
+ * POST /api/sitemap/invalidate - Internal endpoint to clear cache
+ */
+app.post('/api/sitemap/invalidate', (_req, res) => {
+  sitemapCache = null;
+  res.status(204).send();
+});
+
+/**
+ * GET /robots.txt
+ */
+app.get('/robots.txt', (_req, res) => {
+  res.type('text/plain').send(`User-agent: *
+Allow: /
+Sitemap: ${SITE_URL}/sitemap.xml`);
+});
 
 /**
  * Serve static files from /browser

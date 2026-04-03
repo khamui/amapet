@@ -8,7 +8,9 @@ import {
   ElementRef,
   ViewChild,
   OnDestroy,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
@@ -37,6 +39,7 @@ export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
   private ar = inject(ActivatedRoute);
   public as = inject(AuthService);
   private moderationStore = inject(ModerationStore);
+  private platformId = inject(PLATFORM_ID);
 
   circle = signal<Circle | null>(null);
   questions = signal<Question[]>([]);
@@ -108,6 +111,8 @@ export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setupIntersectionObserver(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     this.observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !this.isLoading() && this.hasMore()) {

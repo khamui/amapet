@@ -52,6 +52,8 @@ services:
       LEGAL_COUNTRY: ${LEGAL_COUNTRY}
       LEGAL_EMAIL: ${LEGAL_EMAIL}
       LEGAL_WEBSITE: ${LEGAL_WEBSITE}
+      SITE_URL: ${SITE_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
     depends_on:
       - mongo
     networks:
@@ -65,6 +67,9 @@ services:
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT}:4000"
+    environment:
+      SITE_URL: ${SITE_URL}
+      API_URL: ${API_URL}
     depends_on:
       - backend
     healthcheck:
