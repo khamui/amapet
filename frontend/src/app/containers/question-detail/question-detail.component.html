@@ -92,10 +92,10 @@
           >
             {{ question.intentionId || "question" }}
           </div>
-          <p
+          <div
             [innerHtml]="question.body"
-            class="text-left text-sm font-semibold my-10 break-words"
-          ></p>
+            class="ql-content text-left text-sm font-semibold my-10 break-words"
+          ></div>
           @if (question.moderationInfo?.noteText) {
             <div
               class="my-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded"
@@ -130,7 +130,7 @@
                 ></span>
               </div>
               <div
-                class="text-sm break-words"
+                class="ql-content text-sm break-words"
                 [innerHtml]="solutionAnswer()?.answerText"
               ></div>
             </div>
