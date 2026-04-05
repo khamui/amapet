@@ -57,6 +57,7 @@
         [outlined]="true"
         [loading]="loading"
         (click)="cancelEditor()"
+        data-testid="cancel-editor"
       >
         {{ cancelButtonText }}
       </p-button>
@@ -68,6 +69,7 @@
       [outlined]="true"
       [loading]="loading"
       [disabled]="editorEmpty()"
+      data-testid="submit-editor"
     >
       {{ submitButtonText }}
     </p-button>

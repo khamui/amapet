@@ -1,4 +1,6 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, APP_INITIALIZER } from '@angular/core';
+import { AuthService } from './services/auth.service';
+import { ConsentService } from './services/consent.service';
 import {
   withInterceptorsFromDi,
   withInterceptors,
@@ -28,6 +30,18 @@ export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom(AppRoutingModule, SocialLoginModule),
     MessageService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (auth: AuthService) => () => auth.initFromStoredToken(),
+      deps: [AuthService],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (consent: ConsentService) => () => consent.init(),
+      deps: [ConsentService],
+      multi: true,
+    },
     {
       provide: SOCIAL_AUTH_CONFIG,
       useValue: {

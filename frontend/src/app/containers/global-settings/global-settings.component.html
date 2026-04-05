@@ -23,7 +23,9 @@
   </div>
 }
 <div class="flex w-full justify-around p-3 items-center">
-  <h2 class="text-md">{{ ses.maintenance()?.key | displayName }}</h2>
+  @if (ses.maintenance()?.key) {
+    <h2 class="text-md">{{ ses.maintenance()?.key | displayName }}</h2>
+  }
   <p-togglebutton
     [ngModel]="ses.isMaintenance()"
     [inputId]="ses.maintenance()?.key"
@@ -94,7 +96,7 @@
             <div class="flex flex-col">
               <span class="text-sm font-mono">{{ backup.name }}</span>
               <span class="text-xs text-surface-500">{{
-                backup.createdAt | date: 'medium'
+                backup.createdAt | date: "medium"
               }}</span>
             </div>
             <div class="flex gap-2">

@@ -31,12 +31,14 @@
             severity="secondary"
             size="small"
             (click)="openEditDialog(circle)"
+            data-testid="edit-circle-description"
           />
           <p-button
             label="Moderators"
             severity="secondary"
             size="small"
             (click)="openModeratorDialog(circle)"
+            data-testid="manage-moderators"
           />
         </td>
       </tr>
@@ -68,7 +70,7 @@
         severity="secondary"
         (click)="editDialogVisible.set(false)"
       />
-      <p-button label="Save" (click)="saveAbout()" />
+      <p-button label="Save" (click)="saveAbout()" data-testid="save-circle-description" />
     </div>
   </div>
 </p-dialog>
@@ -105,6 +107,7 @@
                   [text]="true"
                   size="small"
                   (click)="removeModerator(mod)"
+                  data-testid="remove-moderator"
                 />
               }
             </div>
@@ -125,6 +128,7 @@
         [style]="{ width: '100%' }"
         [inputStyle]="{ width: '100%' }"
         appendTo="body"
+        data-testid="add-moderator-input"
       >
         <ng-template let-user pTemplate="item">
           <span class="font-medium">{{ user.username }}</span>

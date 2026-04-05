@@ -11,7 +11,6 @@ import {
 import {
   FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +18,7 @@ import { combineLatest } from 'rxjs';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { ButtonModule } from 'primeng/button';
-import { SharedModule } from 'primeng/api';
+import { PrimeTemplate } from 'primeng/api';
 import { EditorModule } from 'primeng/editor';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
@@ -40,11 +39,10 @@ import { SettingsService } from 'src/app/services/settings.service';
     ReactiveFormsModule,
     InputTextModule,
     EditorModule,
-    SharedModule,
+    PrimeTemplate,
     ButtonModule,
     AutoFocusModule,
     SelectButtonModule,
-    FormsModule,
   ],
 })
 export class CreateQuestionComponent implements OnInit {
@@ -71,11 +69,24 @@ export class CreateQuestionComponent implements OnInit {
     private ar: ActivatedRoute,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {
+    // Sync selectedIntention signal with form control for styling
     effect(() => {
       const intentions = this.questionIntentions();
       if (intentions?.length === 1) {
         this.selectedIntention.set(intentions[0].id);
         this.questionForm.controls.intentionSelect.setValue(intentions[0].id);
+      } else if (intentions && intentions.length > 1) {
+        // Set default to 'question' or first available intention
+        const defaultIntention = intentions.find((i: QuestionIntentionsValue) => i.id === 'question') || intentions[0];
+        this.selectedIntention.set(defaultIntention.id);
+        this.questionForm.controls.intentionSelect.setValue(defaultIntention.id);
+      }
+    });
+
+    // Update selectedIntention signal when form control changes (for styling)
+    this.questionForm.controls.intentionSelect.valueChanges.subscribe((value) => {
+      if (value) {
+        this.selectedIntention.set(value as IntentionId);
       }
     });
   }
@@ -85,9 +96,9 @@ export class CreateQuestionComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.questionForm.controls.intentionSelect.setValue(
-    //  this.questionIntentions[0].id,
-    //);
+    if (!isPlatformBrowser(this.platformId)) {
+      return; // Skip on server - requires browser context
+    }
 
     /* creating two observables and combine their results */
     const params$ = this.ar.paramMap;

@@ -113,6 +113,7 @@
           @if (question.intentionId === "question" && solutionAnswer()) {
             <div
               class="mt-6 p-4 rounded-lg border-2 border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-900/20"
+              data-testid="solution-preview"
             >
               <div class="flex items-center gap-2 mb-3">
                 <i
@@ -141,14 +142,14 @@
           <span class="mx-2">{{ ans.answers().length || 0 }} answers</span>
         </div>
         @if (isLoggedIn() && !question.moderationInfo?.closed) {
-          <div class="w-full mt-5 mb-3">
+          <div class="w-full mt-5 mb-3" data-testid="main-answer-editor">
             <ama-texteditor
               (submit)="submitAnswer($event)"
               [loading]="loading"
             ></ama-texteditor>
           </div>
         } @else if (question.moderationInfo?.closed) {
-          <div class="text-sm text-gray-500 italic my-5">
+          <div class="text-sm text-gray-500 italic my-5" data-testid="comments-closed">
             Comments are closed on this question.
           </div>
         }

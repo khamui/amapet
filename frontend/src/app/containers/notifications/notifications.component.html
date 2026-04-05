@@ -6,6 +6,7 @@
   [raised]="true"
   (click)="handleNotificationsToggle($event, notificationsPanel)"
   [disabled]="notifications?.length === 0"
+  data-testid="notification-bell"
 >
   @if (unreadItems > 0) {
     <i
@@ -13,6 +14,7 @@
       pBadge
       [value]="unreadItems.toString()"
       severity="danger"
+      data-testid="notification-badge"
     ></i>
   } @else {
     <i class="pi pi-bell"></i>
@@ -27,6 +29,7 @@
         [raised]="notification.unread"
         (click)="handleNotification(notification)"
         class="flex flex-col my-2"
+        data-testid="notification-item"
       >
         <div class="flex flex-col text-left">
           <span class="font-bold"
@@ -44,6 +47,7 @@
         [severity]="notification.unread ? 'success' : 'secondary'"
         [raised]="notification.unread"
         (click)="handleNotification(notification)"
+        data-testid="notification-item"
       >
         <div class="flex flex-col justify-start">
           <span class="font-bold text-left">
@@ -62,6 +66,7 @@
         [severity]="notification.unread ? 'primary' : 'secondary'"
         [raised]="notification.unread"
         (click)="handleNotification(notification)"
+        data-testid="notification-item"
       >
         <div class="flex flex-col justify-start">
           <span class="font-bold text-left"> New answer to your post! </span>

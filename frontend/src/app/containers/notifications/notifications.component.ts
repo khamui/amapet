@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { Subscription, switchMap, timer } from 'rxjs';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Notification } from 'src/app/typedefs/Notification.typedef';
-import { JsonPipe } from '@angular/common';
+import { isPlatformBrowser, JsonPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Popover, PopoverModule } from 'primeng/popover';
 
@@ -18,6 +18,8 @@ const INTERVAL_IN_MS = 180000; // 3 mins
   styleUrl: './notifications.component.scss',
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
+  private platformId = inject(PLATFORM_ID);
+
   @ViewChild('notificationsPanel') notificationsPanel!: Popover;
 
   notifications!: Notification[];
@@ -30,6 +32,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return; // Skip on server - requires browser context
+    }
+
     this.timerSubscription$ = timer(0, INTERVAL_IN_MS)
       .pipe(switchMap(() => this.nos.getAll(`/notifications`)))
       .subscribe((notificationsResponse: unknown) => {

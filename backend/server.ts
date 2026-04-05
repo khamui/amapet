@@ -17,6 +17,7 @@ import databaseRoutes from './routes/route.database.js';
 import exploreRoutes from './routes/explore.js';
 import legalRoutes from './routes/legal.js';
 import sitemapRoutes from './routes/sitemap.js';
+import testAuthRoutes from './routes/test-auth.js';
 
 // env
 import * as dotenv from 'dotenv';
@@ -45,6 +46,11 @@ app.use('/', databaseRoutes);
 app.use('/', exploreRoutes);
 app.use('/', legalRoutes);
 app.use('/', sitemapRoutes);
+
+// Test-only routes (only in test environment)
+if (process.env.NODE_ENV === 'test') {
+  app.use('/', testAuthRoutes);
+}
 
 const port = PORT || '3000';
 app.set('port', port);

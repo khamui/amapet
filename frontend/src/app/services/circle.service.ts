@@ -43,8 +43,10 @@ export class CircleService {
     skip: number = 0,
     limit: number = 50,
   ) => {
+    // Add cache-busting timestamp to prevent browser caching
+    const timestamp = Date.now();
     return await this.api.read<PaginatedQuestionsResponse>(
-      `/circles/${circleName}/questions?skip=${skip}&limit=${limit}`,
+      `/circles/${circleName}/questions?skip=${skip}&limit=${limit}&_t=${timestamp}`,
     );
   };
 
@@ -68,10 +70,11 @@ export class CircleService {
     return this.api.createAsObservable$<Circle>('/circles', payload).pipe(
       tap({
         next: (newCircle: Circle) => {
-          this.readCircles();
-          this.circles$.subscribe(() => {
-            this.ro.navigate([newCircle.name]);
-          });
+          // Update circles list immediately with the new circle
+          const currentCircles = this.circlesSubject.getValue();
+          this.updateCircles([...currentCircles, newCircle]);
+
+          this.ro.navigate([newCircle.name]);
           this.ms.add({
             severity: 'success',
             summary: 'Circle created!',

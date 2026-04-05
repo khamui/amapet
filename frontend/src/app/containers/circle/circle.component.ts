@@ -53,16 +53,20 @@ export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   ngOnInit(): void {
-    const params$ = this.ar.paramMap;
-    params$.subscribe(async (paramMap) => {
+    // Subscribe to paramMap - emits immediately on component init and on param changes
+    this.ar.paramMap.subscribe((paramMap) => {
       const name = paramMap.get('name');
-      if (name && name !== this.circleName) {
-        this.circleName = name;
-        this.resetPagination();
-        await this.loadCircleMetadata();
-        await this.loadMoreQuestions();
+      if (name) {
+        this.initCircle(name);
       }
     });
+  }
+
+  private async initCircle(name: string): Promise<void> {
+    this.circleName = name;
+    this.resetPagination();
+    await this.loadCircleMetadata();
+    await this.loadMoreQuestions();
   }
 
   ngAfterViewInit(): void {

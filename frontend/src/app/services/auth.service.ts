@@ -31,21 +31,30 @@ export class AuthService {
 
   /***
    *
+   * public initFromStoredToken()
+   * Synchronously initializes auth state from localStorage token.
+   * Called via APP_INITIALIZER before routing starts.
+   *
+   ***/
+  public initFromStoredToken(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const storedToken = localStorage.getItem(TOKEN_NAME);
+    if (storedToken) {
+      const payload = decode(storedToken);
+      this.setLoggedInWithExpiration((payload as any).exp);
+    }
+  }
+
+  /***
+   *
    * public subscribeLogin()
-   * This method needs to be set at the earliest point possible.
-   * Ideally if the app starts. This observes if a login action was
-   * triggered or not.
+   * Initializes social auth SDK and subscribes to login events.
+   * Token check is handled separately by initFromStoredToken().
    *
    ***/
   public subscribeLogin = async () => {
-    if (!isPlatformBrowser(this.platformId)) {
-      return; // Skip on server
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    const storedToken = localStorage.getItem(TOKEN_NAME);
-
-    // Always set up auth state subscription to handle login attempts
-    // This ensures login works even after logout without page refresh
     await firstValueFrom(this.sas.initState);
     this.sas.authState.subscribe(async (user: SocialUser) => {
       if (!user) return;
@@ -61,12 +70,6 @@ export class AuthService {
         this.handleLoginError(error);
       }
     });
-
-    // If token exists, validate it
-    if (storedToken) {
-      const payload = decode(storedToken);
-      this.setLoggedInWithExpiration((payload as any).exp);
-    }
   };
 
   public logout = async () => {
@@ -76,7 +79,11 @@ export class AuthService {
     this.isLoggedIn.set(false);
     this.user.set(undefined);
     this.router.navigate(['/'], { replaceUrl: true });
-    await this.sas.signOut();
+    try {
+      await this.sas.signOut();
+    } catch {
+      // Ignore - social session may not exist if user logged in via stored token
+    }
   };
 
   private setLoggedInWithExpiration = (exp: number) => {

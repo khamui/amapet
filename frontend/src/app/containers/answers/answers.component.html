@@ -3,6 +3,7 @@
     @if (isSolution(answer) && !answer.deleted) {
       <span
         class="inline-flex items-center gap-1 px-2 py-0.5 mr-2 rounded-full bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 text-xs font-bold"
+        data-testid="solution-badge"
       >
         <i class="pi pi-check-circle text-xs"></i>Solution
       </span>
@@ -23,6 +24,7 @@
             type="button"
             class="btn__link mx-1"
             (click)="toggleEditForm(answer)"
+            data-testid="edit-answer"
           >
             Edit
           </button>
@@ -31,6 +33,7 @@
           type="button"
           class="btn__link mx-1"
           (click)="handleDelete(answer)"
+          data-testid="delete-answer"
         >
           Delete
         </button>
@@ -62,6 +65,7 @@
           type="button"
           class="btn__link ml-2 text-rose-400 font-semibold text-xs"
           (click)="handleUnmarkSolution()"
+          data-testid="unmark-solution"
         >
           Unmark
         </button>
@@ -70,6 +74,7 @@
           type="button"
           class="btn__link ml-2 text-green-600 dark:text-green-400 font-semibold text-xs"
           (click)="handleMarkAsSolution(answer)"
+          data-testid="mark-solution"
         >
           Mark as Solution
         </button>
@@ -105,6 +110,7 @@
             <div
               class="prose prose-sm dark:prose-invert max-w-none my-3"
               [innerHtml]="answer.answerText"
+              data-testid="answer-text"
             ></div>
           }
         }
@@ -117,6 +123,7 @@
               onLabel="Cancel"
               offLabel="Reply"
               size="small"
+              data-testid="reply-answer"
             ></p-toggleButton>
           </div>
           @if (subAnswerEditor.checked) {

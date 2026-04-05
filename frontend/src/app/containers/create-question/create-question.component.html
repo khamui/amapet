@@ -10,12 +10,11 @@
       formControlName="titleInput"
       placeholder="Describe your question in a few words..."
       [pAutoFocus]="true"
+      data-testid="question-title-input"
     />
   </div>
   <div class="my-3">
     <p-selectbutton
-      [ngModel]="selectedIntention()"
-      (ngModelChange)="selectedIntention.set($event)"
       [options]="questionIntentions()"
       formControlName="intentionSelect"
       optionLabel="label"
@@ -72,6 +71,7 @@
       type="submit"
       [loading]="loading"
       [disabled]="!questionForm.controls.titleInput.value"
+      data-testid="submit-question"
       >Submit</p-button
     >
   </div>

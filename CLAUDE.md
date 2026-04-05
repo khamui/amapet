@@ -33,3 +33,17 @@ Backend Rules
 - API: RESTful naming, JSON payloads, standard HTTP status codes.
 - Validation: Use Joi for request body schema validation.
 - Middleware: Centralized error handling and JWT-based Auth.
+
+E2E Tests
+
+- at the very end of a task, where you added code to fix bugs or add
+  functionality, read the @TESTS.md
+- and either adjust affected tests by the changed code and adjust @TESTS.md
+- or add a new test if the new code is not tested yet and add a concise line
+  describing the tests in @TESTS.md
+
+Finishing
+
+- run e2e tests to verify regression did not happen
+- if they are failing, report and make a plan to fix them and ask for
+  confirmation before editing
