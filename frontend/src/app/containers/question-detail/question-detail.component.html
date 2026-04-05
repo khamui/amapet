@@ -94,7 +94,7 @@
           </div>
           <div
             [innerHtml]="question.body"
-            class="ql-content text-left text-sm font-semibold my-10 break-words"
+            class="prose prose-sm dark:prose-invert max-w-none text-left my-10"
           ></div>
           @if (question.moderationInfo?.noteText) {
             <div
@@ -130,7 +130,7 @@
                 ></span>
               </div>
               <div
-                class="ql-content text-sm break-words"
+                class="prose prose-sm dark:prose-invert max-w-none"
                 [innerHtml]="solutionAnswer()?.answerText"
               ></div>
             </div>
