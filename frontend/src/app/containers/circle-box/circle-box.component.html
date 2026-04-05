@@ -1,6 +1,6 @@
 <div>
   @if (ownedCircleMenuItems().length > 0) {
-    <div class="mb-4">
+    <div class="mb-4" data-testid="my-circles-section">
       <ama-sidebox
         [items]="ownedCircleMenuItems()"
         context="owned-circles"
@@ -27,6 +27,7 @@
       severity="secondary"
       [raised]="true"
       (onClick)="createPopup.toggle($event)"
+      data-testid="create-circle"
     ></p-button>
     <p-popover #createPopup>
       <ng-template pTemplate="content">
@@ -38,6 +39,7 @@
             type="text"
             pInputText
             placeholder="circle name..."
+            data-testid="circle-name-input"
           />
           <button
             type="button"
@@ -45,6 +47,7 @@
             icon="pi pi-check"
             (click)="handleCreateCircle(nameInput.value)"
             [disabled]="nameInput.value === '' || circleExists"
+            data-testid="submit-circle"
           >
             Create
           </button>

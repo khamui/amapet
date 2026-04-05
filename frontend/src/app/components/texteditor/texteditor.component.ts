@@ -55,14 +55,18 @@ export class TexteditorComponent implements OnInit {
   public submitEditor = (e: SubmitEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    this.data
-      ? this.submit.emit({
-          text: this.textEditorForm.controls['textEditor'].value,
-          data: this.data,
-          editorButtonEl: this.editorButtonElement,
-          listButtonEl: this.listButtonElement
-        })
-      : this.submit.emit(this.textEditorForm.controls['textEditor'].value);
+    if (this.data) {
+      this.submit.emit({
+        text: this.textEditorForm.controls['textEditor'].value,
+        data: this.data,
+        editorButtonEl: this.editorButtonElement,
+        listButtonEl: this.listButtonElement
+      });
+    } else {
+      this.submit.emit(this.textEditorForm.controls['textEditor'].value);
+      this.textEditorForm.controls['textEditor'].setValue('');
+      this.editorEmpty.set(true);
+    }
   };
 
   public textEditorForm = new FormGroup({

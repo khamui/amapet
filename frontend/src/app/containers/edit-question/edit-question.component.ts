@@ -42,6 +42,10 @@ export class EditQuestionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return; // Skip on server - requires browser context
+    }
+
     /* creating two observables and combine their results */
     const params$ = this.ar.paramMap;
     combineLatest([params$, this.cs.circles$]).subscribe(
@@ -50,16 +54,22 @@ export class EditQuestionComponent implements OnInit {
           return circle.name === `c/${paramMap.get('id')}`;
         }) as Circle;
 
+        if (!this.circle?.questions) {
+          return; // Guard against undefined circle or questions
+        }
+
         this.question = (this.circle.questions as Question[]).find(
           (question: Question) => {
             return question._id === paramMap.get('qid');
           },
         ) as Question;
 
-        this.questionForm.setValue({
-          titleInput: this.question.title,
-          bodyEditor: this.question.body,
-        });
+        if (this.question) {
+          this.questionForm.setValue({
+            titleInput: this.question.title,
+            bodyEditor: this.question.body,
+          });
+        }
       },
     );
   }

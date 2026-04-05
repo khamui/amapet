@@ -6,6 +6,7 @@
     "scripts": {
         "start": "node dist/server.js",
         "start:dev": "tsx watch server.ts",
+        "start:dev:test": "NODE_ENV=test npm run start:dev",
         "start:dev:js": "nodemon server.js",
         "build": "tsc",
         "lint": "eslint .",

@@ -14,14 +14,17 @@ interface ModerationResponse {
 export class ModerationStore {
   private moderatedCircleIds = signal<string[]>([]);
   private moderatedCircles = signal<Circle[]>([]);
+  private storeReady = signal(false);
 
   public moderatedCircles$ = this.moderatedCircles.asReadonly();
+  public ready$ = this.storeReady.asReadonly();
 
   constructor(private api: ApiService<unknown>) {}
 
   public async initStore() {
     await this.fetchModeratedCircleIds();
     await this.fetchModeratedCircles();
+    this.storeReady.set(true);
   }
 
   public async fetchModeratedCircleIds() {

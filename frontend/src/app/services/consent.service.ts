@@ -1,4 +1,4 @@
-import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, inject, PLATFORM_ID, computed } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type ConsentStatus = 'accepted' | 'rejected' | null;
@@ -13,13 +13,16 @@ export class ConsentService {
   private readonly consentStatus = signal<ConsentStatus>(this.loadConsent());
 
   public readonly status = this.consentStatus.asReadonly();
+  public readonly hasDecided = computed(() => this.consentStatus() !== null);
+  public readonly isAccepted = computed(() => this.consentStatus() === 'accepted');
 
-  public hasDecided(): boolean {
-    return this.consentStatus() !== null;
-  }
-
-  public isAccepted(): boolean {
-    return this.consentStatus() === 'accepted';
+  /** Called via APP_INITIALIZER to sync state after hydration */
+  public init(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === 'accepted' || stored === 'rejected') {
+      this.consentStatus.set(stored);
+    }
   }
 
   public giveConsent(): void {

@@ -29,6 +29,7 @@
           [loading]="processingAction()"
           [disabled]="processingAction()"
           (onClick)="handleApprove()"
+          data-testid="mod-approve-question"
         ></p-button>
         <p-button
           [label]="currentStatus() === 'blocked' ? 'Unblock' : 'Block'"
@@ -40,6 +41,7 @@
           [loading]="processingAction()"
           [disabled]="processingAction()"
           (onClick)="handleBlock()"
+          data-testid="mod-block-question"
         ></p-button>
       </ng-template>
       <div class="flex jufstify-content-start">
@@ -134,6 +136,7 @@
               placeholder="Add a note visible to other moderators..."
               [ngModel]="noteText()"
               (ngModelChange)="noteText.set($event)"
+              data-testid="mod-note-input"
             ></textarea>
             <div class="flex gap-2 mt-2">
               <p-button
@@ -142,6 +145,7 @@
                 size="small"
                 [loading]="savingNote()"
                 (onClick)="saveNote()"
+                data-testid="mod-save-note"
               />
               <p-button
                 label="Cancel"
@@ -161,6 +165,7 @@
             [ngModel]="questionClosed()"
             [disabled]="processingAction()"
             (onChange)="handleToggleCommenting($event)"
+            data-testid="mod-close-comments"
           />
           <label
             class="font-bold cursor-pointer"

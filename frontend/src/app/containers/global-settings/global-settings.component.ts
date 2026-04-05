@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { DisplayNamePipe } from 'src/app/pipes/display-name.pipe';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -14,7 +14,7 @@ import {
   ToggleButtonChangeEvent,
   ToggleButtonModule,
 } from 'primeng/togglebutton';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, isPlatformBrowser, NgClass } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
@@ -38,12 +38,16 @@ import { DividerModule } from 'primeng/divider';
   styleUrl: './global-settings.component.scss',
 })
 export class GlobalSettingsComponent implements OnInit {
+  private platformId = inject(PLATFORM_ID);
   public ses = inject(SettingsService);
   public dbs = inject(DatabaseService);
   private confirmationService = inject(ConfirmationService);
   private router = inject(Router);
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return; // Skip on server - requires browser context
+    }
     this.dbs.checkCanSeed();
     this.dbs.loadBackups();
   }

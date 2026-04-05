@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 
@@ -44,6 +44,7 @@ const API = environment.apiUrl;
   templateUrl: './profile-circles.component.html',
 })
 export class ProfileCirclesComponent implements OnInit {
+  private platformId = inject(PLATFORM_ID);
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
@@ -59,11 +60,14 @@ export class ProfileCirclesComponent implements OnInit {
 
   private getHeaders = () => ({
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('amapet_token')}`,
+      Authorization: `Bearer ${this.authService.getToken()}`,
     },
   });
 
   async ngOnInit() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return; // Skip on server - authenticated calls require browser
+    }
     await this.loadOwnedCircles();
   }
 
