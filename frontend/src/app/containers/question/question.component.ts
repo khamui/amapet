@@ -19,6 +19,7 @@ import { UsernameBadgeComponent } from 'src/app/components/username-badge/userna
   styleUrls: ['./question.component.scss'],
   providers: [ConfirmationService],
   standalone: true,
+  host: { ngSkipHydration: 'true' },
   imports: [
     DateAgoPipe,
     PanelModule,

@@ -27,6 +27,7 @@
     "@primeng/themes": "20.1.2",
     "@primeuix/themes": "^2.0.2",
     "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/typography": "^0.5.19",
     "express": "^5.1.0",
     "jwt-decode": "4.0.0",
     "postcss": "^8.5.6",
