@@ -54,6 +54,7 @@ services:
       LEGAL_WEBSITE: ${LEGAL_WEBSITE}
       SITE_URL: ${SITE_URL}
       FRONTEND_URL: ${FRONTEND_URL}
+      IMGBB_API_KEY: ${IMGBB_API_KEY}
     depends_on:
       - mongo
     networks:

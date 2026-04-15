@@ -17,6 +17,7 @@ import databaseRoutes from './routes/route.database.js';
 import exploreRoutes from './routes/explore.js';
 import legalRoutes from './routes/legal.js';
 import sitemapRoutes from './routes/sitemap.js';
+import imageRoutes from './routes/images.js';
 import testAuthRoutes from './routes/test-auth.js';
 
 // env
@@ -46,6 +47,7 @@ app.use('/', databaseRoutes);
 app.use('/', exploreRoutes);
 app.use('/', legalRoutes);
 app.use('/', sitemapRoutes);
+app.use('/', imageRoutes);
 
 // Test-only routes (only in test environment)
 if (process.env.NODE_ENV === 'test') {

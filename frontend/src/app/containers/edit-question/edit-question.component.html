@@ -7,11 +7,27 @@
       pInputText
       formControlName="titleInput"
       placeholder="Title"
+      [maxlength]="titleMaxLength"
     />
+    <div class="flex justify-between mt-1 text-xs text-surface-500 dark:text-surface-400">
+      <span>
+        @if (questionForm.controls.titleInput.dirty && questionForm.controls.titleInput.hasError('minWords')) {
+          <span class="text-red-500">At least 2 words required</span>
+        }
+      </span>
+      <span [class.text-red-500]="(questionForm.controls.titleInput.value?.length || 0) > titleMaxLength">
+        {{ questionForm.controls.titleInput.value?.length || 0 }}/{{ titleMaxLength }}
+      </span>
+    </div>
   </div>
   <div class="w-full my-3">
     @if (isBrowserOnly) {
-      <p-editor formControlName="bodyEditor" [style]="{ height: '12rem' }">
+      <p-editor
+        formControlName="bodyEditor"
+        [style]="{ height: '12rem' }"
+        placeholder="Elaborate on your question..."
+        (onTextChange)="onBodyTextChange($event)"
+      >
         <ng-template pTemplate="header">
           <span class="ql-formats">
             <button type="button" class="ql-bold" aria-label="Bold"></button>
@@ -41,9 +57,18 @@
           </span>
         </ng-template>
       </p-editor>
+      <div class="flex justify-end mt-1 text-xs text-surface-500 dark:text-surface-400">
+        <span [class.text-red-500]="bodyTextLength() > bodyMaxLength">
+          {{ bodyTextLength() }}/{{ bodyMaxLength }}
+        </span>
+      </div>
     }
   </div>
+  <ama-image-upload
+    [existingImages]="existingImageUrls"
+    (imagesChanged)="onImagesChanged($event)"
+  ></ama-image-upload>
   <div>
-    <p-button type="submit" [loading]="loading">Submit</p-button>
+    <p-button type="submit" [loading]="loading" [disabled]="isSubmitDisabled">Submit</p-button>
   </div>
 </form>

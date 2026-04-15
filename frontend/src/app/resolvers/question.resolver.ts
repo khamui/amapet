@@ -27,16 +27,12 @@ export const questionResolver: ResolveFn<QuestionResolverData | null> = async (r
   const { isError: circleError, result: circle } = await cs.readCircle(circleName);
   if (circleError || !circle) return null;
 
-  // Find question in circle or fetch directly
-  let question = (circle as Circle).questions.find(
+  // Find question in circle data
+  const question = (circle as Circle).questions.find(
     (q) => q.slug === questionId || q._id === questionId
   );
 
-  if (!question) {
-    const { isError: qError, result: q } = await cs.readCircleQuestion(circleName, questionId);
-    if (qError || !q) return null;
-    question = q as Question;
-  }
+  if (!question) return null;
 
   // Fetch answers for structured data (SSR)
   const { isError: answersError, result: answersResult } = await api.read<Answer[]>(

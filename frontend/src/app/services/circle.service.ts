@@ -35,7 +35,8 @@ export class CircleService {
   };
 
   public readCircle = async (circleName: string) => {
-    return await this.api.read<Circle>(`/circles/${circleName}`);
+    const timestamp = Date.now();
+    return await this.api.read<Circle>(`/circles/${circleName}?_t=${timestamp}`);
   };
 
   public readCircleQuestions = async (
@@ -103,11 +104,17 @@ export class CircleService {
     );
   };
 
+  public uploadImages = async (files: File[]): Promise<string[]> => {
+    const response = await this.api.uploadFiles('/images/upload', files);
+    return response.urls;
+  };
+
   public createCircleQuestion = (
     circle: Circle,
     titleInput: string,
     bodyEditor: string,
     intentionId: string,
+    images: string[] = [],
   ) => {
     const payload: Question = {
       circleId: circle._id as string,
@@ -115,6 +122,7 @@ export class CircleService {
       ownerName: this.as.getUserName(),
       title: titleInput,
       body: bodyEditor,
+      images,
       intentionId,
     };
     const createdQuestion$ = this.api.createAsObservable$(
@@ -146,10 +154,12 @@ export class CircleService {
     question: Question,
     titleInput: string,
     bodyEditor: string,
+    images: string[] = [],
   ) => {
     const payload: Partial<Question> = {
       title: titleInput,
       body: bodyEditor,
+      images,
     };
     const updatedQuestion$ = this.api.updateAsObservable$<Question>(
       `/circles/${circle._id}/questions/${question._id}/update`,

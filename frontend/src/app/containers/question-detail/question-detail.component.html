@@ -92,6 +92,7 @@
           >
             {{ question.intentionId || "question" }}
           </div>
+          <ama-question-gallery [images]="question.images || []"></ama-question-gallery>
           <div
             [innerHtml]="question.body"
             class="prose prose-sm dark:prose-invert max-w-none text-left my-10"

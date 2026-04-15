@@ -309,6 +309,7 @@ export const controllerCircles = {
         $set: {
           'questions.$.title': req.body.title,
           'questions.$.body': req.body.body,
+          'questions.$.images': req.body.images,
           'questions.$.slug': newSlug,
           'questions.$.modded_at': Date.now(),
         },
@@ -327,6 +328,7 @@ export const controllerCircles = {
         modded_at: Date.now(),
         title: req.body.title,
         body: req.body.body,
+        images: req.body.images,
         upvotes: currentQuestion.upvotes,
         downvotes: currentQuestion.downvotes,
         intentionId: currentQuestion.intentionId,

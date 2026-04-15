@@ -12,6 +12,7 @@ import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
 import { UsernameBadgeComponent } from 'src/app/components/username-badge/username-badge.component';
+import { QuestionGalleryComponent } from 'src/app/components/question-gallery/question-gallery.component';
 
 @Component({
   selector: 'ama-question',
@@ -29,6 +30,7 @@ import { UsernameBadgeComponent } from 'src/app/components/username-badge/userna
     VoteComponent,
     UsernameBadgeComponent,
     RouterLink,
+    QuestionGalleryComponent,
   ],
 })
 export class QuestionComponent {
@@ -75,6 +77,10 @@ export class QuestionComponent {
       this.questionData.set(this.questionInput());
     });
   }
+
+  navigateToDetail = () => {
+    this.ro.navigate(this.questionUrl());
+  };
 
   handleEdit = (event: MouseEvent) => {
     event.stopPropagation();

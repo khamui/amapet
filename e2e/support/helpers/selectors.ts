@@ -113,6 +113,13 @@ export const selectors = {
     badge: '[data-testid="notification-badge"]',
   },
 
+  // Images
+  images: {
+    uploadInput: '[data-testid="image-upload-input"]',
+    removeButton: '[data-testid="remove-image"]',
+    gallery: '[data-testid="question-gallery"]',
+  },
+
   // Common
   common: {
     loading: '[data-testid="loading"]',

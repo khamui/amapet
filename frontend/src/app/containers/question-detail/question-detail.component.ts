@@ -21,6 +21,7 @@ import { NgClass } from '@angular/common';
 import { VoteComponent } from 'src/app/components/vote/vote.component';
 import { UsernameBadgeComponent } from 'src/app/components/username-badge/username-badge.component';
 import { ButtonModule } from 'primeng/button';
+import { QuestionGalleryComponent } from 'src/app/components/question-gallery/question-gallery.component';
 
 @Component({
   selector: 'app-question-detail',
@@ -41,6 +42,7 @@ import { ButtonModule } from 'primeng/button';
     UsernameBadgeComponent,
     ProgressBarModule,
     ButtonModule,
+    QuestionGalleryComponent,
   ],
 })
 export class QuestionDetailComponent implements OnInit {
@@ -115,7 +117,7 @@ export class QuestionDetailComponent implements OnInit {
     this.ro.navigate([
       this.circle.name,
       'questions',
-      this.question._id,
+      this.question.slug || this.question._id,
       'edit',
     ]);
   };
