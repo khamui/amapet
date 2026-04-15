@@ -34,6 +34,7 @@ const questionSubSchema = new Schema<IQuestion>(
     body: String,
     upvotes: { type: [String], default: [] },
     downvotes: { type: [String], default: [] },
+    images: { type: [String], default: [] },
     intentionId: String,
     solutionId: { type: String, default: null },
     moderationInfo: {

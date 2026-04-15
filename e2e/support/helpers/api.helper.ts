@@ -63,7 +63,7 @@ export class ApiHelper {
   async createQuestion(
     token: string,
     circleId: string,
-    data: { title: string; body: string; ownerId: string; ownerName: string }
+    data: { title: string; body: string; ownerId: string; ownerName: string; images?: string[] }
   ): Promise<TestQuestion> {
     const response = await this.request.post(
       `${API_URL}/circles/${circleId}/questions/create`,

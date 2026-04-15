@@ -23,6 +23,7 @@
         "migrate:owner-names": "tsx scripts/migrate-owner-names.ts"
     },
     "dependencies": {
+        "@types/multer": "^2.1.0",
         "body-parser": "1.20.3",
         "cors": "2.8.5",
         "dotenv": "16.6.1",
@@ -32,6 +33,7 @@
         "jsonwebtoken": "9.0.2",
         "jwks-rsa": "^4.0.0",
         "mongoose": "8.9.3",
+        "multer": "^2.1.1",
         "slugify": "^1.6.8"
     },
     "devDependencies": {

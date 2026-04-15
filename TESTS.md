@@ -29,6 +29,11 @@ updated everytime tests were modified, extended or added.
 - question edit page is accessible (verifies title input is pre-filled)
 - question can be deleted via UI (confirm dialog, navigates back, question removed)
 
+### Images
+- question with images shows gallery on detail page (API-seeded)
+- image upload UI shows preview and allows removal
+- edit question: remove image and submit succeeds (API-seeded with image, removes via UI, submits, verifies gallery gone)
+
 ### View Detail
 - displays question detail page with title, body, and answer count
 - shows answers on question detail page (verifies answer text is rendered)

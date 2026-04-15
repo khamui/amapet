@@ -9,9 +9,12 @@ import {
   signal,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs';
@@ -25,10 +28,23 @@ import { InputTextModule } from 'primeng/inputtext';
 import { isPlatformBrowser } from '@angular/common';
 import { AutoFocusModule } from 'primeng/autofocus';
 import {
+  ImageUploadComponent,
+  ImageUploadState,
+} from 'src/app/components/image-upload/image-upload.component';
+import {
   IntentionId,
   QuestionIntentionsValue,
 } from 'src/app/typedefs/Settings.typedef';
 import { SettingsService } from 'src/app/services/settings.service';
+
+function minWordsValidator(min: number) {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const words = (control.value?.trim() || '')
+      .split(/\s+/)
+      .filter((w: string) => w.length > 0);
+    return words.length >= min ? null : { minWords: true };
+  };
+}
 
 @Component({
   selector: 'ama-create-question',
@@ -43,6 +59,7 @@ import { SettingsService } from 'src/app/services/settings.service';
     ButtonModule,
     AutoFocusModule,
     SelectButtonModule,
+    ImageUploadComponent,
   ],
 })
 export class CreateQuestionComponent implements OnInit {
@@ -61,6 +78,9 @@ export class CreateQuestionComponent implements OnInit {
 
   public loading = false;
   public circle!: Circle | undefined;
+  public bodyTextLength = signal(0);
+  private pendingFiles = signal<File[]>([]);
+  private existingUrls = signal<string[]>([]);
 
   public selectedIntention = signal<IntentionId>('question');
 
@@ -112,23 +132,52 @@ export class CreateQuestionComponent implements OnInit {
   }
 
   public questionForm = new FormGroup({
-    titleInput: new FormControl(''),
+    titleInput: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(156),
+      minWordsValidator(2),
+    ]),
     bodyEditor: new FormControl(''),
     intentionSelect: new FormControl(''),
   });
 
+  public onImagesChanged(state: ImageUploadState) {
+    this.pendingFiles.set(state.files);
+    this.existingUrls.set(state.existingUrls);
+  }
+
+  public onBodyTextChange(event: { textValue: string }) {
+    this.bodyTextLength.set((event.textValue || '').trim().length);
+  }
+
+  get isSubmitDisabled(): boolean {
+    return (
+      this.questionForm.controls.titleInput.invalid ||
+      this.bodyTextLength() > 2000 ||
+      this.loading
+    );
+  }
+
   public submitQuestion = async () => {
+    if (this.isSubmitDisabled) return;
     this.loading = true;
     const titleInput = this.questionForm.value.titleInput;
     const bodyEditor = this.questionForm.value.bodyEditor;
     const intentionId = this.questionForm.value.intentionSelect;
-    if (titleInput !== '') {
+    try {
+      let imageUrls: string[] = [];
+      if (this.pendingFiles().length > 0) {
+        imageUrls = await this.cs.uploadImages(this.pendingFiles());
+      }
       this.cs.createCircleQuestion(
         this.circle as Circle,
         titleInput as string,
-        bodyEditor as string,
+        bodyEditor as string || '',
         intentionId as string,
+        imageUrls,
       );
+    } catch {
+      this.loading = false;
     }
     this.loading = false;
   };

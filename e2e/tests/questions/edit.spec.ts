@@ -8,7 +8,7 @@ test.describe('Questions - Edit', () => {
   test('question edit page is accessible', async ({ page, testCircle, testQuestion }) => {
     const circleName = testCircle.name.replace('c/', '');
 
-    await page.goto(`/c/${circleName}/questions/${testQuestion._id}/edit`);
+    await page.goto(`/c/${circleName}/questions/${testQuestion.slug || testQuestion._id}/edit`);
     await page.waitForLoadState('networkidle');
 
     // Title input should be pre-filled with the question title

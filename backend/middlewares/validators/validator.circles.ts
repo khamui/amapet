@@ -12,12 +12,14 @@ export const questionCreateSchema = Joi.object({
   ownerName: Joi.string().required(),
   title: Joi.string().min(3).max(150).required(),
   body: Joi.string().max(3000).allow('').optional(),
+  images: Joi.array().items(Joi.string().uri()).max(5).default([]),
   intentionId: Joi.string().required(),
 });
 
 export const questionEditSchema = Joi.object({
   title: Joi.string().min(3).max(150).required(),
   body: Joi.string().max(3000).required(),
+  images: Joi.array().items(Joi.string().uri()).max(5).required(),
 });
 
 export const questionSolutionSchema = Joi.object({

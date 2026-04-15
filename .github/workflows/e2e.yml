@@ -28,6 +28,7 @@ jobs:
       JWT_SECRET: test-jwt-secret-for-e2e
       GOOGLE_CLIENT_ID: test-google-client-id
       MICROSOFT_CLIENT_ID: test-microsoft-client-id
+      IMGBB_API_KEY: test-imgbb-key
 
     steps:
       - name: Checkout
