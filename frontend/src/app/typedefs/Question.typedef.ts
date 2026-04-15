@@ -10,6 +10,7 @@ export type Question = {
   body: string,
   upvotes?: string[],
   downvotes?: string[],
+  images?: string[];
   intentionId?: string;
   solutionId?: string;
   moderationInfo?: ModerationInfo;

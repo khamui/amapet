@@ -1,0 +1,28 @@
+@if (hasImages()) {
+  <div class="my-3" data-testid="question-gallery" (click)="$event.stopPropagation(); $event.preventDefault()">
+    <p-galleria
+      [value]="images()"
+      [numVisible]="5"
+      [showThumbnails]="false"
+      [showIndicators]="showItemNavigators()"
+      [showItemNavigators]="showItemNavigators()"
+      [(activeIndex)]="activeIndex"
+    >
+      <ng-template pTemplate="item" let-item>
+        <img
+          [src]="item"
+          [alt]="'Question image'"
+          class="w-full aspect-[16/10] object-cover rounded cursor-pointer"
+          (click)="onImageClick()"
+        />
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+        <img
+          [src]="item"
+          [alt]="'Thumbnail'"
+          class="w-16 h-16 object-cover rounded"
+        />
+      </ng-template>
+    </p-galleria>
+  </div>
+}

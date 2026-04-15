@@ -39,6 +39,7 @@ export interface IQuestion {
   body?: string;
   upvotes: string[];
   downvotes: string[];
+  images?: string[];
   intentionId?: string;
   solutionId?: string;
   moderationInfo?: IModerationInfo;

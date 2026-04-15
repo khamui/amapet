@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { QUESTION_BODY_MAX_LENGTH, QUESTION_TITLE_MAX_LENGTH } from '../../constants/question.constants.js';
 
 export const circleCreateSchema = Joi.object({
   ownerId: Joi.string().required(),
@@ -10,14 +11,16 @@ export const questionCreateSchema = Joi.object({
   circleId: Joi.string().required(),
   ownerId: Joi.string().required(),
   ownerName: Joi.string().required(),
-  title: Joi.string().min(3).max(150).required(),
-  body: Joi.string().max(3000).allow('').optional(),
+  title: Joi.string().min(3).max(QUESTION_TITLE_MAX_LENGTH).required(),
+  body: Joi.string().max(QUESTION_BODY_MAX_LENGTH).allow('').optional(),
+  images: Joi.array().items(Joi.string().uri()).max(5).default([]),
   intentionId: Joi.string().required(),
 });
 
 export const questionEditSchema = Joi.object({
-  title: Joi.string().min(3).max(150).required(),
-  body: Joi.string().max(3000).required(),
+  title: Joi.string().min(3).max(QUESTION_TITLE_MAX_LENGTH).required(),
+  body: Joi.string().max(QUESTION_BODY_MAX_LENGTH).required(),
+  images: Joi.array().items(Joi.string().uri()).max(5).required(),
 });
 
 export const questionSolutionSchema = Joi.object({

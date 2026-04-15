@@ -119,6 +119,20 @@ export class ApiService<T> {
     }
   };
 
+  // upload files as FormData
+  uploadFiles = async (resource: string, files: File[]): Promise<{ urls: string[] }> => {
+    const formData = new FormData();
+    files.forEach(file => formData.append('images', file));
+    const token = isPlatformBrowser(this.platformId)
+      ? localStorage.getItem('amapet_token')
+      : null;
+    return lastValueFrom(
+      this.http.post<{ urls: string[] }>(API + resource, formData, {
+        headers: { Authorization: `Bearer ${token || ''}` },
+      })
+    );
+  };
+
   // delete as observable
   deleteAsObservable$ = <T>(resource: string, withAuth = true) => {
     return withAuth
