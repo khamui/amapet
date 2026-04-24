@@ -5,7 +5,7 @@ import path from 'path';
 const TEST_IMAGE_PATH = path.resolve(__dirname, '../../fixtures/assets/test-image.png');
 
 // A publicly accessible test image URL for API-seeded questions
-const TEST_IMAGE_URL = 'https://via.placeholder.com/300x200.png?text=Test+Image';
+const TEST_IMAGE_URL = 'https://placehold.co/300x200.png';
 
 test.describe('Questions - Images', () => {
   test.use({ storageState: '.auth/user.json' });

@@ -3,7 +3,7 @@
   @if (circle()!.about) {
     <p class="text-gray-400 dark:text-surface-500 mb-5">{{ circle()!.about }}</p>
   }
-  @if (isLoggedIn()) {
+  @if (isLoggedIn() && allQuestions().length > 0) {
     <div class="w-full">
       <input
         class="w-full border-2 border-primary"
@@ -14,23 +14,40 @@
       />
     </div>
   }
-  <ama-questions
-    [questions]="allQuestions()"
-    [circle]="circle()!"
-  ></ama-questions>
-
-  <div #scrollSentinel class="h-1"></div>
-
-  @if (isLoading()) {
-    <div class="flex justify-center py-4">
-      <p-progressSpinner
-        styleClass="w-8 h-8"
-        strokeWidth="4"
-      ></p-progressSpinner>
+  @if (!isLoading() && allQuestions().length === 0) {
+    <div class="flex flex-col items-center gap-3 py-12 text-center">
+      <i class="pi pi-comments text-4xl text-surface-400 dark:text-surface-500"></i>
+      <p class="text-surface-600 dark:text-surface-400 text-lg">No questions yet in circle {{ circle()!.name }}.</p>
+      @if (isLoggedIn()) {
+        <p class="text-surface-500 dark:text-surface-500">Be the first to start a conversation!</p>
+        <p-button
+          label="Ask a Question"
+          icon="pi pi-plus"
+          (onClick)="navigateToCreateForm()"
+        ></p-button>
+      } @else {
+        <p class="text-surface-500 dark:text-surface-500">Log in to ask the first question!</p>
+      }
     </div>
-  }
+  } @else {
+    <ama-questions
+      [questions]="allQuestions()"
+      [circle]="circle()!"
+    ></ama-questions>
 
-  @if (!hasMore() && questions().length > 0) {
-    <p class="text-center text-surface-500 py-4">End of the feed.</p>
+    <div #scrollSentinel class="h-1"></div>
+
+    @if (isLoading()) {
+      <div class="flex justify-center py-4">
+        <p-progressSpinner
+          styleClass="w-8 h-8"
+          strokeWidth="4"
+        ></p-progressSpinner>
+      </div>
+    }
+
+    @if (!hasMore() && questions().length > 0) {
+      <p class="text-center text-surface-500 py-4">End of the feed.</p>
+    }
   }
 }

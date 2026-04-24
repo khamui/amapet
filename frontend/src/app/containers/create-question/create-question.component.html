@@ -84,13 +84,21 @@
     }
   </div>
   <ama-image-upload (imagesChanged)="onImagesChanged($event)"></ama-image-upload>
-  <div>
+  <div class="flex gap-2">
     <p-button
       type="submit"
       [loading]="loading"
       [disabled]="isSubmitDisabled"
       data-testid="submit-question"
       >Submit</p-button
+    >
+    <p-button
+      type="button"
+      severity="secondary"
+      [outlined]="true"
+      (onClick)="cancel()"
+      data-testid="cancel-question"
+      >Cancel</p-button
     >
   </div>
 </form>

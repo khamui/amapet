@@ -16,6 +16,10 @@ updated everytime tests were modified, extended or added.
 - displays circles on explore page
 - circle detail page shows circle info
 
+### Empty State
+- empty circle shows message, ask-a-question button, and hidden input for logged-in user
+- empty circle shows message and login prompt for unauthenticated user
+
 ### Follow
 - user can follow a circle
 - user can unfollow a circle
@@ -23,6 +27,7 @@ updated everytime tests were modified, extended or added.
 ## Questions
 ### Create
 - can create a new question via UI and view it
+- cancel button navigates back to circle page
 - newly created question appears on circle page without refresh
 
 ### Edit
