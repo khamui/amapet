@@ -128,11 +128,12 @@ export class QuestionComponent {
   };
 
   handleEdit = (event: MouseEvent) => {
+    event.preventDefault();
     event.stopPropagation();
     this.ro.navigate([
       this.circle().name,
       'questions',
-      this.question()._id,
+      this.question().slug || this.question()._id,
       'edit',
     ]);
   };
@@ -154,6 +155,7 @@ export class QuestionComponent {
   };
 
   handleModerate = (event: MouseEvent) => {
+    event.preventDefault();
     event.stopPropagation();
     const plainCircleName = this.circle().name.replace('c/', '');
     this.ro.navigate(['moderate', 'c', plainCircleName, 'q', this.question().slug || this.question()._id]);

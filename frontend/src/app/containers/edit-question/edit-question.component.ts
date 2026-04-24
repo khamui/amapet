@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { Component, inject, Inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -7,7 +7,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
 import { Question } from 'src/app/typedefs/Question.typedef';
@@ -46,6 +46,8 @@ function minWordsValidator(min: number) {
   ],
 })
 export class EditQuestionComponent implements OnInit {
+  private router = inject(Router);
+
   circle!: Circle | undefined;
   public question!: Question;
 
@@ -148,5 +150,17 @@ export class EditQuestionComponent implements OnInit {
       this.loading = false;
     }
     this.loading = false;
+  };
+
+  public cancel = () => {
+    const circleName = this.circle?.name?.replace('c/', '');
+    const slug = this.question?.slug || this.question?._id;
+    if (circleName && slug) {
+      this.router.navigateByUrl(`/c/${circleName}/questions/${slug}`);
+    } else if (circleName) {
+      this.router.navigateByUrl(`/c/${circleName}`);
+    } else {
+      this.router.navigateByUrl('/');
+    }
   };
 }
