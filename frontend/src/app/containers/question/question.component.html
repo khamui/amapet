@@ -70,7 +70,7 @@
         <div class="ml-1">
           <h4 class="m-0">{{ question().title }}</h4>
           <ama-question-gallery [images]="question().images || []" (imageClick)="navigateToDetail()"></ama-question-gallery>
-          <div [innerHtml]="question().body" class="prose prose-sm dark:prose-invert max-w-none text-left my-4"></div>
+          <div [innerHtml]="bodyExcerpt()" class="prose prose-sm dark:prose-invert max-w-none text-left my-4"></div>
         </div>
         <p-divider layout="horizontal"></p-divider>
         <div class="text-sm">

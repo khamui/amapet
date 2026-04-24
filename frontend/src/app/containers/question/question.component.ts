@@ -71,6 +71,51 @@ export class QuestionComponent {
     return (q as ExploreQuestion).answerCount ?? 0;
   });
 
+  bodyExcerpt = computed(() => {
+    const q = this.question();
+    const body = q.body || '';
+    const hasImages = (q.images?.length ?? 0) > 0;
+    const limit = hasImages ? 200 : 1200;
+
+    const plainText = body.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+    if (plainText.length <= limit) return body;
+
+    let charCount = 0;
+    let result = '';
+    const tagRegex = /(<[^>]*>)|([^<]+)/g;
+    let match: RegExpExecArray | null;
+    while ((match = tagRegex.exec(body)) !== null) {
+      if (match[1]) {
+        result += match[1];
+      } else {
+        const decoded = match[2].replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+        const remaining = limit - charCount;
+        if (decoded.length <= remaining) {
+          result += match[2];
+          charCount += decoded.length;
+        } else {
+          const raw = match[2];
+          let rawIdx = 0;
+          let added = 0;
+          while (added < remaining && rawIdx < raw.length) {
+            const entityMatch = raw.slice(rawIdx).match(/^&[a-zA-Z]+;|^&#\d+;/);
+            if (entityMatch) {
+              result += entityMatch[0];
+              rawIdx += entityMatch[0].length;
+            } else {
+              result += raw[rawIdx];
+              rawIdx++;
+            }
+            added++;
+          }
+          charCount += added;
+          break;
+        }
+      }
+    }
+    return result + '…';
+  });
+
   constructor() {
     // Sync input to local state
     effect(() => {
