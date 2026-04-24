@@ -16,7 +16,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { CircleService } from 'src/app/services/circle.service';
 import { Circle } from 'src/app/typedefs/Circle.typedef';
@@ -86,6 +86,8 @@ export class CreateQuestionComponent implements OnInit {
   private existingUrls = signal<string[]>([]);
 
   public selectedIntention = signal<IntentionId>('question');
+
+  private router = inject(Router);
 
   constructor(
     private cs: CircleService,
@@ -183,6 +185,11 @@ export class CreateQuestionComponent implements OnInit {
       this.loading = false;
     }
     this.loading = false;
+  };
+
+  public cancel = () => {
+    const circleName = this.circle?.name?.replace('c/', '');
+    this.router.navigateByUrl(circleName ? `/c/${circleName}` : '/');
   };
 
   public toggleStyle = computed(() => {

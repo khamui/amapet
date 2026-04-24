@@ -20,6 +20,7 @@ import { Question, PaginatedQuestionsResponse } from 'src/app/typedefs/Question.
 import { QuestionsComponent } from '../questions/questions.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { ButtonModule } from 'primeng/button';
 
 const PAGE_SIZE = 50;
 
@@ -29,7 +30,7 @@ const PAGE_SIZE = 50;
   templateUrl: './circle.component.html',
   styleUrls: ['./circle.component.scss'],
   standalone: true,
-  imports: [InputTextModule, QuestionsComponent, ProgressSpinner],
+  imports: [InputTextModule, QuestionsComponent, ProgressSpinner, ButtonModule],
 })
 export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollSentinel') scrollSentinel!: ElementRef;

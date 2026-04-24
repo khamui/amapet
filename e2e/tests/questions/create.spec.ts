@@ -25,6 +25,18 @@ test.describe('Questions - Create', () => {
     await expect(page.locator(`text=${questionTitle}`)).toBeVisible({ timeout: 5000 });
   });
 
+  test('cancel button navigates back to circle page', async ({ page, testCircle }) => {
+    const circleName = testCircle.name.replace('c/', '');
+
+    await page.goto(`/c/${circleName}/questions/create`);
+    await page.waitForLoadState('networkidle');
+
+    await page.click('[data-testid="cancel-question"]');
+
+    await page.waitForURL(`/c/${circleName}`, { timeout: 10000 });
+    await expect(page.getByRole('heading', { name: testCircle.name })).toBeVisible();
+  });
+
   test('newly created question appears on circle page without refresh', async ({ page, testCircle }) => {
     const questionTitle = `UI Test Question ${Date.now()}`;
     const circleName = testCircle.name.replace('c/', '');
