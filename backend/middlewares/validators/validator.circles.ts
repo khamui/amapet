@@ -1,6 +1,26 @@
 import Joi from 'joi';
 import { QUESTION_BODY_MAX_LENGTH, QUESTION_TITLE_MAX_LENGTH } from '../../constants/question.constants.js';
 
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#\d+;/g, ' ');
+}
+
+const bodySchema = Joi.string().custom((value, helpers) => {
+  const textLength = stripHtml(value).trim().length;
+  if (textLength > QUESTION_BODY_MAX_LENGTH) {
+    return helpers.error('string.max', { limit: QUESTION_BODY_MAX_LENGTH });
+  }
+  return value;
+});
+
 export const circleCreateSchema = Joi.object({
   ownerId: Joi.string().required(),
   name: Joi.string().min(3).max(30).required(),
@@ -12,14 +32,14 @@ export const questionCreateSchema = Joi.object({
   ownerId: Joi.string().required(),
   ownerName: Joi.string().required(),
   title: Joi.string().min(3).max(QUESTION_TITLE_MAX_LENGTH).required(),
-  body: Joi.string().max(QUESTION_BODY_MAX_LENGTH).allow('').optional(),
+  body: bodySchema.allow('').optional(),
   images: Joi.array().items(Joi.string().uri()).max(5).default([]),
   intentionId: Joi.string().required(),
 });
 
 export const questionEditSchema = Joi.object({
   title: Joi.string().min(3).max(QUESTION_TITLE_MAX_LENGTH).required(),
-  body: Joi.string().max(QUESTION_BODY_MAX_LENGTH).required(),
+  body: bodySchema.required(),
   images: Joi.array().items(Joi.string().uri()).max(5).required(),
 });
 
