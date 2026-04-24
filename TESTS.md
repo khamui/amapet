@@ -1,6 +1,10 @@
 This file contains a comprehensive concise list of the tests and should be
 updated everytime tests were modified, extended or added.
 
+## Conventions
+
+- Unauthenticated tests must live in their own `*.unauth.spec.ts` file.
+
 # E2E Tests (Playwright)
 
 ## Authentication
