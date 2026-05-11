@@ -37,6 +37,7 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
   questions = signal<ExploreQuestion[]>([]);
   isLoading = signal(false);
   hasMore = signal(true);
+  hasFetched = signal(false);
 
   private currentSkip = 0;
   private observer: IntersectionObserver | null = null;
@@ -75,6 +76,7 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.isLoading.set(false);
+    this.hasFetched.set(true);
   }
 
   private setupIntersectionObserver(): void {

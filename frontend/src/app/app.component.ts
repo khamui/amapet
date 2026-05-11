@@ -54,8 +54,6 @@ export class AppComponent implements OnInit {
   public isFullScreenRoute = signal(false);
 
   async ngOnInit() {
-    this.as.subscribeLogin();
-
     await this.ses.init();
 
     this.setCircleBox();

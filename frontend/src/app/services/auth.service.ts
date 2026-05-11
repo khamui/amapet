@@ -1,17 +1,12 @@
-import {
-  SocialAuthService,
-  SocialUser,
-  MicrosoftLoginProvider,
-} from '@abacritt/angularx-social-login';
 import { Token } from '../typedefs/Token.typedef';
 import { inject, Injectable, signal, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ApiService } from './api.service';
-import { firstValueFrom } from 'rxjs';
 import { jwtDecode as decode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { User } from '../typedefs/User.typedef';
 import { MessageService } from 'primeng/api';
+import { environment } from '../../environments/environment';
 
 // CONSTANTS
 const TOKEN_NAME = 'amapet_token';
@@ -21,7 +16,6 @@ const TOKEN_NAME = 'amapet_token';
 })
 export class AuthService {
   private platformId = inject(PLATFORM_ID);
-  private sas = inject(SocialAuthService);
   private api = inject(ApiService<Token>);
   private router = inject(Router);
   private ms = inject(MessageService);
@@ -45,33 +39,6 @@ export class AuthService {
     }
   }
 
-  /***
-   *
-   * public subscribeLogin()
-   * Initializes social auth SDK and subscribes to login events.
-   * Token check is handled separately by initFromStoredToken().
-   *
-   ***/
-  public subscribeLogin = async () => {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    await firstValueFrom(this.sas.initState);
-    this.sas.authState.subscribe(async (user: SocialUser) => {
-      if (!user) return;
-
-      try {
-        const token = await this.requestToken(user);
-        if (token && !token.isError) {
-          this.setToken((token.result as Token).token);
-          this.isLoggedIn.set(true);
-          this.router.navigate(['/'], { replaceUrl: true });
-        }
-      } catch (error: any) {
-        this.handleLoginError(error);
-      }
-    });
-  };
-
   public logout = async () => {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(TOKEN_NAME);
@@ -79,11 +46,6 @@ export class AuthService {
     this.isLoggedIn.set(false);
     this.user.set(undefined);
     this.router.navigate(['/'], { replaceUrl: true });
-    try {
-      await this.sas.signOut();
-    } catch {
-      // Ignore - social session may not exist if user logged in via stored token
-    }
   };
 
   private setLoggedInWithExpiration = (exp: number) => {
@@ -141,40 +103,63 @@ export class AuthService {
 
   /***
    *
-   * private requestToken()
-   * This method makes a call to amapet's backend to receive a jwt token
-   * which can be used for further authorizations.
+   * public exchangeGoogleCode()
+   * Exchanges a Google OAuth authorization code (from the redirect
+   * flow) for an amapet JWT, stores it, and updates auth state. Used
+   * by the /google-redirect.html route handler.
    *
    ***/
-  private requestToken = async (user: SocialUser) => {
-    const { idToken: token, provider } = user;
+  public exchangeGoogleCode = async (code: string): Promise<boolean> => {
+    if (!code) {
+      this.handleLoginError(new Error('No authentication code received'));
+      return false;
+    }
+    try {
+      const authToken = await this.api.create('/google-signin', {
+        code,
+        redirectUri: environment.googleRedirectUri,
+      } as any);
+      if (authToken.isError) {
+        this.handleLoginError(authToken.result);
+        return false;
+      }
+      this.setToken((authToken.result as Token).token);
+      this.isLoggedIn.set(true);
+      return true;
+    } catch (error: any) {
+      this.handleLoginError(error);
+      return false;
+    }
+  };
 
-    if (!token) {
-      const error = new Error('No authentication token received');
-      this.ms.add({
-        severity: 'error',
-        summary: 'Authentication Error',
-        detail: 'No authentication token received. Please try again.',
+  /***
+   *
+   * public exchangeMicrosoftIdToken()
+   * Exchanges a Microsoft idToken (from msal-browser redirect) for an
+   * amapet JWT, stores it, and updates auth state. Used by the
+   * /redirect.html route handler.
+   *
+   ***/
+  public exchangeMicrosoftIdToken = async (idToken: string): Promise<boolean> => {
+    if (!idToken) {
+      this.handleLoginError(new Error('No authentication token received'));
+      return false;
+    }
+    try {
+      const authToken = await this.api.create('/microsoft-signin', {
+        token: idToken,
       });
-      throw error;
+      if (authToken.isError) {
+        this.handleLoginError(authToken.result);
+        return false;
+      }
+      this.setToken((authToken.result as Token).token);
+      this.isLoggedIn.set(true);
+      return true;
+    } catch (error: any) {
+      this.handleLoginError(error);
+      return false;
     }
-
-    // Route to correct backend endpoint based on provider
-    const endpoint =
-      provider === MicrosoftLoginProvider.PROVIDER_ID
-        ? '/microsoft-signin'
-        : '/google-signin';
-
-    const authToken = await this.api.create(endpoint, { token });
-
-    if (authToken.isError) {
-      const error = new Error(
-        (authToken as any).error || 'Backend authentication failed',
-      );
-      throw error;
-    }
-
-    return authToken;
   };
 
   /***

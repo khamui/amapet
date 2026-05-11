@@ -1,24 +1,22 @@
 import { Component, effect, inject, model } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
-import {
-  GoogleSigninButtonModule,
-  SocialAuthService,
-  MicrosoftLoginProvider,
-} from '@abacritt/angularx-social-login';
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { MicrosoftAuthService } from 'src/app/services/microsoft-auth.service';
+import { GoogleAuthService } from 'src/app/services/google-auth.service';
 
 @Component({
   selector: 'ama-social-login-dialog',
   templateUrl: './social-login-dialog.component.html',
   styleUrls: ['./social-login-dialog.component.scss'],
   standalone: true,
-  imports: [DialogModule, GoogleSigninButtonModule],
+  imports: [DialogModule],
 })
 export class SocialLoginDialogComponent {
   public as = inject(AuthService);
   public ses = inject(SettingsService);
-  private sas = inject(SocialAuthService);
+  private msAuth = inject(MicrosoftAuthService);
+  private googleAuth = inject(GoogleAuthService);
 
   public visible = model(false);
 
@@ -31,8 +29,12 @@ export class SocialLoginDialogComponent {
     });
   }
 
+  signInWithGoogle() {
+    this.googleAuth.loginRedirect();
+  }
+
   signInWithMicrosoft() {
-    this.sas.signIn(MicrosoftLoginProvider.PROVIDER_ID);
+    this.msAuth.loginRedirect();
   }
 
   closeDialog() {

@@ -3,4 +3,5 @@ export const environment = {
   apiUrl: 'https://api.helpa.ws',
   uiUrl: 'https://helpa.ws',
   redirectUri: 'https://helpa.ws/redirect.html',
+  googleRedirectUri: 'https://helpa.ws/google-redirect.html',
 };

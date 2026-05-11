@@ -10,6 +10,8 @@ import { ModerationQuestionDetailComponent } from './containers/moderation-quest
 import { GlobalSettingsComponent } from './containers/global-settings/global-settings.component';
 import { ProfileCirclesComponent } from './containers/profile-circles/profile-circles.component';
 import { NotFoundComponent } from './containers/not-found/not-found.component';
+import { MicrosoftRedirectComponent } from './containers/microsoft-redirect/microsoft-redirect.component';
+import { GoogleRedirectComponent } from './containers/google-redirect/google-redirect.component';
 import { ImprintComponent } from './containers/legal/imprint/imprint.component';
 import { PrivacyComponent } from './containers/legal/privacy/privacy.component';
 import { DisclaimerComponent } from './containers/legal/disclaimer/disclaimer.component';
@@ -70,6 +72,8 @@ const routes: Routes = [
   { path: 'privacy', component: PrivacyComponent },
   { path: 'disclaimer', component: DisclaimerComponent },
   { path: 'terms', component: TermsComponent },
+  { path: 'redirect.html', component: MicrosoftRedirectComponent },
+  { path: 'google-redirect.html', component: GoogleRedirectComponent },
   { path: '', component: ExploreComponent, canActivate: [appAvailableGuard] },
   { path: '**', component: NotFoundComponent },
 ];
