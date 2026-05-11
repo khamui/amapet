@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID, TransferState, makeStateKey } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ApiService } from './api.service';
 import { Circle } from '../typedefs/Circle.typedef';
@@ -15,6 +16,9 @@ export class CircleService {
   private circlesSubject = new BehaviorSubject<Circle[]>([]);
   public circles$ = this.circlesSubject.asObservable();
   private created!: Observable<Circle>;
+
+  private state = inject(TransferState);
+  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private api: ApiService<Circle>,
@@ -35,8 +39,21 @@ export class CircleService {
   };
 
   public readCircle = async (circleName: string) => {
-    const timestamp = Date.now();
-    return await this.api.read<Circle>(`/circles/${circleName}?_t=${timestamp}`);
+    const key = makeStateKey<Circle>(`circle:${circleName}`);
+
+    if (isPlatformBrowser(this.platformId) && this.state.hasKey(key)) {
+      const result = this.state.get(key, null as unknown as Circle);
+      this.state.remove(key);
+      return { isError: false as const, result };
+    }
+
+    const response = await this.api.read<Circle>(`/circles/${circleName}`);
+
+    if (!response.isError && !isPlatformBrowser(this.platformId)) {
+      this.state.set(key, response.result as Circle);
+    }
+
+    return response;
   };
 
   public readCircleQuestions = async (
@@ -44,11 +61,28 @@ export class CircleService {
     skip: number = 0,
     limit: number = 50,
   ) => {
-    // Add cache-busting timestamp to prevent browser caching
-    const timestamp = Date.now();
-    return await this.api.read<PaginatedQuestionsResponse>(
-      `/circles/${circleName}/questions?skip=${skip}&limit=${limit}&_t=${timestamp}`,
+    const key = makeStateKey<PaginatedQuestionsResponse>(
+      `circleQs:${circleName}:${skip}:${limit}`,
     );
+
+    if (isPlatformBrowser(this.platformId) && this.state.hasKey(key)) {
+      const result = this.state.get(
+        key,
+        null as unknown as PaginatedQuestionsResponse,
+      );
+      this.state.remove(key);
+      return { isError: false as const, result };
+    }
+
+    const response = await this.api.read<PaginatedQuestionsResponse>(
+      `/circles/${circleName}/questions?skip=${skip}&limit=${limit}`,
+    );
+
+    if (!response.isError && !isPlatformBrowser(this.platformId)) {
+      this.state.set(key, response.result as PaginatedQuestionsResponse);
+    }
+
+    return response;
   };
 
   private updateCircles = (newCircles: Circle[]) => {

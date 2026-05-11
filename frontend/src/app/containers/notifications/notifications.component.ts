@@ -1,4 +1,11 @@
-import { Component, inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { Subscription, switchMap, timer } from 'rxjs';
@@ -22,7 +29,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   @ViewChild('notificationsPanel') notificationsPanel!: Popover;
 
-  notifications!: Notification[];
+  notifications: Notification[] = [];
   unreadItems = 0;
   timerSubscription$!: Subscription;
 
@@ -40,7 +47,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
       .pipe(switchMap(() => this.nos.getAll(`/notifications`)))
       .subscribe((notificationsResponse: unknown) => {
         this.notifications = notificationsResponse as Notification[];
-        console.log('not length', this.notifications.length);
         this.unreadItems = this.notifications.filter((n) => n.unread).length;
       });
   }
@@ -70,16 +76,18 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     ]);
 
     if (notification.unread) {
-      this.nos.markAsRead(`/notifications/${notification._id}`).subscribe(() => {
-        this.nos
-          .getAll('/notifications')
-          .subscribe((notificationsResponse: unknown) => {
-            this.notifications = notificationsResponse as Notification[];
-            this.unreadItems = this.notifications.filter(
-              (n) => n.unread,
-            ).length;
-          });
-      });
+      this.nos
+        .markAsRead(`/notifications/${notification._id}`)
+        .subscribe(() => {
+          this.nos
+            .getAll('/notifications')
+            .subscribe((notificationsResponse: unknown) => {
+              this.notifications = notificationsResponse as Notification[];
+              this.unreadItems = this.notifications.filter(
+                (n) => n.unread,
+              ).length;
+            });
+        });
     }
   };
 

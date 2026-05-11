@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { skip } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { CircleService } from 'src/app/services/circle.service';
 import { ModerationStore } from 'src/app/stores/moderation.store';
@@ -25,7 +26,6 @@ import { ButtonModule } from 'primeng/button';
 const PAGE_SIZE = 50;
 
 @Component({
-  host: { ngSkipHydration: 'true' },
   selector: 'app-circle',
   templateUrl: './circle.component.html',
   styleUrls: ['./circle.component.scss'],
@@ -46,6 +46,7 @@ export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
   questions = signal<Question[]>([]);
   isLoading = signal(false);
   hasMore = signal(true);
+  hasFetched = signal(false);
 
   private currentSkip = 0;
   private circleName = '';
@@ -54,8 +55,14 @@ export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
   public isLoggedIn = computed(() => this.as.isLoggedIn());
 
   ngOnInit(): void {
-    // Subscribe to paramMap - emits immediately on component init and on param changes
-    this.ar.paramMap.subscribe((paramMap) => {
+    // Initial load from route snapshot (runs once before first paint).
+    const initialName = this.ar.snapshot.paramMap.get('name');
+    if (initialName) {
+      this.initCircle(initialName);
+    }
+
+    // Subsequent param changes (e.g. navigating between circles).
+    this.ar.paramMap.pipe(skip(1)).subscribe((paramMap) => {
       const name = paramMap.get('name');
       if (name) {
         this.initCircle(name);
@@ -83,6 +90,7 @@ export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentSkip = 0;
     this.hasMore.set(true);
     this.isLoading.set(false);
+    this.hasFetched.set(false);
   }
 
   private async loadCircleMetadata(): Promise<void> {
@@ -113,6 +121,7 @@ export class CircleComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.isLoading.set(false);
+    this.hasFetched.set(true);
   }
 
   private setupIntersectionObserver(): void {

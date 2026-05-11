@@ -1,26 +1,22 @@
-import { ApplicationConfig, importProvidersFrom, APP_INITIALIZER } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, APP_INITIALIZER, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from './services/auth.service';
 import { ConsentService } from './services/consent.service';
+import { MicrosoftAuthService } from './services/microsoft-auth.service';
+import { GoogleAuthService } from './services/google-auth.service';
 import {
   withInterceptorsFromDi,
   withInterceptors,
   provideHttpClient,
+  withFetch,
 } from '@angular/common/http';
 import { backendStatusInterceptor } from './interceptors/backend-status.interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import {
-  GoogleLoginProvider,
-  MicrosoftLoginProvider,
-  SOCIAL_AUTH_CONFIG,
-  SocialAuthServiceConfig,
-  SocialLoginModule,
-} from '@abacritt/angularx-social-login';
 import { providePrimeNG } from 'primeng/config';
 import { MessageService } from 'primeng/api';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { StandardTheme } from '../assets/themes/standard/standard-theme';
-import { environment } from '../environments/environment';
 
 const DefaultOptions = {
   darkModeSelector: '.darkmode',
@@ -28,7 +24,7 @@ const DefaultOptions = {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    importProvidersFrom(AppRoutingModule, SocialLoginModule),
+    importProvidersFrom(AppRoutingModule),
     MessageService,
     {
       provide: APP_INITIALIZER,
@@ -43,33 +39,51 @@ export const appConfig: ApplicationConfig = {
       multi: true,
     },
     {
-      provide: SOCIAL_AUTH_CONFIG,
-      useValue: {
-        autoLogin: false,
-        lang: 'de',
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '265914185201-ln0r3huhnfjd1j1j80c5tvi43pf1lhpg.apps.googleusercontent.com',
-              { onTapEnabled: false },
-            ),
-          },
-          {
-            id: MicrosoftLoginProvider.PROVIDER_ID,
-            provider: new MicrosoftLoginProvider(
-              'c35f1a94-54c1-4382-8458-851e9f9b8c30',
-              {
-                redirect_uri: environment.redirectUri,
-                logout_redirect_uri: environment.uiUrl,
-              },
-            ),
-          },
-        ],
-        onError: (err) => {
-          console.error(err);
+      // Always process a possible Microsoft redirect response on app
+      // startup. Runs on every route so MSAL's interaction_in_progress
+      // flag is consumed even if the user lands somewhere other than
+      // /redirect.html. No-op when there is no pending redirect.
+      provide: APP_INITIALIZER,
+      useFactory:
+        (msAuth: MicrosoftAuthService, auth: AuthService) => async () => {
+          try {
+            const result = await msAuth.handleRedirect();
+            if (result?.idToken) {
+              await auth.exchangeMicrosoftIdToken(result.idToken);
+            }
+          } catch (e) {
+            console.error('[MS-INIT] error', e);
+          }
         },
-      } as SocialAuthServiceConfig,
+      deps: [MicrosoftAuthService, AuthService],
+      multi: true,
+    },
+    {
+      // Process a possible Google OAuth redirect response on app
+      // startup. Reads ?code= from the URL when the user lands on
+      // /google-redirect.html and exchanges it for an amapet JWT
+      // before routing kicks in. No-op when there is no code.
+      provide: APP_INITIALIZER,
+      useFactory:
+        (
+          platformId: object,
+          googleAuth: GoogleAuthService,
+          auth: AuthService,
+        ) =>
+        async () => {
+          if (!isPlatformBrowser(platformId)) return;
+          if (window.location.pathname !== '/google-redirect.html') return;
+          try {
+            const code = googleAuth.readCodeFromUrl();
+            if (code) {
+              await auth.exchangeGoogleCode(code);
+            }
+          } catch (e) {
+            console.error('[GOOGLE-INIT] error', e);
+          }
+        },
+      deps: [PLATFORM_ID, GoogleAuthService, AuthService],
+      multi: true,
     },
     provideAnimations(),
     providePrimeNG({
@@ -79,6 +93,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideHttpClient(
+      withFetch(),
       withInterceptorsFromDi(),
       withInterceptors([backendStatusInterceptor]),
     ),
