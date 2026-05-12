@@ -1,60 +1,34 @@
-<div class="grid grid-cols-2 gap-4">
-  <div class="col-span-2">
-    <p-card subheader="Account">
-      <h2 class="mb-2">
-        {{ user.username }}
-      </h2>
-      <span class="font-medium text-500 text-sm font-italic">{{
-        user.email
-      }}</span>
-      <p class="text-600 text-sm">
-        You have
-        <span class="text-purple-600 dark:text-purple-400 font-medium font-italic text-md">
-          {{ user.aura || 0 }}
-        </span>
-        Aura, your level is
-        <span class="text-purple-600 dark:text-purple-400 font-medium font-italic text-sm">
-          {{ getAuraLevel(user.aura || 0) }}
-        </span>
-      </p>
-    </p-card>
+@if (user(); as u) {
+  <div class="grid grid-cols-2 gap-4">
+    <div class="col-span-2">
+      <p-card subheader="Account">
+        <h2 class="mb-2">
+          {{ u.username }}
+        </h2>
+        <span class="font-medium text-500 text-sm font-italic">{{
+          u.email
+        }}</span>
+        <p class="text-600 text-sm">
+          You have
+          <span class="text-purple-600 dark:text-purple-400 font-medium font-italic text-md">
+            {{ u.aura || 0 }}
+          </span>
+          Aura, your level is
+          <span class="text-purple-600 dark:text-purple-400 font-medium font-italic text-sm">
+            {{ getAuraLevel(u.aura || 0) }}
+          </span>
+        </p>
+      </p-card>
+    </div>
+    <a routerLink="/profile/circles" class="no-underline block">
+      <p-card
+        subheader="Circles"
+        styleClass="cursor-pointer hover:[--p-card-background:var(--p-gray-50)] dark:hover:[--p-card-background:var(--p-gray-800)]"
+      >
+        <p>
+          <span>{{ u.numOfCircles }}</span>
+        </p>
+      </p-card>
+    </a>
   </div>
-  <!--<div>
-    <p-card subheader="Avatar">
-      <p><span>tbd</span></p>
-    </p-card>
-  </div>-->
-  <a routerLink="/profile/circles" class="no-underline block">
-    <p-card
-      subheader="Circles"
-      styleClass="cursor-pointer hover:[--p-card-background:var(--p-gray-50)] dark:hover:[--p-card-background:var(--p-gray-800)]"
-    >
-      <p>
-        <span>{{ user.numOfCircles }}</span>
-      </p>
-    </p-card>
-  </a>
-  <!--<div>
-    <p-card subheader="Questions">
-      <p>
-        <span>{{ user.numOfQuestions }}</span>
-      </p>
-    </p-card>
-  </div>
-  <div>
-    <p-card subheader="Comments">
-      <p>
-        <span>{{ user.comments.length }}</span>
-        tbd
-      </p>
-    </p-card>
-  </div>
-  <div>
-    <p-card subheader="Following">
-      <p>
-        <span>{{ user.followedCircles.length }}</span>
-        tbd
-      </p>
-    </p-card>
-  </div>-->
-</div>
+}
