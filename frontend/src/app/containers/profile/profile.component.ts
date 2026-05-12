@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit {
   private as = inject(AuthService);
   private api = inject(ApiService<any>);
 
-  user!: User;
+  user = signal<User | undefined>(undefined);
   getAuraLevel = getAuraLevel;
 
   async ngOnInit(): Promise<void> {
@@ -27,17 +27,17 @@ export class ProfileComponent implements OnInit {
       return; // Skip on server - authenticated calls require browser
     }
 
-    this.user = this.as.getUser() as User;
+    this.user.set(this.as.getUser() as User);
     const { isError, result } = await this.api.read('/profile', true);
     if (isError) {
       console.error('Error fetching profile:', result);
-    } else {
-      const {
-        profile: { numOfQuestions, numOfCircles, aura },
-      } = result as any;
-      this.user.numOfCircles = numOfCircles;
-      this.user.numOfQuestions = numOfQuestions;
-      this.user.aura = aura || 0;
+      return;
     }
+    const {
+      profile: { numOfQuestions, numOfCircles, aura },
+    } = result as any;
+    this.user.update((u) =>
+      u ? { ...u, numOfCircles, numOfQuestions, aura: aura || 0 } : u,
+    );
   }
 }
