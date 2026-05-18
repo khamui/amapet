@@ -20,6 +20,8 @@ export class SettingsService {
     signal(undefined);
   public readonly maintenance: WritableSignal<Settings | undefined> =
     signal(undefined);
+  public readonly defaultTheme: WritableSignal<Settings | undefined> =
+    signal(undefined);
 
   // computed dependants of 'maintenance'-setting
   public readonly isMaintenance = computed(
@@ -42,6 +44,8 @@ export class SettingsService {
           this.intentions.set(setting);
         } else if (setting.key === 'maintenance') {
           this.maintenance.set(setting);
+        } else if (setting.key === 'defaultTheme') {
+          this.defaultTheme.set(setting);
         }
       }
     }

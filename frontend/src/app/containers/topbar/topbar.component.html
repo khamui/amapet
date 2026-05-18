@@ -1,69 +1,78 @@
 <p-toolbar>
-  <button
-    (click)="handleNavigateHome()"
-    class="p-toolbar-group-start cursor-pointer lg:flex hidden items-center gap-2"
-  >
-    <img class="h-10" src="../../../assets/helpaws_logo_petrol.png" />
-    <span
-      class="font-semibold text-lg bg-gradient-to-r from-teal-400 to-amber-400 dark:from-teal-200 dark:to-zinc-50 bg-clip-text text-transparent"
-      >Helpaws</span
-    >
-    <span
-      class="text-xs font-bold bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300 px-2 py-0.5 rounded-full"
-    >
-      BETA
-    </span>
-  </button>
-  <div class="block lg:hidden">
+  <div class="p-toolbar-group-start flex items-center gap-2 min-w-0">
     <p-button
       #burgerMenu
       styleClass="p-3"
+      class="lg:hidden"
       [text]="true"
       [raised]="true"
       (onClick)="handleToggleMobileDrawer()"
     >
       <i [class]="burgerIcon()"></i>
     </p-button>
-  </div>
-  <div class="p-toolbar-group-end gap-2">
-    @if (isLoggedIn() && hasPermLevel()) {
-      <p-button
-        #globalSettingsButton
-        styleClass="p-3"
-        [rounded]="true"
-        [text]="true"
-        [raised]="true"
-        (click)="router.navigate(['global-settings'])"
+    <button
+      (click)="handleNavigateHome()"
+      class="cursor-pointer flex items-center gap-2 min-w-0"
+    >
+      <img
+        class="h-10 shrink-0"
+        src="../../../assets/helpaws_logo_petrol.png"
+      />
+      <span
+        class="font-semibold text-lg bg-gradient-to-r from-teal-400 to-amber-400 dark:from-teal-200 dark:to-zinc-50 bg-clip-text text-transparent hidden lg:inline"
+        >Helpaws</span
       >
-        <i class="pi pi-cog"></i>
-      </p-button>
-    }
+      <span
+        class="text-xs font-bold bg-surface-200 dark:bg-surface-700 text-surface-600 dark:text-surface-300 px-2 py-0.5 rounded-full hidden lg:inline"
+      >
+        BETA
+      </span>
+    </button>
+  </div>
+  <div class="p-toolbar-group-end gap-2 flex items-center">
     @if (isLoggedIn()) {
+      @if (hasPermLevel()) {
+        <p-button
+          #globalSettingsButton
+          styleClass="p-3"
+          class="hidden lg:inline-flex"
+          [rounded]="true"
+          [text]="true"
+          [raised]="true"
+          (click)="router.navigate(['global-settings'])"
+        >
+          <i class="pi pi-cog"></i>
+        </p-button>
+      }
       <ama-notifications></ama-notifications>
-      <p-menu #menu [model]="userMenuItems()" [popup]="true">
-        <ng-template #start>
-          <div class="p-2 flex justify-center border-b border-surface-200">
-            <ama-theme-switcher></ama-theme-switcher>
-          </div>
-        </ng-template>
-      </p-menu>
       <p-button
-        styleClass="mr-2 p-3"
+        styleClass="p-3"
+        class="hidden lg:inline-flex"
         [rounded]="true"
         [text]="true"
         [raised]="true"
-        (click)="menu.toggle($event)"
+        (click)="toggleUserMenu($event)"
       >
         <i class="pi pi-user"></i>
       </p-button>
       <p-button
         label="Logout"
         icon="pi pi-sign-out"
-        class="mr-2 danger-50"
+        class="danger-50 hidden lg:inline-flex"
         styleClass="p-button-danger"
         size="small"
         (onClick)="handleLogout()"
       ></p-button>
+      <p-button
+        styleClass="p-3"
+        class="lg:hidden"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        (click)="toggleOverflowMenu($event)"
+      >
+        <i class="pi pi-ellipsis-v"></i>
+      </p-button>
     } @else {
       <p-button
         label="Login/Register"
@@ -76,6 +85,23 @@
     }
   </div>
 </p-toolbar>
+
+@if (isLoggedIn()) {
+  <p-menu #menu [model]="userMenuItems()" [popup]="true">
+    <ng-template #start>
+      <div class="p-2 flex justify-center border-b border-surface-200">
+        <ama-theme-switcher></ama-theme-switcher>
+      </div>
+    </ng-template>
+  </p-menu>
+  <p-menu #overflowMenu [model]="overflowMenuItems()" [popup]="true">
+    <ng-template #start>
+      <div class="p-2 flex justify-center border-b border-surface-200">
+        <ama-theme-switcher></ama-theme-switcher>
+      </div>
+    </ng-template>
+  </p-menu>
+}
 
 <ama-social-login-dialog
   [(visible)]="showLoginDialog"
