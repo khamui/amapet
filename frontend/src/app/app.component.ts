@@ -19,6 +19,7 @@ import { SideboxComponent } from './components/sidebox/sidebox.component';
 import { SettingsService } from './services/settings.service';
 import { UiStateService } from './services/ui-state.service';
 import { ThemeService } from './services/theme.service';
+import { ThemeStyleService } from './services/theme-style.service';
 import { NgClass } from '@angular/common';
 import { filter } from 'rxjs';
 
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit {
   public ses = inject(SettingsService);
   public uiState = inject(UiStateService);
   private themeService = inject(ThemeService);
+  private themeStyleService = inject(ThemeStyleService);
 
   // Computed signal that directly references auth service's isLoggedIn
   public isLoggedIn = computed(() => this.as.isLoggedIn());
@@ -55,6 +57,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     await this.ses.init();
+    this.themeStyleService.applyConfiguredTheme();
 
     this.setCircleBox();
 
