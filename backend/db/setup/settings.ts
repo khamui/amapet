@@ -18,6 +18,10 @@ const requiredSettings: RequiredSetting[] = [
     key: 'maintenance',
     value: { isMaintenanceMode: false },
   },
+  {
+    key: 'defaultTheme',
+    value: { name: 'standard' },
+  },
 ];
 
 export async function ensurePlatformSettings(): Promise<void> {

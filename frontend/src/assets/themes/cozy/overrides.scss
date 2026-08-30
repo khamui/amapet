@@ -1,0 +1,181 @@
+/* ============================================================
+   Theme: Cozy Reading Room
+   Activated by adding .theme-cozy to <html>. All rules are
+   excluded from .moderation-view subtrees by explicit reset.
+   Identity: editorial / handmade / paperback warmth.
+   ============================================================ */
+
+:root.theme-cozy {
+  body {
+    font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* parchment-tinted gradient */
+    background-image: linear-gradient(
+      285deg,
+      #fafaf9 0%,
+      #f5f5f4 40%,
+      var(--p-teal-50) 100%
+    );
+  }
+
+  &.darkmode body {
+    background-image: none;
+  }
+
+  /* --- Editorial serif on all headings + key titles ----------- */
+  h1, h2, h3, h4,
+  .question-title,
+  .circle-title,
+  .p-panel .p-panel-title,
+  .p-dialog .p-dialog-title {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  /* --- Larger soft radii -------------------------------------- */
+  .p-panel,
+  .p-card,
+  .p-dialog,
+  .p-menu,
+  .p-listbox,
+  .p-select-overlay,
+  .p-multiselect-overlay {
+    border-radius: 1.5rem;
+  }
+
+  /* Pill-shaped intention chips */
+  .intention-chip,
+  [class*='intention-'] {
+    border-radius: 9999px;
+    box-shadow: inset 0 0 0 1px rgba(120, 53, 15, 0.12);
+  }
+  &.darkmode .intention-chip,
+  &.darkmode [class*='intention-'] {
+    box-shadow: inset 0 0 0 1px rgba(255, 237, 213, 0.12);
+  }
+
+  /* --- Cream card surfaces + warm thick borders --------------- */
+  .p-panel,
+  .p-card {
+    background-color: #fafaf9; /* stone-50 */
+    border: 1.5px solid #d6d3d1; /* stone-300 */
+  }
+  &.darkmode {
+    .p-panel,
+    .p-card {
+      background-color: var(--p-surface-900);
+      border: 1.5px solid #44403c; /* stone-700 */
+    }
+  }
+
+  /* --- Warm focus ring (soft, offset) ------------------------- */
+  *:focus-visible {
+    outline: 2px solid var(--p-orange-400, #fb923c);
+    outline-offset: 2px;
+  }
+
+  /* --- Slow, ink-settling transitions ------------------------- */
+  .p-panel,
+  .p-card,
+  .p-button {
+    transition: background-color 250ms ease-out, border-color 250ms ease-out,
+      box-shadow 250ms ease-out, color 250ms ease-out;
+  }
+
+  /* --- Solution badge: cream w/ dotted warm border ------------ */
+  .solution-badge,
+  [data-solution-badge] {
+    background-color: #f5f5f4; /* stone-100 */
+    border: 1px dotted #a8a29e; /* stone-400 */
+  }
+  &.darkmode .solution-badge,
+  &.darkmode [data-solution-badge] {
+    background-color: #292524; /* stone-800 */
+    border: 1px dotted #78716c; /* stone-500 */
+  }
+
+  /* --- Empty-state paw motif (larger, fainter) ---------------- */
+  .empty-state,
+  [data-empty-state] {
+    background-image: url('./motifs/paw.svg');
+    background-repeat: no-repeat;
+    background-position: right 1rem bottom 1rem;
+    background-size: 8rem;
+    opacity: 1;
+    color: inherit;
+    position: relative;
+  }
+  .empty-state::after,
+  [data-empty-state]::after {
+    /* paw color tint via mask overlay */
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-color: rgba(120, 53, 15, 0.08);
+    mix-blend-mode: multiply;
+  }
+
+  /* --- Vote button hover gets a tiny heart hint --------------- */
+  .p-button.vote-btn:hover,
+  app-vote .p-button:hover {
+    background-image: url('./motifs/heart.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 1rem;
+    opacity: 0.95;
+  }
+
+  /* --- Section divider between answer threads ----------------- */
+  app-answers .answer-divider::before,
+  .answer-divider::before {
+    content: '';
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-image: url('./motifs/heart.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.35;
+    color: var(--p-orange-400, #fb923c);
+  }
+
+  /* --- Reset everything inside moderation views --------------- */
+  .moderation-view,
+  .moderation-view * {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+    letter-spacing: normal !important;
+    transition: none !important;
+  }
+  .moderation-view {
+    background-image: none !important;
+  }
+  .moderation-view h1,
+  .moderation-view h2,
+  .moderation-view h3,
+  .moderation-view h4,
+  .moderation-view .question-title,
+  .moderation-view .circle-title {
+    font-weight: revert !important;
+  }
+  .moderation-view .p-panel,
+  .moderation-view .p-card,
+  .moderation-view .solution-badge,
+  .moderation-view [data-solution-badge],
+  .moderation-view .empty-state,
+  .moderation-view [data-empty-state],
+  .moderation-view .empty-state::after,
+  .moderation-view [data-empty-state]::after,
+  .moderation-view app-vote .p-button:hover,
+  .moderation-view .answer-divider::before,
+  .moderation-view .intention-chip,
+  .moderation-view [class*='intention-'] {
+    background-image: none !important;
+    background-color: revert !important;
+    border: revert !important;
+    border-radius: revert !important;
+    box-shadow: revert !important;
+    outline: revert !important;
+  }
+}

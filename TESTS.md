@@ -113,3 +113,7 @@ updated everytime tests were modified, extended or added.
 ## Navigation
 - Critical routes render without errors (/, /explore, /profile, /imprint, /privacy, /terms, /disclaimer)
 - 404 page for unknown routes (verifies 404 heading, error message, and back button)
+
+## Topbar
+- desktop: user icon opens popup menu with Profile item
+- mobile: overflow ellipsis opens popup menu with Profile and Logout items

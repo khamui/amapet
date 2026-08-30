@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:where(.darkmode, .darkmode *));
 
+/* Optional theme overlays — activated by .theme-cozy / .theme-honey on <html> */
+@import "./assets/themes/cozy/overrides.scss";
+@import "./assets/themes/honey/overrides.scss";
+
 html {
   font-size: 14px;
 }

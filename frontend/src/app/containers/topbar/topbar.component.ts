@@ -1,11 +1,11 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
 import { NotificationsComponent } from '../notifications/notifications.component';
-import { MenuModule } from 'primeng/menu';
+import { Menu, MenuModule } from 'primeng/menu';
 import { ModerationStore } from 'src/app/stores/moderation.store';
 import { SocialLoginDialogComponent } from 'src/app/components/social-login-dialog/social-login-dialog.component';
 import { UiStateService } from 'src/app/services/ui-state.service';
@@ -29,8 +29,35 @@ export class TopbarComponent {
   public hasPermLevel = signal(false);
   public userMenuItems = signal<MenuItem[]>([]);
 
+  public userMenu = viewChild<Menu>('menu');
+  public overflowMenu = viewChild<Menu>('overflowMenu');
+
   // Computed signal that directly references auth service's isLoggedIn
   public isLoggedIn = computed(() => this.as.isLoggedIn());
+
+  // Mobile overflow menu: collapses right-side action buttons
+  public overflowMenuItems = computed<MenuItem[]>(() => {
+    const items: MenuItem[] = [];
+    if (this.hasPermLevel()) {
+      items.push({
+        label: 'Global Settings',
+        icon: 'pi pi-cog',
+        command: () => this.router.navigate(['global-settings']),
+      });
+    }
+    items.push({
+      label: 'Profile',
+      icon: 'pi pi-user',
+      command: () => this.router.navigate(['profile']),
+    });
+    items.push({
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      styleClass: 'text-red-600',
+      command: () => this.handleLogout(),
+    });
+    return items;
+  });
 
   // Burger menu icon toggles based on drawer state
   public burgerIcon = computed(() =>
@@ -88,5 +115,13 @@ export class TopbarComponent {
 
   public handleToggleMobileDrawer() {
     this.uiState.toggleMobileDrawer();
+  }
+
+  public toggleUserMenu(event: Event) {
+    this.userMenu()?.toggle(event);
+  }
+
+  public toggleOverflowMenu(event: Event) {
+    this.overflowMenu()?.toggle(event);
   }
 }
