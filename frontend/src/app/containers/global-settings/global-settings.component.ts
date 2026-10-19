@@ -4,9 +4,11 @@ import { DisplayNamePipe } from 'src/app/pipes/display-name.pipe';
 import { SettingsService } from 'src/app/services/settings.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import {
+  DefaultThemeValue,
   MaintenanceMode,
   QuestionIntentionsValue,
   Settings,
+  ThemeName,
 } from 'src/app/typedefs/Settings.typedef';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +21,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { DividerModule } from 'primeng/divider';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-global-settings',
@@ -32,6 +35,7 @@ import { DividerModule } from 'primeng/divider';
     ConfirmDialogModule,
     DividerModule,
     DatePipe,
+    SelectModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './global-settings.component.html',
@@ -71,6 +75,23 @@ export class GlobalSettingsComponent implements OnInit {
 
     this.ses.intentions.set(
       (await this.ses.updateSetting<QuestionIntentionsValue[]>(
+        settingId,
+        reqPayload,
+      )) as Settings,
+    );
+  }
+
+  public readonly themeOptions: Array<{ label: string; value: ThemeName }> = [
+    { label: 'Standard', value: 'standard' },
+    { label: 'Cozy Reading Room', value: 'cozy' },
+    { label: 'Honey Petrol', value: 'honey' },
+  ];
+
+  async handleThemeChange(value: ThemeName, settingId: string | undefined) {
+    if (!settingId) return;
+    const reqPayload: DefaultThemeValue = { name: value };
+    this.ses.defaultTheme.set(
+      (await this.ses.updateSetting<DefaultThemeValue>(
         settingId,
         reqPayload,
       )) as Settings,

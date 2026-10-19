@@ -42,6 +42,20 @@
   />
 </div>
 
+@if (ses.defaultTheme()) {
+  <div class="flex w-full justify-around p-3 items-center">
+    <h2 class="text-md">Default theme</h2>
+    <p-select
+      [options]="themeOptions"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="ses.defaultTheme()?.value?.name"
+      class="w-60"
+      (onChange)="handleThemeChange($event.value, ses.defaultTheme()?._id)"
+    />
+  </div>
+}
+
 <p-divider />
 
 <h2 class="text-lg mt-4 mb-6">Database Management</h2>

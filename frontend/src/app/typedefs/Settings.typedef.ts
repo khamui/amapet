@@ -1,9 +1,9 @@
 export type Settings = {
   _id: string;
-  key: 'question_intentions' | 'maintenance';
+  key: 'question_intentions' | 'maintenance' | 'defaultTheme';
   inputType: 'multiopts' | 'binary';
   value: any;
-  //value: QuestionIntentionsValue[] | MaintenanceMode;
+  //value: QuestionIntentionsValue[] | MaintenanceMode | DefaultThemeValue;
 };
 
 export type IntentionId = 'question' | 'discussion' | 'information';
@@ -16,4 +16,10 @@ export type QuestionIntentionsValue = {
 
 export type MaintenanceMode = {
   isMaintenanceMode: boolean;
+};
+
+export type ThemeName = 'standard' | 'cozy' | 'honey';
+
+export type DefaultThemeValue = {
+  name: ThemeName;
 };
