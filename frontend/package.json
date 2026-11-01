@@ -15,7 +15,7 @@
   "dependencies": {
     "@azure/msal-browser": "5.10.0",
     "@angular/animations": "21.2.25",
-    "@angular/cdk": "21.2.10",
+    "@angular/cdk": "21.2.14",
     "@angular/common": "21.2.25",
     "@angular/compiler": "21.2.25",
     "@angular/core": "21.2.25",
